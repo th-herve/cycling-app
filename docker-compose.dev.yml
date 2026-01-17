@@ -1,0 +1,16 @@
+services:
+  cycling_db:
+    container_name: cycling_db
+    image: postgres:18.0
+    restart: no
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_DB=cycling
+      - POSTGRES_PASSWORD=admin
+    volumes:
+      - cycling_db_data:/var/lib/postgresql
+
+volumes:
+  cycling_db_data:
