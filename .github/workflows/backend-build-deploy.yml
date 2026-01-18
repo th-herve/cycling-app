@@ -1,12 +1,12 @@
-name: Frontend build and deploy
+name: Backend build and deploy
 
 on:
   push:
-    path: "frontend/**"
+    path: "backend/**"
     branches: [ "main" ]
 
 jobs:
-  frontend-docker:
+  backend-docker:
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
@@ -30,7 +30,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          context: ./frontend
+          context: ./backend
           tags: |
-            ghcr.io/${{ github.repository_owner }}/cycling-frontend:latest
-            ghcr.io/${{ github.repository_owner }}/cycling-frontend:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/cycling-backend:latest
+            ghcr.io/${{ github.repository_owner }}/cycling-backend:${{ github.sha }}
