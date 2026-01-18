@@ -3,11 +3,12 @@ name: Frontend build and deploy
 on:
   push:
     path: "frontend/**"
-    branches: [ "main" ]
+    branches: [ "test" ]
 
 jobs:
   frontend-docker:
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,6 +30,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
+          context: ./frontend
           tags: |
             ghcr.io/${{ github.repository_owner }}/cycling-frontend:latest
             ghcr.io/${{ github.repository_owner }}/cycling-frontend:${{ github.sha }}
