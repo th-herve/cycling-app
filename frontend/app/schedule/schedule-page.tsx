@@ -1,7 +1,7 @@
+import ViewSelector, { View } from "@/components/common/view-selector";
 import Event from "@/types/event";
-import ViewSelector, { View } from "./components/view-selector";
-import CalendarView from "./components/calendar-view/calendar-view";
-import ListView from "./components/list-view/list-view";
+import CalendarView from "./calendar/components/calendar-view";
+import ListView from "./list/components/list-view";
 
 interface Props {
   data: Event[];
