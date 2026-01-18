@@ -6,6 +6,8 @@ import (
 	"cycling-backend/internal/common"
 	"cycling-backend/internal/domain/event"
 	"cycling-backend/internal/domain/season"
+	"embed"
+	"fmt"
 	"net/http"
 	"os"
 
@@ -13,6 +15,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	"github.com/pressly/goose/v3"
 	"github.com/rs/zerolog/log"
 )
 
@@ -20,6 +23,19 @@ import (
 var AppMode string
 
 const defaultMode = "dev"
+
+var DbConfig struct {
+	user     string
+	password string
+	name     string
+	host     string
+}
+
+// next comment is read by go to embed the migration files
+//
+//go:embed migrations/*.sql
+var embedMigrations embed.FS
+var migrationsDir = "migrations"
 
 func init() {
 	err := godotenv.Load()
@@ -31,16 +47,48 @@ func init() {
 
 	common.SetUpLogger(AppMode)
 
+	DbConfig.name = os.Getenv("DB_NAME")
+	DbConfig.user = os.Getenv("DB_USER")
+	DbConfig.password = os.Getenv("DB_PASSWORD")
+	DbConfig.host = os.Getenv("DB_HOST")
+
+	if DbConfig.host == "" {
+		DbConfig.host = "localhost"
+	}
+
 	if err != nil {
 		log.Warn().Msg("Warning: no .env file")
 	}
 }
 
+func applyMigrations(db *sqlx.DB) {
+	goose.SetBaseFS(embedMigrations)
+	if err := goose.SetDialect("postgres"); err != nil {
+		log.Fatal().Err(err).Msg("Failed to set goose dialect")
+	}
+
+	if err := goose.Up(db.DB, migrationsDir); err != nil {
+		log.Fatal().Err(err).Msg("Failed to run migrations")
+	}
+
+	log.Debug().Msg("Applied migrations")
+	if AppMode == "dev" {
+		goose.Status(db.DB, migrationsDir)
+	}
+}
+
 func main() {
 
-	db, err := sqlx.Connect("postgres", "user=admin password=admin host=localhost port=5432 dbname=cycling sslmode=disable")
+	dbDataSource := fmt.Sprintf("user=%s password=%s host=%s port=5432 dbname=%s sslmode=disable",
+		DbConfig.user, DbConfig.password, DbConfig.host, DbConfig.name)
+
+	db, err := sqlx.Connect("postgres", dbDataSource)
 	if err != nil {
-		log.Fatal().Str("err", err.Error()).Msg("Failed to connect to database")
+		log.Fatal().Str("err", err.Error()).
+			Str("dbUser", DbConfig.user).
+			Str("dbName", DbConfig.name).
+			Str("host", DbConfig.host).
+			Msg("Failed to connect to database")
 	}
 	defer db.Close()
 
@@ -49,6 +97,8 @@ func main() {
 	}
 
 	log.Info().Msg("Database connection established")
+
+	applyMigrations(db)
 
 	seasonStorage := season.NewSeasonStorage(db)
 	seasonService := app.NewSeasonService(seasonStorage)
