@@ -34,3 +34,20 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository_owner }}/cycling-frontend:latest
             ghcr.io/${{ github.repository_owner }}/cycling-frontend:${{ github.sha }}
+
+  frontend-deploy:
+    needs: frontend-docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH connection and deploy script
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USERNAME }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          passphrase: ${{ secrets.DEPLOY_PASSPHRASE }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /var/www/cycling-app &&
+            docker compose pull &&
+            docker compose up -d
