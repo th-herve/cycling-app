@@ -18,7 +18,7 @@ type storage struct {
 	db *sqlx.DB
 }
 
-func NewResultStorage(db *sqlx.DB) Storage {
+func NewRiderStorage(db *sqlx.DB) Storage {
 	return &storage{db: db}
 }
 
