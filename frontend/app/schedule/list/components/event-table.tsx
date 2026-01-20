@@ -46,7 +46,7 @@ const EventsTable = ({ events }: Props) => {
                 <TableCell className="py-5">
                   <div className="flex items-center gap-2">
                     <LucideCrown className="size-4 text-yellow-400" />
-                    {event.results ? event.results[0].riderLastName : ""}
+                    {event.results ? event.results.general[0].rider.lastName : ""}
                   </div>
                 </TableCell>
               </TableRow>
