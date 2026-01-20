@@ -1,6 +1,6 @@
 import Country from "./country";
 import EventType from "./event-type";
-import Result from "./result";
+import { ResultsSnapshot } from "./result";
 
 export default interface Event {
   id: string;
@@ -27,7 +27,7 @@ export default interface Event {
 
   country?: Country;
 
-  results?: Result[];
+  results?: ResultsSnapshot;
 
   parentName?: string;
 }

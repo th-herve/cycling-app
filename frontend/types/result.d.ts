@@ -1,3 +1,4 @@
+import { RiderSnapshot } from "./rider";
 
 export default interface Result {
   id: string;
@@ -7,4 +8,13 @@ export default interface Result {
   timeSeconds: number;
   riderFirstName: string;
   riderLastName: string;
+}
+
+export interface ResultSnapshot {
+  rank: number;
+  rider: RiderSnapshot;
+}
+
+export interface ResultsSnapshot {
+  general: ResultSnapshot[];
 }
