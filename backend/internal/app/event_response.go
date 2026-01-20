@@ -3,15 +3,15 @@ package app
 import (
 	"cycling-backend/internal/common"
 	"cycling-backend/internal/domain/event"
+	"cycling-backend/internal/domain/result"
+	"cycling-backend/internal/domain/rider"
 
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 )
 
-/*
-* Convert a list of Event to a list of EventReponse.
-* And add the different data passed in the hydration context.
- */
+// Convert a list of Event to a list of EventReponse.
+// And add the different data passed in the hydration context.
 func createEventListResponse(events []*event.Event, hydrationCtx EventHydrationContext) []*EventResponse {
 	flatResponse := convertToEventResponse(events)
 
@@ -20,16 +20,19 @@ func createEventListResponse(events []*event.Event, hydrationCtx EventHydrationC
 		hydrateCountry(flatResponse, hydrationCtx.Countries)
 	}
 
+	withResult := hydrationCtx.Results != nil
+	if withResult {
+		hydrateResults(flatResponse, hydrationCtx.Results, hydrationCtx.Riders)
+	}
+
 	response := restructureStages(flatResponse)
 
 	return response
 }
 
-/*
-* Take a list of events where races and stages are flat.
-* Add the race name to its stages, and add the stages to their race.
-* Returns the new sturcture
- */
+// Take a list of events where races and stages are flat.
+// Add the race name to its stages, and add the stages to their race.
+// Returns the new sturcture
 func restructureStages(flatEvents []*EventResponse) []*EventResponse {
 	result := make([]*EventResponse, 0, len(flatEvents))
 	raceEventsById := make(map[uuid.UUID]*EventResponse)
@@ -108,9 +111,36 @@ func hydrateCountry(events []*EventResponse, countryMap common.CountryMap) {
 	}
 }
 
-/*
-* Take a list of events and returns a list of the country's id
- */
+// !!TODO For now it assumes it's only general ranking and does not group by result type
+// TODO maybe return a new array instead of mutating
+func hydrateResults(events []*EventResponse, results []result.Result, riders []rider.Rider) {
+	resultsSnapshotByEvent := make(map[uuid.UUID][]ResultSnapshot)
+	hydrateRider := len(riders) > 0
+
+	var riderById map[uuid.UUID]RiderSnapshot
+	if hydrateRider {
+		riderById = toRiderSnapshotById(riders)
+	}
+
+	for _, r := range results {
+		res := ResultToSnapshot(r)
+		if hydrateRider && r.RiderID != nil {
+			if rs, ok := riderById[*r.RiderID]; ok {
+				res.Rider = rs
+			}
+		}
+		resultsSnapshotByEvent[r.EventID] = append(resultsSnapshotByEvent[r.EventID], res)
+	}
+
+	// TODO handle other result type
+	for _, e := range events {
+		e.Results = &ResultsSnapshot{
+			General: resultsSnapshotByEvent[e.ID],
+		}
+	}
+}
+
+// Take a list of events and returns a list of the country's id
 func collectCountriesCodes(events []*event.Event) []string {
 	seen := map[string]bool{}
 	result := []string{}
@@ -131,4 +161,39 @@ func collectCountriesCodes(events []*event.Event) []string {
 	}
 
 	return result
+}
+
+func collectEventsId(events []*event.Event) []uuid.UUID {
+	result := make([]uuid.UUID, len(events))
+
+	for _, e := range events {
+		result = append(result, e.ID)
+	}
+
+	return result
+}
+
+func groupResultByType(results []result.Result) ResultsByType {
+	byType := ResultsByType{}
+
+	for _, r := range results {
+		t := r.Type
+		arr, ok := byType[t]
+		if !ok {
+			arr = []result.Result{}
+		}
+		arr = append(arr, r)
+		byType[t] = arr
+	}
+
+	return byType
+}
+
+// convert list of Rider to RiderSnapshot and map them by id
+func toRiderSnapshotById(riders []rider.Rider) map[uuid.UUID]RiderSnapshot {
+	byId := make(map[uuid.UUID]RiderSnapshot, len(riders))
+	for _, r := range riders {
+		byId[r.ID] = RiderToSnapshot(r)
+	}
+	return byId
 }

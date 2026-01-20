@@ -41,7 +41,7 @@ func LoggerMiddleware() gin.HandlerFunc {
 		// attach the info to a sub logger
 		sublog := log.With().
 			Str("requestID", requestID).
-			Dur("duration", duration).
+			Str("duration", fmt.Sprintf("%s", duration)).
 			Str("clientIP", clientIP).
 			Str("method", method).
 			Str("path", path).

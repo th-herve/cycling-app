@@ -5,6 +5,8 @@ import (
 	"cycling-backend/internal/app/handler"
 	"cycling-backend/internal/common"
 	"cycling-backend/internal/domain/event"
+	"cycling-backend/internal/domain/result"
+	"cycling-backend/internal/domain/rider"
 	"cycling-backend/internal/domain/season"
 	"embed"
 	"fmt"
@@ -105,8 +107,14 @@ func main() {
 
 	countryStorage := common.NewCountryStorageStorage(db)
 
+	resultStorage := result.NewResultStorage(db)
+	resultService := app.NewResultService(resultStorage, countryStorage)
+
+	riderStorage := rider.NewRiderStorage(db)
+	riderService := app.NewRiderService(riderStorage, countryStorage)
+
 	eventStorage := event.NewEventStorage(db)
-	eventService := app.NewEventService(eventStorage, seasonService, countryStorage)
+	eventService := app.NewEventService(eventStorage, seasonService, resultService, riderService, countryStorage)
 	eventHandler := handler.NewEventHandler(eventService)
 
 	if AppMode == "prod" {

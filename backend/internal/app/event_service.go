@@ -4,22 +4,40 @@ import (
 	"context"
 	"cycling-backend/internal/common"
 	"cycling-backend/internal/domain/event"
+	"cycling-backend/internal/domain/result"
+	"cycling-backend/internal/domain/rider"
 
 	"github.com/rs/zerolog/log"
 )
 
 type EventService struct {
 	storage        event.Storage
-	countryStorage common.CountryStorage
 	seasonService  *SeasonService
+	resultService  *ResultService
+	riderService   *RiderService
+	countryStorage common.CountryStorage
 }
 
 type EventHydrationContext struct {
 	Countries common.CountryMap
+	Results   []result.Result
+	Riders    []rider.Rider
 }
 
-func NewEventService(storage event.Storage, seasonService *SeasonService, countryStorage common.CountryStorage) *EventService {
-	return &EventService{storage: storage, seasonService: seasonService, countryStorage: countryStorage}
+func NewEventService(
+	storage event.Storage,
+	seasonService *SeasonService,
+	resultService *ResultService,
+	riderService *RiderService,
+	countryStorage common.CountryStorage,
+) *EventService {
+	return &EventService{
+		storage:        storage,
+		seasonService:  seasonService,
+		resultService:  resultService,
+		riderService:   riderService,
+		countryStorage: countryStorage,
+	}
 }
 
 func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender common.Gender) ([]*EventResponse, error) {
@@ -51,11 +69,25 @@ func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender com
 	countryMap, err := s.countryStorage.FindManyByAlpha3Code(ctx, countryCodes)
 
 	if err != nil {
-		// only log the error, the countries won't be added to the response
 		log.Warn().Caller().Err(err).Msg("Error getting countries, they won't be added to the response")
 	}
 
-	response := createEventListResponse(events, EventHydrationContext{Countries: countryMap})
+	eventsId := collectEventsId(events)
+	results, err := s.resultService.FindManyByEventIds(ctx, eventsId,
+		&result.ResultSearchOptions{Limit: 3, Type: []result.ResultType{result.ResultTypeGeneral}})
+
+	var riders []rider.Rider
+	if err != nil {
+		log.Warn().Err(err).Msg("Error getting results, they won't be added to the response")
+	} else {
+		ridersId := collectRidersId(results)
+		riders, err = s.riderService.FindManyById(ctx, ridersId)
+		if err != nil {
+			log.Warn().Caller().Err(err).Msg("Error getting riders, they won't be added to the response")
+		}
+	}
+
+	response := createEventListResponse(events, EventHydrationContext{Countries: countryMap, Results: results, Riders: riders})
 
 	return response, nil
 }
