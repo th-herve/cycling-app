@@ -4,6 +4,7 @@ import (
 	"context"
 	"cycling-backend/internal/common"
 	"cycling-backend/internal/common/db"
+	"log"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/google/uuid"
@@ -45,7 +46,7 @@ func (s *storage) FindManyByEventIds(ctx context.Context, eventsId []uuid.UUID, 
 
 	// order by rank but put ranks 0 at the end. 0 is for DNS, DNF...
 	// it work by first ordering by if the rank is eq 0. Where 0=0 -> 1 (true) and not0=0 -> 0 (false). So false>true in the order.
-	queryBuilder.OrderBy("event_id", "type", "rank = 0", "rank")
+	queryBuilder = queryBuilder.OrderBy("event_id", "type", "rank = 0", "rank")
 
 	query, args, err := queryBuilder.ToSql()
 
