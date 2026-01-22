@@ -4,7 +4,6 @@ import (
 	"context"
 	"cycling-backend/internal/common"
 	"cycling-backend/internal/common/db"
-	"log"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/google/uuid"
