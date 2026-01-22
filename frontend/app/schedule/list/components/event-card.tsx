@@ -60,6 +60,9 @@ const ResultDisplay = ({
   className?: string;
 }) => {
   const winner = results?.[0];
+  if (!winner) {
+    return null
+  }
   const rider = winner.rider;
   if (!rider.lastName || winner.rank !== 1) return null;
 
