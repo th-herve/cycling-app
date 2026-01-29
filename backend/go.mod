@@ -1,4 +1,4 @@
-module cycling-backend
+module github.com/th-herve/cycling-app/backend
 
 go 1.25.5
 

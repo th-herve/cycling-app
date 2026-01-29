@@ -2,7 +2,8 @@ package domain
 
 import (
 	"context"
-	"cycling-backend/internal/common"
+
+	"github.com/th-herve/cycling-app/backend/internal/common"
 )
 
 type SeasonStorage interface {

@@ -1,10 +1,10 @@
 package domain
 
 import (
-	"cycling-backend/internal/common"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/th-herve/cycling-app/backend/internal/common"
 )
 
 type EventType string

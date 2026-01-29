@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"cycling-backend/internal/app"
-	"cycling-backend/internal/common"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/th-herve/cycling-app/backend/internal/app"
+	"github.com/th-herve/cycling-app/backend/internal/common"
 )
 
 type EventHandler struct {

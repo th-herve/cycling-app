@@ -1,11 +1,10 @@
 package app
 
 import (
-	"cycling-backend/internal/common"
-	"cycling-backend/pkg/domain"
-
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
+	"github.com/th-herve/cycling-app/backend/internal/common"
+	"github.com/th-herve/cycling-app/backend/pkg/domain"
 )
 
 // Convert a list of Event to a list of EventReponse.

@@ -2,10 +2,10 @@ package common
 
 import (
 	"context"
-	"cycling-backend/internal/common/db"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
+	"github.com/th-herve/cycling-app/backend/internal/common/db"
 )
 
 

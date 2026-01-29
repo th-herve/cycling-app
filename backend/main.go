@@ -1,10 +1,6 @@
 package main
 
 import (
-	"cycling-backend/internal/app"
-	"cycling-backend/internal/app/handler"
-	"cycling-backend/internal/app/storage"
-	"cycling-backend/internal/common"
 	"embed"
 	"fmt"
 	"net/http"
@@ -16,6 +12,10 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/pressly/goose/v3"
 	"github.com/rs/zerolog/log"
+	"github.com/th-herve/cycling-app/backend/internal/app"
+	"github.com/th-herve/cycling-app/backend/internal/app/handler"
+	"github.com/th-herve/cycling-app/backend/internal/app/storage"
+	"github.com/th-herve/cycling-app/backend/internal/common"
 )
 
 // prod or dev

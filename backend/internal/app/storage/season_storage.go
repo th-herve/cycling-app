@@ -2,12 +2,12 @@ package storage
 
 import (
 	"context"
-	"cycling-backend/internal/common"
-	"cycling-backend/internal/common/db"
-	"cycling-backend/pkg/domain"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
+	"github.com/th-herve/cycling-app/backend/internal/common"
+	"github.com/th-herve/cycling-app/backend/internal/common/db"
+	"github.com/th-herve/cycling-app/backend/pkg/domain"
 )
 
 type seasonStorage struct {

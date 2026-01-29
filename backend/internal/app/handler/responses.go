@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"cycling-backend/internal/common"
 	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/th-herve/cycling-app/backend/internal/common"
 )
 
 type APIResponse struct {

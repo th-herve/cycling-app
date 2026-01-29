@@ -1,10 +1,9 @@
 package app
 
 import (
-	"cycling-backend/pkg/domain"
-
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
+	"github.com/th-herve/cycling-app/backend/pkg/domain"
 )
 
 func collectRidersId(results []domain.Result) []uuid.UUID {

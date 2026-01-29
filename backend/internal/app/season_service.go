@@ -2,8 +2,9 @@ package app
 
 import (
 	"context"
-	"cycling-backend/internal/common"
-	"cycling-backend/pkg/domain"
+
+	"github.com/th-herve/cycling-app/backend/internal/common"
+	"github.com/th-herve/cycling-app/backend/pkg/domain"
 )
 
 type SeasonService struct {
