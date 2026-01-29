@@ -1,35 +1,25 @@
-package result
+package storage
 
 import (
 	"context"
 	"cycling-backend/internal/common"
 	"cycling-backend/internal/common/db"
+	"cycling-backend/pkg/domain"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 )
 
-type ResultSearchOptions struct {
-	Type []ResultType
-	// >= 0, 0 meaning no limit
-	Limit int
-}
-
-type Storage interface {
-	FindByEventId(ctx context.Context, eventId uuid.UUID, options *ResultSearchOptions) ([]Result, error)
-	FindManyByEventIds(ctx context.Context, eventsId []uuid.UUID, options *ResultSearchOptions) ([]Result, error)
-}
-
-type storage struct {
+type resultStorage struct {
 	db *sqlx.DB
 }
 
-func NewResultStorage(db *sqlx.DB) Storage {
-	return &storage{db: db}
+func NewResultStorage(db *sqlx.DB) domain.ResultStorage {
+	return &resultStorage{db: db}
 }
 
-func (s *storage) FindManyByEventIds(ctx context.Context, eventsId []uuid.UUID, options *ResultSearchOptions) ([]Result, error) {
+func (s *resultStorage) FindManyByEventIds(ctx context.Context, eventsId []uuid.UUID, options *domain.ResultSearchOptions) ([]domain.Result, error) {
 	queryBuilder := db.Q.Select("*").From("results").Where(squirrel.Eq{"event_id": eventsId})
 
 	// since we don't just want to limit the number of row returned, but limit for each result type,
@@ -53,7 +43,7 @@ func (s *storage) FindManyByEventIds(ctx context.Context, eventsId []uuid.UUID, 
 		return nil, err
 	}
 
-	var result []Result
+	var result []domain.Result
 
 	err = s.db.Select(&result, query, args...)
 
@@ -64,7 +54,7 @@ func (s *storage) FindManyByEventIds(ctx context.Context, eventsId []uuid.UUID, 
 	return result, nil
 }
 
-func (s *storage) FindByEventId(ctx context.Context, eventId uuid.UUID, options *ResultSearchOptions) ([]Result, error) {
+func (s *resultStorage) FindByEventId(ctx context.Context, eventId uuid.UUID, options *domain.ResultSearchOptions) ([]domain.Result, error) {
 
 	queryBuilder := db.Q.Select("*").From("results").Where(squirrel.Eq{"event_id": eventId})
 
@@ -85,7 +75,7 @@ func (s *storage) FindByEventId(ctx context.Context, eventId uuid.UUID, options 
 		return nil, err
 	}
 
-	var results []Result
+	var results []domain.Result
 
 	err = s.db.Select(&results, query, args...)
 

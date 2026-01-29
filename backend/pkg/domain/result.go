@@ -1,4 +1,4 @@
-package result
+package domain
 
 import (
 	"cycling-backend/internal/common"

@@ -3,29 +3,29 @@ package app
 import (
 	"context"
 	"cycling-backend/internal/common"
-	"cycling-backend/internal/domain/result"
+	"cycling-backend/pkg/domain"
 
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 )
 
 type ResultService struct {
-	storage        result.Storage
+	storage        domain.ResultStorage
 	countryStorage common.CountryStorage
 }
 
-type ResultsByType = map[result.ResultType][]result.Result
+type ResultsByType = map[domain.ResultType][]domain.Result
 
 
 type ResultHydrationContext struct {
 	Countries common.CountryMap
 }
 
-func NewResultService(storage result.Storage, countryStorage common.CountryStorage) *ResultService {
+func NewResultService(storage domain.ResultStorage, countryStorage common.CountryStorage) *ResultService {
 	return &ResultService{storage: storage, countryStorage: countryStorage}
 }
 
-func (s *ResultService) FindManyByEventIds(ctx context.Context, eventsId []uuid.UUID, options *result.ResultSearchOptions) ([]result.Result, error) {
+func (s *ResultService) FindManyByEventIds(ctx context.Context, eventsId []uuid.UUID, options *domain.ResultSearchOptions) ([]domain.Result, error) {
 	results, err := s.storage.FindManyByEventIds(ctx, eventsId, options)
 
 	if err != nil {

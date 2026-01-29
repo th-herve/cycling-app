@@ -3,11 +3,8 @@ package main
 import (
 	"cycling-backend/internal/app"
 	"cycling-backend/internal/app/handler"
+	"cycling-backend/internal/app/storage"
 	"cycling-backend/internal/common"
-	"cycling-backend/internal/domain/event"
-	"cycling-backend/internal/domain/result"
-	"cycling-backend/internal/domain/rider"
-	"cycling-backend/internal/domain/season"
 	"embed"
 	"fmt"
 	"net/http"
@@ -102,18 +99,18 @@ func main() {
 
 	applyMigrations(db)
 
-	seasonStorage := season.NewSeasonStorage(db)
+	seasonStorage := storage.NewSeasonStorage(db)
 	seasonService := app.NewSeasonService(seasonStorage)
 
 	countryStorage := common.NewCountryStorageStorage(db)
 
-	resultStorage := result.NewResultStorage(db)
+	resultStorage := storage.NewResultStorage(db)
 	resultService := app.NewResultService(resultStorage, countryStorage)
 
-	riderStorage := rider.NewRiderStorage(db)
+	riderStorage := storage.NewRiderStorage(db)
 	riderService := app.NewRiderService(riderStorage, countryStorage)
 
-	eventStorage := event.NewEventStorage(db)
+	eventStorage := storage.NewEventStorage(db)
 	eventService := app.NewEventService(eventStorage, seasonService, resultService, riderService, countryStorage)
 	eventHandler := handler.NewEventHandler(eventService)
 

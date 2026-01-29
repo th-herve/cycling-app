@@ -2,15 +2,13 @@ package app
 
 import (
 	"cycling-backend/internal/common"
-	"cycling-backend/internal/domain/event"
-	"cycling-backend/internal/domain/result"
-	"cycling-backend/internal/domain/rider"
+	"cycling-backend/pkg/domain"
 
 	"github.com/google/uuid"
 )
 
 type EventResponse struct {
-	event.Event
+	domain.Event
 	Country    *common.CountrySnapshot `json:"country,omitempty"`
 	Stages     []*EventResponse        `json:"stages,omitempty"`
 	ParentName *string                 `json:"parentName,omitempty"`
@@ -28,7 +26,7 @@ type ResultSnapshot struct {
 	Rider RiderSnapshot `json:"rider"`
 }
 
-func ResultToSnapshot(result result.Result) ResultSnapshot {
+func ResultToSnapshot(result domain.Result) ResultSnapshot {
 	snapshot := ResultSnapshot{}
 	if result.Rank != nil {
 		snapshot.Rank = *result.Rank
@@ -44,7 +42,7 @@ type RiderSnapshot struct {
 	Team        *TeamSnapshot           `json:"team,omitempty"`
 }
 
-func RiderToSnapshot(rider rider.Rider) RiderSnapshot {
+func RiderToSnapshot(rider domain.Rider) RiderSnapshot {
 	return RiderSnapshot{
 		ID: rider.ID,
 		FirstName: rider.FirstName,

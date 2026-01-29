@@ -1,13 +1,13 @@
 package app
 
 import (
-	"cycling-backend/internal/domain/result"
+	"cycling-backend/pkg/domain"
 
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 )
 
-func collectRidersId(results []result.Result) []uuid.UUID {
+func collectRidersId(results []domain.Result) []uuid.UUID {
 	seen := map[uuid.UUID]bool{}
 	ridersId := []uuid.UUID{}
 

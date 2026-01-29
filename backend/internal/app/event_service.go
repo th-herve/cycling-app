@@ -3,15 +3,13 @@ package app
 import (
 	"context"
 	"cycling-backend/internal/common"
-	"cycling-backend/internal/domain/event"
-	"cycling-backend/internal/domain/result"
-	"cycling-backend/internal/domain/rider"
+	"cycling-backend/pkg/domain"
 
 	"github.com/rs/zerolog/log"
 )
 
 type EventService struct {
-	storage        event.Storage
+	storage        domain.EventStorage
 	seasonService  *SeasonService
 	resultService  *ResultService
 	riderService   *RiderService
@@ -20,12 +18,12 @@ type EventService struct {
 
 type EventHydrationContext struct {
 	Countries common.CountryMap
-	Results   []result.Result
-	Riders    []rider.Rider
+	Results   []domain.Result
+	Riders    []domain.Rider
 }
 
 func NewEventService(
-	storage event.Storage,
+	storage domain.EventStorage,
 	seasonService *SeasonService,
 	resultService *ResultService,
 	riderService *RiderService,
@@ -74,9 +72,9 @@ func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender com
 
 	eventsId := collectEventsId(events)
 	results, err := s.resultService.FindManyByEventIds(ctx, eventsId,
-		&result.ResultSearchOptions{Limit: 3, Type: []result.ResultType{result.ResultTypeGeneral}})
+		&domain.ResultSearchOptions{Limit: 3, Type: []domain.ResultType{domain.ResultTypeGeneral}})
 
-	var riders []rider.Rider
+	var riders []domain.Rider
 	if err != nil {
 		log.Warn().Err(err).Msg("Error getting results, they won't be added to the response")
 	} else {

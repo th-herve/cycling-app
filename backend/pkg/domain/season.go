@@ -1,4 +1,4 @@
-package season
+package domain
 
 import (
 	"cycling-backend/internal/common"

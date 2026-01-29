@@ -1,27 +1,24 @@
-package event
+package storage
 
 import (
 	"context"
 	"cycling-backend/internal/common/db"
+	"cycling-backend/pkg/domain"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 )
 
-type Storage interface {
-	FindAllBySeason(ctx context.Context, seasonId uuid.UUID) ([]*Event, error)
-}
-
-type storage struct {
+type eventStorage struct {
 	db *sqlx.DB
 }
 
-func NewEventStorage(db *sqlx.DB) Storage {
-	return &storage{db: db}
+func NewEventStorage(db *sqlx.DB) domain.EventStorage {
+	return &eventStorage{db: db}
 }
 
-func (s *storage) FindAllBySeason(ctx context.Context, seasonId uuid.UUID) ([]*Event, error) {
+func (s *eventStorage) FindAllBySeason(ctx context.Context, seasonId uuid.UUID) ([]*domain.Event, error) {
 
 	query, args, err := db.Q.Select("*").From("events").Where(squirrel.Eq{"season_id": seasonId}).OrderBy("start").ToSql()
 
@@ -29,7 +26,7 @@ func (s *storage) FindAllBySeason(ctx context.Context, seasonId uuid.UUID) ([]*E
 		return nil, err
 	}
 
-	var events []*Event
+	var events []*domain.Event
 
 	err = s.db.Select(&events, query, args...)
 

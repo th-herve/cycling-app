@@ -1,4 +1,4 @@
-package discipline
+package domain
 
 import (
 	"cycling-backend/internal/common"
