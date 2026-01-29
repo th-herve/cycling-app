@@ -8,7 +8,7 @@ import (
 type Discipline struct {
 	ID   uuid.UUID `db:"id" json:"id"`
 	Name string    `db:"name" json:"name"`
-	Code *string   `db:"code" json:"code,omitempty"`
+	Code string    `db:"code" json:"code,omitempty"`
 
 	common.Timestamps
 }
