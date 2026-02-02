@@ -12,5 +12,19 @@ services:
     volumes:
       - cycling_db_dev:/var/lib/postgresql
 
+  cycling_db_test:
+    container_name: cycling_db_dev_test
+    image: postgres:18.0
+    restart: no
+    ports:
+      - '5433:5432'
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_DB=cycling_test
+      - POSTGRES_PASSWORD=admin
+    volumes:
+      - cycling_db_dev_test:/var/lib/postgresql
+
 volumes:
   cycling_db_dev:
+  cycling_db_dev_test:
