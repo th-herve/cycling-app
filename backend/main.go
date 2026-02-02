@@ -102,7 +102,7 @@ func main() {
 	seasonStorage := storage.NewSeasonStorage(db)
 	seasonService := app.NewSeasonService(seasonStorage)
 
-	countryStorage := common.NewCountryStorageStorage(db)
+	countryStorage := storage.NewCountryStorageStorage(db)
 
 	resultStorage := storage.NewResultStorage(db)
 	resultService := app.NewResultService(resultStorage, countryStorage)

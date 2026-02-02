@@ -25,3 +25,10 @@ type TeamSeason struct {
 
 	common.Timestamps
 }
+
+type TeamCategory struct {
+	ID           uuid.UUID `db:"id" json:"id"`
+	Name         string    `db:"name" json:"name"`
+	Code         string    `db:"code" json:"code"`
+	DisciplineID uuid.UUID `db:"discipline_id" json:"disciplineId"`
+}

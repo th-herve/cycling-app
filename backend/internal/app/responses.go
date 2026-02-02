@@ -2,13 +2,12 @@ package app
 
 import (
 	"github.com/google/uuid"
-	"github.com/th-herve/cycling-app/backend/internal/common"
 	"github.com/th-herve/cycling-app/backend/pkg/domain"
 )
 
 type EventResponse struct {
 	domain.Event
-	Country    *common.CountrySnapshot `json:"country,omitempty"`
+	Country    *domain.CountrySnapshot `json:"country,omitempty"`
 	Stages     []*EventResponse        `json:"stages,omitempty"`
 	ParentName *string                 `json:"parentName,omitempty"`
 	Results    *ResultsSnapshot        `json:"results,omitempty"`
@@ -37,7 +36,7 @@ type RiderSnapshot struct {
 	ID          uuid.UUID               `json:"id"`
 	FirstName   string                  `json:"firstName"`
 	LastName    string                  `json:"lastName"`
-	Nationality *common.CountrySnapshot `json:"nationality,omitempty"`
+	Nationality *domain.CountrySnapshot `json:"nationality,omitempty"`
 	Team        *TeamSnapshot           `json:"team,omitempty"`
 }
 
@@ -53,5 +52,5 @@ type TeamSnapshot struct {
 	ID           uuid.UUID               `json:"id"`
 	Name         string                  `json:"name"`
 	Abbreviation string                  `json:"abbreviation"`
-	Country      *common.CountrySnapshot `json:"country,omitempty"`
+	Country      *domain.CountrySnapshot `json:"country,omitempty"`
 }

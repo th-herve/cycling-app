@@ -11,15 +11,21 @@ import (
 	"github.com/th-herve/cycling-app/backend/pkg/domain"
 )
 
-type resultStorage struct {
+type ResultSearchOptions struct {
+	Type []domain.ResultType
+	// >= 0, 0 meaning no limit
+	Limit int
+}
+
+type ResultStorage struct {
 	db *sqlx.DB
 }
 
-func NewResultStorage(db *sqlx.DB) domain.ResultStorage {
-	return &resultStorage{db: db}
+func NewResultStorage(db *sqlx.DB) *ResultStorage {
+	return &ResultStorage{db: db}
 }
 
-func (s *resultStorage) FindManyByEventIds(ctx context.Context, eventsId []uuid.UUID, options *domain.ResultSearchOptions) ([]domain.Result, error) {
+func (s *ResultStorage) FindManyByEventIds(ctx context.Context, eventsId []uuid.UUID, options *ResultSearchOptions) ([]domain.Result, error) {
 	queryBuilder := db.Q.Select("*").From("results").Where(squirrel.Eq{"event_id": eventsId})
 
 	// since we don't just want to limit the number of row returned, but limit for each result type,
@@ -54,7 +60,7 @@ func (s *resultStorage) FindManyByEventIds(ctx context.Context, eventsId []uuid.
 	return result, nil
 }
 
-func (s *resultStorage) FindByEventId(ctx context.Context, eventId uuid.UUID, options *domain.ResultSearchOptions) ([]domain.Result, error) {
+func (s *ResultStorage) FindByEventId(ctx context.Context, eventId uuid.UUID, options *ResultSearchOptions) ([]domain.Result, error) {
 
 	queryBuilder := db.Q.Select("*").From("results").Where(squirrel.Eq{"event_id": eventId})
 

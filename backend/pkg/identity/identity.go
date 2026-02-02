@@ -8,6 +8,7 @@ import (
 	"unicode"
 
 	"github.com/google/uuid"
+	"github.com/th-herve/cycling-app/backend/pkg/domain"
 	"golang.org/x/text/unicode/norm"
 )
 
@@ -41,12 +42,12 @@ func RiderID(firstName, lastName, nationality string, dob time.Time) uuid.UUID {
 	return uuid.NewSHA1(NamespaceRider, data)
 }
 
-func SeasonID(year int, gender string) uuid.UUID {
-	return uuid.NewSHA1(NamespaceSeason, []byte(strconv.Itoa(year)+"|"+gender))
+func SeasonID(year int, gender domain.Gender) uuid.UUID {
+	return uuid.NewSHA1(NamespaceSeason, []byte(strconv.Itoa(year)+"|"+string(gender)))
 }
 
-func TeamSeasonID(abbreviation, categoryCode string, seasonYear int) uuid.UUID {
-	data := fmt.Appendf(nil, "%s|%s|%d", abbreviation, categoryCode, seasonYear)
+func TeamSeasonID(abbreviation string, teamCategoryID, seasonID uuid.UUID) uuid.UUID {
+	data := fmt.Appendf(nil, "%s|%s|%s", abbreviation, teamCategoryID.String(), seasonID.String())
 	return uuid.NewSHA1(NamespaceTeamSeason, data)
 }
 

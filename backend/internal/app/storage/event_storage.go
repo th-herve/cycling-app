@@ -10,15 +10,15 @@ import (
 	"github.com/th-herve/cycling-app/backend/pkg/domain"
 )
 
-type eventStorage struct {
+type EventStorage struct {
 	db *sqlx.DB
 }
 
-func NewEventStorage(db *sqlx.DB) domain.EventStorage {
-	return &eventStorage{db: db}
+func NewEventStorage(db *sqlx.DB) *EventStorage {
+	return &EventStorage{db: db}
 }
 
-func (s *eventStorage) FindAllBySeason(ctx context.Context, seasonId uuid.UUID) ([]*domain.Event, error) {
+func (s *EventStorage) FindAllBySeason(ctx context.Context, seasonId uuid.UUID) ([]*domain.Event, error) {
 
 	query, args, err := db.Q.Select("*").From("events").Where(squirrel.Eq{"season_id": seasonId}).OrderBy("start").ToSql()
 

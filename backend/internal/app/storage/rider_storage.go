@@ -10,15 +10,15 @@ import (
 	"github.com/th-herve/cycling-app/backend/pkg/domain"
 )
 
-type riderStorage struct {
+type RiderStorage struct {
 	db *sqlx.DB
 }
 
-func NewRiderStorage(db *sqlx.DB) domain.RiderStorage {
-	return &riderStorage{db: db}
+func NewRiderStorage(db *sqlx.DB) *RiderStorage {
+	return &RiderStorage{db: db}
 }
 
-func (s *riderStorage) FindById(ctx context.Context, riderId uuid.UUID) (domain.Rider, error) {
+func (s *RiderStorage) FindById(ctx context.Context, riderId uuid.UUID) (domain.Rider, error) {
 	query, args, err := db.Q.Select("*").From("riders").Where(squirrel.Eq{"id": riderId.String()}).ToSql()
 
 	if err != nil {
@@ -36,7 +36,7 @@ func (s *riderStorage) FindById(ctx context.Context, riderId uuid.UUID) (domain.
 	return rider, nil
 }
 
-func (s *riderStorage) FindManyIds(ctx context.Context, ridersId []uuid.UUID) ([]domain.Rider, error) {
+func (s *RiderStorage) FindManyIds(ctx context.Context, ridersId []uuid.UUID) ([]domain.Rider, error) {
 	query, args, err := db.Q.Select("*").From("riders").Where(squirrel.Eq{"id": ridersId}).ToSql()
 
 	if err != nil {

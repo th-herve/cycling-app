@@ -3,19 +3,20 @@ package app
 import (
 	"context"
 
+	"github.com/th-herve/cycling-app/backend/internal/app/storage"
 	"github.com/th-herve/cycling-app/backend/internal/common"
 	"github.com/th-herve/cycling-app/backend/pkg/domain"
 )
 
 type SeasonService struct {
-	storage domain.SeasonStorage
+	storage *storage.SeasonStorage
 }
 
-func NewSeasonService(storage domain.SeasonStorage) *SeasonService {
+func NewSeasonService(storage *storage.SeasonStorage) *SeasonService {
 	return &SeasonService{storage: storage}
 }
 
-func (s *SeasonService) FindOne(ctx context.Context, year int, gender common.Gender) (*domain.Season, error) {
+func (s *SeasonService) FindOne(ctx context.Context, year int, gender domain.Gender) (*domain.Season, error) {
 	season, err := s.storage.FindOne(ctx, year, gender)
 
 	if err != nil {

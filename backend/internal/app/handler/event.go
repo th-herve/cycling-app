@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/th-herve/cycling-app/backend/internal/app"
 	"github.com/th-herve/cycling-app/backend/internal/common"
+	"github.com/th-herve/cycling-app/backend/pkg/domain"
 )
 
 type EventHandler struct {
@@ -31,7 +32,7 @@ func (sc *EventHandler) Get(c *gin.Context) {
 		return
 	}
 
-	gender, err := common.ParseGender(genderQuery)
+	gender, err := domain.ParseGender(genderQuery)
 
 	if err != nil {
 		c.Error(common.ErrInvalidInput)

@@ -1,4 +1,4 @@
-package common
+package storage
 
 import (
 	"context"
@@ -6,27 +6,22 @@ import (
 	"github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
 	"github.com/th-herve/cycling-app/backend/internal/common/db"
+	"github.com/th-herve/cycling-app/backend/pkg/domain"
 )
 
+type CountryMap map[string]*domain.Country
 
-type CountryMap map[string]*Country
-
-type CountryStorage interface {
-	FindOneByAlpha3Code(ctx context.Context, code string) (*Country, error)
-	FindManyByAlpha3Code(ctx context.Context, codes []string) (CountryMap, error)
-}
-
-type countryStorage struct {
+type CountryStorage struct {
 	db *sqlx.DB
 }
 
-func NewCountryStorageStorage(db *sqlx.DB) CountryStorage {
-	return &countryStorage{db: db}
+func NewCountryStorageStorage(db *sqlx.DB) *CountryStorage {
+	return &CountryStorage{db: db}
 }
 
-func (s *countryStorage) FindOneByAlpha3Code(ctx context.Context, code string) (*Country, error) {
+func (s *CountryStorage) FindOneByAlpha3Code(ctx context.Context, code string) (*domain.Country, error) {
 
-	var country Country
+	var country domain.Country
 	query, args, err := db.Q.Select("*").From("countries").Where(squirrel.Eq{"alpha_3_code": code}).ToSql()
 
 	if err != nil {
@@ -42,7 +37,7 @@ func (s *countryStorage) FindOneByAlpha3Code(ctx context.Context, code string) (
 	return &country, nil
 }
 
-func (s *countryStorage) FindManyByAlpha3Code(ctx context.Context, codes []string) (CountryMap, error) {
+func (s *CountryStorage) FindManyByAlpha3Code(ctx context.Context, codes []string) (CountryMap, error) {
 
 	query, args, err := db.Q.Select("*").From("countries").Where(squirrel.Eq{"alpha_3_code": codes}).ToSql()
 
@@ -50,7 +45,7 @@ func (s *countryStorage) FindManyByAlpha3Code(ctx context.Context, codes []strin
 		return nil, err
 	}
 
-	countries := []*Country{}
+	countries := []*domain.Country{}
 
 	err = s.db.Select(&countries, query, args...)
 
@@ -61,7 +56,7 @@ func (s *countryStorage) FindManyByAlpha3Code(ctx context.Context, codes []strin
 	return s.groupByCode(countries), nil
 }
 
-func (s *countryStorage) groupByCode(countries []*Country) CountryMap {
+func (s *CountryStorage) groupByCode(countries []*domain.Country) CountryMap {
 	result := CountryMap{}
 
 	for _, country := range countries {

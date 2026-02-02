@@ -5,16 +5,17 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
+	"github.com/th-herve/cycling-app/backend/internal/app/storage"
 	"github.com/th-herve/cycling-app/backend/internal/common"
 	"github.com/th-herve/cycling-app/backend/pkg/domain"
 )
 
 type RiderService struct {
-	storage        domain.RiderStorage
-	countryStorage common.CountryStorage
+	storage        *storage.RiderStorage
+	countryStorage *storage.CountryStorage
 }
 
-func NewRiderService(storage domain.RiderStorage, countryStorage common.CountryStorage) *RiderService {
+func NewRiderService(storage *storage.RiderStorage, countryStorage *storage.CountryStorage) *RiderService {
 	return &RiderService{storage: storage, countryStorage: countryStorage}
 }
 

@@ -3,7 +3,7 @@ package app
 import (
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
-	"github.com/th-herve/cycling-app/backend/internal/common"
+	"github.com/th-herve/cycling-app/backend/internal/app/storage"
 	"github.com/th-herve/cycling-app/backend/pkg/domain"
 )
 
@@ -89,7 +89,7 @@ func convertToEventResponse(events []*domain.Event) []*EventResponse {
 	return response
 }
 
-func hydrateCountry(events []*EventResponse, countryMap common.CountryMap) {
+func hydrateCountry(events []*EventResponse, countryMap storage.CountryMap) {
 	for _, event := range events {
 
 		if event.CountryCode != nil {
@@ -103,7 +103,7 @@ func hydrateCountry(events []*EventResponse, countryMap common.CountryMap) {
 				continue
 			}
 
-			event.Country = common.CountryToSnapshot(*c)
+			event.Country = domain.CountryToSnapshot(*c)
 		}
 	}
 }

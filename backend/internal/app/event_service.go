@@ -4,30 +4,31 @@ import (
 	"context"
 
 	"github.com/rs/zerolog/log"
+	"github.com/th-herve/cycling-app/backend/internal/app/storage"
 	"github.com/th-herve/cycling-app/backend/internal/common"
 	"github.com/th-herve/cycling-app/backend/pkg/domain"
 )
 
 type EventService struct {
-	storage        domain.EventStorage
+	storage        *storage.EventStorage
 	seasonService  *SeasonService
 	resultService  *ResultService
 	riderService   *RiderService
-	countryStorage common.CountryStorage
+	countryStorage *storage.CountryStorage
 }
 
 type EventHydrationContext struct {
-	Countries common.CountryMap
+	Countries storage.CountryMap
 	Results   []domain.Result
 	Riders    []domain.Rider
 }
 
 func NewEventService(
-	storage domain.EventStorage,
+	storage *storage.EventStorage,
 	seasonService *SeasonService,
 	resultService *ResultService,
 	riderService *RiderService,
-	countryStorage common.CountryStorage,
+	countryStorage *storage.CountryStorage,
 ) *EventService {
 	return &EventService{
 		storage:        storage,
@@ -38,7 +39,7 @@ func NewEventService(
 	}
 }
 
-func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender common.Gender) ([]*EventResponse, error) {
+func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender domain.Gender) ([]*EventResponse, error) {
 	season, err := s.seasonService.FindOne(ctx, year, gender)
 
 	if err != nil {
@@ -72,7 +73,7 @@ func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender com
 
 	eventsId := collectEventsId(events)
 	results, err := s.resultService.FindManyByEventIds(ctx, eventsId,
-		&domain.ResultSearchOptions{Limit: 3, Type: []domain.ResultType{domain.ResultTypeGeneral}})
+		&storage.ResultSearchOptions{Limit: 3, Type: []domain.ResultType{domain.ResultTypeGeneral}})
 
 	var riders []domain.Rider
 	if err != nil {
