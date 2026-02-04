@@ -28,6 +28,7 @@ var DbConfig struct {
 	password string
 	name     string
 	host     string
+	port     string
 }
 
 // next comment is read by go to embed the migration files
@@ -50,6 +51,7 @@ func init() {
 	DbConfig.user = os.Getenv("DB_USER")
 	DbConfig.password = os.Getenv("DB_PASSWORD")
 	DbConfig.host = os.Getenv("DB_HOST")
+	DbConfig.port = os.Getenv("DB_PORT")
 
 	if DbConfig.host == "" {
 		DbConfig.host = "localhost"
@@ -78,8 +80,8 @@ func applyMigrations(db *sqlx.DB) {
 
 func main() {
 
-	dbDataSource := fmt.Sprintf("user=%s password=%s host=%s port=5432 dbname=%s sslmode=disable",
-		DbConfig.user, DbConfig.password, DbConfig.host, DbConfig.name)
+	dbDataSource := fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s sslmode=disable",
+		DbConfig.user, DbConfig.password, DbConfig.host, DbConfig.port, DbConfig.name)
 
 	db, err := sqlx.Connect("postgres", dbDataSource)
 	if err != nil {
@@ -87,6 +89,7 @@ func main() {
 			Str("dbUser", DbConfig.user).
 			Str("dbName", DbConfig.name).
 			Str("host", DbConfig.host).
+			Str("dbPort", DbConfig.port).
 			Msg("Failed to connect to database")
 	}
 	defer db.Close()
