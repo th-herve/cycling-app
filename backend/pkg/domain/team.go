@@ -31,4 +31,5 @@ type TeamCategory struct {
 	Name         string    `db:"name" json:"name"`
 	Code         string    `db:"code" json:"code"`
 	DisciplineID uuid.UUID `db:"discipline_id" json:"disciplineId"`
+	Gender       Gender    `db:"gender" json:"gender"`
 }
