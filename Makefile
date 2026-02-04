@@ -3,6 +3,10 @@ DB_USER=admin
 DB_NAME=cycling
 DOCKER_DB_NAME=cycling_db_dev
 
+DB_TEST_NAME=cycling_test
+DOCKER_DB_TEST_NAME=cycling_db_dev_test
+DOCKER_DB_TEST_VOLUME=cycling-code_cycling_db_dev_test
+
 DB_BACKUP_DATE=$(shell date +'%Y-%m-%dT%Hh%M')
 DB_BACKUP_NAME=cycling-db-backup-data
 
@@ -50,6 +54,8 @@ db-trucate: # truncate the database table with the ./script/truncate.sql file
 
 db-restore: db-trucate db-apply # truncate the db and apply the given sql file. Usage: 'make db-restore FILE=backup.sql'
 
+db-test-rm: # delete the volume for the test database
+	docker volume rm $(DOCKER_DB_TEST_VOLUME)
 
 frontend-dev: # run the frontend dev
 	cd frontend && npm run dev
