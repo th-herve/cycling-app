@@ -51,6 +51,10 @@ func TeamSeasonID(abbreviation string, teamCategoryID, seasonID uuid.UUID) uuid.
 	return uuid.NewSHA1(NamespaceTeamSeason, data)
 }
 
+func TeamID() uuid.UUID {
+	return uuid.New()
+}
+
 // Generate an id for an event of type 'race'
 //
 // !! Do not use for event of type stage
