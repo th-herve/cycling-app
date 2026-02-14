@@ -1,24 +1,17 @@
 package domain
 
-import (
-	"github.com/google/uuid"
-	"github.com/th-herve/cycling-app/backend/internal/common"
-)
-
 type Discipline struct {
-	ID   uuid.UUID `db:"id" json:"id"`
-	Name string    `db:"name" json:"name"`
-	Code string    `db:"code" json:"code,omitempty"`
+	Code string `db:"code" json:"code,omitempty"`
+	Name string `db:"name" json:"name"`
 
-	common.Timestamps
+	Timestamps
 }
 
 type Category struct {
-	ID           uuid.UUID `db:"id" json:"id"`
-	Name         string    `db:"name" json:"name"`
-	DisciplineID uuid.UUID `db:"discipline_id" json:"disciplineId"`
-	Code         string    `db:"code" json:"code"`
-	Gender       Gender    `db:"gender" json:"gender"`
+	Code           string `db:"code" json:"code"`
+	Name           string `db:"name" json:"name"`
+	DisciplineCode string `db:"discipline_code" json:"disciplineCode"`
+	Gender         Gender `db:"gender" json:"gender"`
 
-	common.Timestamps
+	Timestamps
 }

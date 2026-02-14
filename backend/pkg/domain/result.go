@@ -2,7 +2,6 @@ package domain
 
 import (
 	"github.com/google/uuid"
-	"github.com/th-herve/cycling-app/backend/internal/common"
 )
 
 type ResultType string
@@ -50,5 +49,5 @@ type Result struct {
 	Points       *int16        `db:"points,omitempty" json:"points,omitempty"`
 	UCIPoints    *int16        `db:"uci_points,omitempty" json:"uciPoints,omitempty"`
 
-	common.Timestamps
+	Timestamps
 }

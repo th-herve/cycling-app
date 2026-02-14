@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/th-herve/cycling-app/backend/internal/common"
 )
 
 type Rider struct {
@@ -15,5 +14,5 @@ type Rider struct {
 	Nationality *string    `db:"nationality" json:"countryCode,omitempty"`
 	Gender      Gender     `db:"gender" json:"gender"`
 
-	common.Timestamps
+	Timestamps
 }

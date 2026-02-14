@@ -1,9 +1,5 @@
 package domain
 
-import (
-	"github.com/th-herve/cycling-app/backend/internal/common"
-)
-
 type Country struct {
 	Alpha3      string `db:"alpha_3_code" json:"alpha3"`
 	Alpha2      string `db:"alpha_2_code" json:"alpha2"`
@@ -12,7 +8,7 @@ type Country struct {
 	NumericCode string `db:"numeric_code"`
 	Region      string `db:"region"` // Europe, NA...
 
-	common.Timestamps
+	Timestamps
 }
 
 type CountrySnapshot struct {

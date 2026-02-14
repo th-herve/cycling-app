@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/th-herve/cycling-app/backend/internal/common"
 )
 
 type EventType string
@@ -27,17 +26,20 @@ const (
 )
 
 type EventSeries struct {
-	ID uuid.UUID `db:"id" json:"id"`
-	common.Timestamps
+	ID   uuid.UUID `db:"id" json:"id"`
+	Name *string   `db:"name" json:"name"`
+
+	Timestamps
 }
 
 type Event struct {
 	ID             uuid.UUID   `db:"id" json:"id"`
 	Name           string      `db:"name" json:"name"`
-	EventSeriesID  *uuid.UUID  `db:"event_series_id" json:"eventSeriesId,omitempty"`
-	ParentEventID  *uuid.UUID  `db:"parent_event_id" json:"parentEventId,omitempty"`
-	CategoryID     *uuid.UUID  `db:"category_id" json:"categoryId,omitempty"`
-	SeasonID       uuid.UUID   `db:"season_id" json:"seasonId"`
+	EventSeriesID  uuid.UUID   `db:"event_series_id" json:"eventSeriesId,omitempty"`
+	ParentEventID  uuid.UUID   `db:"parent_event_id" json:"parentEventId,omitempty"`
+	CategoryCode   *string     `db:"category_code" json:"categoryCode,omitempty"`
+	SeasonYear     int         `db:"season_year" json:"seasonYear"`
+	SeasonGender   Gender      `db:"season_gender" json:"seasonGender"`
 	Classification *string     `db:"classification" json:"classification,omitempty"`
 	Type           EventType   `db:"type" json:"type"`
 	Status         EventStatus `db:"status" json:"status"`
@@ -50,5 +52,5 @@ type Event struct {
 	IsSingleDay    bool        `db:"is_single_day" json:"isSingleDay"`
 	CountryCode    *string     `db:"country_code" json:"countryCode,omitempty"`
 
-	common.Timestamps
+	Timestamps
 }

@@ -2,34 +2,33 @@ package domain
 
 import (
 	"github.com/google/uuid"
-	"github.com/th-herve/cycling-app/backend/internal/common"
 )
 
 /*
 * This entity group TeamSeason together to keep track of team changing name and other info through season
  */
 type Team struct {
-	ID uuid.UUID `db:"id" json:"id"`
-	common.Timestamps
+	ID   uuid.UUID `db:"id" json:"id"`
+	Name *string   `db:"name" json:"name"`
+	Timestamps
 }
 
 type TeamSeason struct {
-	ID       uuid.UUID `db:"id" json:"id"`
-	TeamID   uuid.UUID `db:"team_id" json:"parentTeamId"`
-	SeasonID uuid.UUID `db:"season_id" json:"seasonId"`
+	ID               uuid.UUID `db:"id" json:"id"`
+	TeamID           uuid.UUID `db:"team_id" json:"parentTeamId"`
+	SeasonYear       int       `db:"season_year" json:"seasonYear"`
+	SeasonGender     Gender    `db:"season_gender" json:"seasonGender"`
+	Name             string    `db:"name" json:"name"`
+	Abbreviation     string    `db:"abbreviation" json:"abbreviation"`
+	TeamCategoryCode string    `db:"team_category_code" json:"teamCategoryCode"`
+	CountryCode      *string   `db:"country_code" json:"countryCode,omitempty"`
 
-	Name           string    `db:"name" json:"name"`
-	Abbreviation   string    `db:"abbreviation" json:"abbreviation"`
-	TeamCategoryID uuid.UUID `db:"team_category_id" json:"teamCategoryID"`
-	CountryCode    *string   `db:"country_code" json:"countryCode,omitempty"`
-
-	common.Timestamps
+	Timestamps
 }
 
 type TeamCategory struct {
-	ID           uuid.UUID `db:"id" json:"id"`
-	Name         string    `db:"name" json:"name"`
-	Code         string    `db:"code" json:"code"`
-	DisciplineID uuid.UUID `db:"discipline_id" json:"disciplineId"`
-	Gender       Gender    `db:"gender" json:"gender"`
+	Code           string `db:"code" json:"code"`
+	Name           string `db:"name" json:"name"`
+	DisciplineCode string `db:"discipline_code" json:"discipline"`
+	Gender         Gender `db:"gender" json:"gender"`
 }
