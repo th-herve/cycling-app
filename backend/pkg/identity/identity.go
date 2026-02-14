@@ -2,7 +2,6 @@ package identity
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 	"unicode"
@@ -13,27 +12,11 @@ import (
 )
 
 var (
-	NamespaceDiscipline   = uuid.MustParse("00000000-0000-0000-0000-000000000001")
-	NamespaceCategory     = uuid.MustParse("00000000-0000-0000-0000-000000000002")
-	NamespaceTeamCategory = uuid.MustParse("00000000-0000-0000-0000-000000000003")
-	NamespaceRider        = uuid.MustParse("00000000-0000-0000-0000-000000000004")
-	NamespaceSeason       = uuid.MustParse("00000000-0000-0000-0000-000000000005")
-	NamespaceTeamSeason   = uuid.MustParse("00000000-0000-0000-0000-000000000006")
-	NamespaceEvent        = uuid.MustParse("00000000-0000-0000-0000-000000000007")
-	NamespaceResult       = uuid.MustParse("00000000-0000-0000-0000-000000000008")
+	NamespaceRider        = uuid.MustParse("00000000-0000-0000-0000-000000000001")
+	NamespaceTeamSeason   = uuid.MustParse("00000000-0000-0000-0000-000000000002")
+	NamespaceEvent        = uuid.MustParse("00000000-0000-0000-0000-000000000003")
+	NamespaceResult       = uuid.MustParse("00000000-0000-0000-0000-000000000004")
 )
-
-func DisciplineID(code string) uuid.UUID {
-	return uuid.NewSHA1(NamespaceDiscipline, []byte(code))
-}
-
-func CategoryID(code string) uuid.UUID {
-	return uuid.NewSHA1(NamespaceCategory, []byte(code))
-}
-
-func TeamCategoryID(code string) uuid.UUID {
-	return uuid.NewSHA1(NamespaceTeamCategory, []byte(code))
-}
 
 func RiderID(firstName, lastName, nationality string, dob time.Time) uuid.UUID {
 	dateStr := formatDateForID(dob)
@@ -42,43 +25,42 @@ func RiderID(firstName, lastName, nationality string, dob time.Time) uuid.UUID {
 	return uuid.NewSHA1(NamespaceRider, data)
 }
 
-func SeasonID(year int, gender domain.Gender) uuid.UUID {
-	return uuid.NewSHA1(NamespaceSeason, []byte(strconv.Itoa(year)+"|"+string(gender)))
-}
-
-func TeamSeasonID(abbreviation string, teamCategoryID, seasonID uuid.UUID) uuid.UUID {
-	data := fmt.Appendf(nil, "%s|%s|%s", abbreviation, teamCategoryID.String(), seasonID.String())
+func TeamSeasonID(abbreviation string, teamCategoryCode string, seasonYear int, seasonGender domain.Gender) uuid.UUID {
+	data := fmt.Appendf(nil, "%s|%s|%d|%s", abbreviation, teamCategoryCode, seasonYear, seasonGender)
 	return uuid.NewSHA1(NamespaceTeamSeason, data)
 }
 
-func TeamID() uuid.UUID {
+func NewTeamID() uuid.UUID {
 	return uuid.New()
 }
 
 // Generate an id for an event of type 'race'
 //
 // !! Do not use for event of type stage
-func EventRaceID(name string, seasonID uuid.UUID, start time.Time) uuid.UUID {
+func EventRaceID(name string, seasonYear int, seasonGender domain.Gender, start time.Time) uuid.UUID {
 	// TODO have it take the Event directly in the param to check for type == race
 	dateStr := formatDateForID(start)
 	nameN := normalizeName(name)
-	data := fmt.Appendf(nil, "%s|%s|%s", nameN, seasonID.String(), dateStr)
+	data := fmt.Appendf(nil, "%s|%d|%s|%s", nameN, seasonYear, seasonGender, dateStr)
 	return uuid.NewSHA1(NamespaceEvent, data)
 }
 
 // Generate an id for an event of type 'stage'
 //
 // !! Do not use for event of type race
-func EventStageID(name string, seasonID uuid.UUID, start time.Time, mainRaceEventID uuid.UUID) uuid.UUID {
+func EventStageID(name string, seasonYear int, seasonGender string, start time.Time, mainRaceEventID uuid.UUID) uuid.UUID {
 	// TODO have it take the Event directly in the param to check for type == stage
 	dateStr := formatDateForID(start)
 	nameN := normalizeName(name)
-	data := fmt.Appendf(nil, "%s|%s|%s|%s", nameN, seasonID.String(), dateStr, mainRaceEventID.String())
+	data := fmt.Appendf(nil, "%s|%d|%s|%s|%s", nameN, seasonYear, seasonGender, dateStr, mainRaceEventID.String())
 	return uuid.NewSHA1(NamespaceEvent, data)
 }
 
-func ResultID(resultType string, eventId uuid.UUID, rank int) uuid.UUID {
-	data := fmt.Appendf(nil, "%s|%s|%d", resultType, eventId.String(), rank)
+// Generate an id for a result row.
+//
+// ParticipantID is either a riderID or a teamSeasonId, depending on the result type.
+func ResultID(resultType domain.ResultType, eventId uuid.UUID, participantID uuid.UUID) uuid.UUID {
+	data := fmt.Appendf(nil, "%s|%s|%s", resultType, eventId.String(), participantID.String())
 	return uuid.NewSHA1(NamespaceResult, data)
 }
 
