@@ -40,25 +40,12 @@ func NewEventService(
 }
 
 func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender domain.Gender) ([]*EventResponse, error) {
-	season, err := s.seasonService.FindOne(ctx, year, gender)
+	events, err := s.storage.FindAllBySeason(ctx, year, gender)
 
 	if err != nil {
 		log.Debug().
 			Int("year", year).
 			Str("gender", string(gender)).
-			Err(err).
-			Caller().
-			Msg("Error getting season")
-		return nil, common.GetErr("EventService FindAllBySeason", err)
-	}
-
-	events, err := s.storage.FindAllBySeason(ctx, season.ID)
-
-	if err != nil {
-		log.Debug().
-			Int("year", year).
-			Str("gender", string(gender)).
-			Str("seasonId", season.ID.String()).
 			Caller().
 			Msg("Error getting events")
 		return nil, common.GetErr("EventService FindAllBySeason", err)

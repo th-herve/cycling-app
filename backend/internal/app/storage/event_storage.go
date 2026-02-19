@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/Masterminds/squirrel"
-	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/th-herve/cycling-app/backend/internal/common/db"
 	"github.com/th-herve/cycling-app/backend/pkg/domain"
@@ -18,9 +17,9 @@ func NewEventStorage(db *sqlx.DB) *EventStorage {
 	return &EventStorage{db: db}
 }
 
-func (s *EventStorage) FindAllBySeason(ctx context.Context, seasonId uuid.UUID) ([]*domain.Event, error) {
+func (s *EventStorage) FindAllBySeason(ctx context.Context, seasonYear int, seasonGender domain.Gender) ([]*domain.Event, error) {
 
-	query, args, err := db.Q.Select("*").From("events").Where(squirrel.Eq{"season_id": seasonId}).OrderBy("start").ToSql()
+	query, args, err := db.Q.Select("*").From("events").Where(squirrel.Eq{"season_year": seasonYear, "season_gender": seasonGender}).OrderBy("start").ToSql()
 
 	if err != nil {
 		return nil, err

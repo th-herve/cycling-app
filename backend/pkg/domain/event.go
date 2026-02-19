@@ -35,8 +35,8 @@ type EventSeries struct {
 type Event struct {
 	ID             uuid.UUID   `db:"id" json:"id"`
 	Name           string      `db:"name" json:"name"`
-	EventSeriesID  uuid.UUID   `db:"event_series_id" json:"eventSeriesId,omitempty"`
-	ParentEventID  uuid.UUID   `db:"parent_event_id" json:"parentEventId,omitempty"`
+	EventSeriesID  *uuid.UUID  `db:"event_series_id" json:"eventSeriesId,omitempty"`
+	ParentEventID  *uuid.UUID  `db:"parent_event_id" json:"parentEventId,omitempty"`
 	CategoryCode   *string     `db:"category_code" json:"categoryCode,omitempty"`
 	SeasonYear     int         `db:"season_year" json:"seasonYear"`
 	SeasonGender   Gender      `db:"season_gender" json:"seasonGender"`
