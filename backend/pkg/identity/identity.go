@@ -25,8 +25,8 @@ func RiderID(firstName, lastName, nationality string, dob time.Time) uuid.UUID {
 	return uuid.NewSHA1(NamespaceRider, data)
 }
 
-func TeamSeasonID(abbreviation string, teamCategoryCode string, seasonYear int, seasonGender domain.Gender) uuid.UUID {
-	data := fmt.Appendf(nil, "%s|%s|%d|%s", abbreviation, teamCategoryCode, seasonYear, seasonGender)
+func TeamSeasonID(abbreviation string, seasonYear int, seasonGender domain.Gender) uuid.UUID {
+	data := fmt.Appendf(nil, "%s|%d|%s", abbreviation, seasonYear, seasonGender)
 	return uuid.NewSHA1(NamespaceTeamSeason, data)
 }
 
