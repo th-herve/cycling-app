@@ -37,22 +37,22 @@ func NewTeamID() uuid.UUID {
 // Generate an id for an event of type 'race'
 //
 // !! Do not use for event of type stage
-func EventRaceID(name string, seasonYear int, seasonGender domain.Gender, start time.Time) uuid.UUID {
+func EventRaceID(name string, seasonGender domain.Gender, start time.Time) uuid.UUID {
 	// TODO have it take the Event directly in the param to check for type == race
 	dateStr := formatDateForID(start)
 	nameN := normalizeName(name)
-	data := fmt.Appendf(nil, "%s|%d|%s|%s", nameN, seasonYear, seasonGender, dateStr)
+	data := fmt.Appendf(nil, "%s|%s|%s", nameN, seasonGender, dateStr)
 	return uuid.NewSHA1(NamespaceEvent, data)
 }
 
 // Generate an id for an event of type 'stage'
 //
 // !! Do not use for event of type race
-func EventStageID(name string, seasonYear int, seasonGender string, start time.Time, mainRaceEventID uuid.UUID) uuid.UUID {
+func EventStageID(name string, seasonGender domain.Gender, start time.Time, mainRaceEventID uuid.UUID) uuid.UUID {
 	// TODO have it take the Event directly in the param to check for type == stage
 	dateStr := formatDateForID(start)
 	nameN := normalizeName(name)
-	data := fmt.Appendf(nil, "%s|%d|%s|%s|%s", nameN, seasonYear, seasonGender, dateStr, mainRaceEventID.String())
+	data := fmt.Appendf(nil, "%s|%s|%s|%s", nameN, seasonGender, dateStr, mainRaceEventID.String())
 	return uuid.NewSHA1(NamespaceEvent, data)
 }
 
