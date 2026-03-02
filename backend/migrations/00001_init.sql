@@ -188,8 +188,8 @@ CREATE TABLE "events" (
   FOREIGN KEY ("season_year", "season_gender") REFERENCES seasons("year", "gender") ON DELETE CASCADE,
   FOREIGN KEY("country_code") REFERENCES countries("alpha_3_code"),
 
-  CHECK ( "end" is null OR "end" >= "start" ),
-  CHECK (
+  CONSTRAINT CHK_event_end_null_or_sup_equal_start CHECK ( "end" is null OR "end" >= "start" ),
+  CONSTRAINT CHK_event_type_correct CHECK (
     (type = 'stage' AND is_single_day = true AND parent_event_id IS NOT NULL)
     OR
     (type = 'race' AND parent_event_id IS NULL)
@@ -302,13 +302,13 @@ CREATE TABLE "results" (
   FOREIGN KEY("rider_id") REFERENCES riders("id") ON DELETE CASCADE,
   FOREIGN KEY("team_season_id") REFERENCES team_seasons("id") ON DELETE CASCADE,
 
-  CHECK (
+  CONSTRAINT CHK_result_riderid_teamid_exclusive CHECK (
     ("rider_id" IS NOT NULL AND "team_season_id" IS NULL)
     OR
     ("rider_id" IS NULL AND "team_season_id" IS NOT NULL)
   ),
   -- If there is no rank, it must mean a special status is applied.
-  CHECK (
+  CONSTRAINT CHK_result_status_or_rank_not_null CHECK (
     status IS NOT NULL
     OR rank IS NOT NULL
   )
@@ -346,7 +346,7 @@ CREATE TABLE "uci_rankings" (
   FOREIGN KEY("team_season_id") REFERENCES team_seasons("id") ON DELETE CASCADE,
   FOREIGN KEY("nation_code") REFERENCES countries("alpha_3_code"),
 
-  CHECK (
+  CONSTRAINT CHK_uci_ranking_valid_type CHECK (
     ("type" = 'individual' AND "rider_id" IS NOT NULL AND "team_season_id" IS NULL AND "nation_code" IS NULL)
     OR
     ("type" = 'team' AND "team_season_id" IS NOT NULL AND "rider_id" IS NULL AND "nation_code" IS NULL)
