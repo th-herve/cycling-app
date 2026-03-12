@@ -64,10 +64,12 @@ CREATE TYPE "result_types" AS ENUM (
 -- DNF: Did Not Finish
 -- DNS: Did Not Start
 -- OTL: Outside Time Limit
+-- DSQ: Disqualified
 CREATE TYPE "result_status" AS ENUM (
   'DNF',
   'DNS',
-  'OTL'
+  'OTL',
+  'DSQ'
 );
 
 

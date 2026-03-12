@@ -35,6 +35,7 @@ const (
 	ResultStatusDNF ResultStatus = "DNF"
 	ResultStatusDNS ResultStatus = "DNS"
 	ResultStatusOTL ResultStatus = "OTL"
+	ResultStatusDSQ ResultStatus = "DSQ"
 )
 
 type Result struct {
