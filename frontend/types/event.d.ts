@@ -5,8 +5,9 @@ import { ResultsSnapshot } from "./result";
 export default interface Event {
   id: string;
   parentEventId?: string;
-  categoryId?: string;
-  seasonId: string;
+  categoryCode?: string;
+  seasonGender: string;
+  seasonYear: int;
   classification?: string;
   type: EventType;
   status: string;
