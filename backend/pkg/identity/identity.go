@@ -34,6 +34,10 @@ func NewTeamID() uuid.UUID {
 	return uuid.New()
 }
 
+func NewEventSerieID() uuid.UUID {
+	return uuid.New()
+}
+
 // Generate an id for an event of type 'race'
 //
 // !! Do not use for event of type stage
