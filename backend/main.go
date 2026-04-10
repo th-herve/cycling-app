@@ -58,7 +58,7 @@ func init() {
 	}
 
 	if err != nil {
-		log.Warn().Msg("Warning: no .env file")
+		log.Warn().Err(err).Msg("Warning: no .env file")
 	}
 }
 
