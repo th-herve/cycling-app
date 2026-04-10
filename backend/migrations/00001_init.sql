@@ -218,7 +218,7 @@ CREATE TABLE "riders" (
   FOREIGN KEY("nationality") REFERENCES countries("alpha_3_code")
 );
 
-CREATE UNIQUE INDEX "uniq_rider_identity" ON "riders" ("first_name", "last_name", "birth_date", "gender");
+CREATE UNIQUE INDEX "uniq_rider_identity" ON "riders" ("first_name", "last_name", "nationality", "birth_date");
 
 
 -- World tour, Pro tour...
