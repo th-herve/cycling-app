@@ -36,6 +36,13 @@ db-backup: # create a db backup
 	  --exclude-table-data=public.goose* \
 	  $(DB_NAME) > $(DB_BACKUP_DATE)-$(DB_BACKUP_NAME).sql
 
+db-test-backup: # create a db backup
+	docker exec -t $(DOCKER_DB_TEST_NAME) pg_dump \
+	  -U $(DB_USER) \
+	  --data-only \
+	  --exclude-table-data=public.goose* \
+	  $(DB_TEST_NAME) > $(DB_BACKUP_DATE)-test-$(DB_BACKUP_NAME).sql
+
 db-apply: # apply a db file to the database, usage: make db-file FILE=backup.sql
 ifndef FILE
 	$(error FILE is not set, ex: 'make docker-db-restore FILE=./backup.sql')
