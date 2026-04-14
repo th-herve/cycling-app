@@ -153,8 +153,13 @@ const DayCell = ({
 
 const EventCard = ({ event }: { event: Event }) => {
   return (
-    <div className="flex items-center gap-2 rounded-xl bg-green-700 px-0.5 md:px-2">
-      <p className="truncate text-sm md:text-base">
+    <div
+      className={cn(
+        "flex items-center gap-2 rounded-xl px-0.5 md:px-2",
+        event.parentEventId ? "bg-green-700" : "bg-cyan-700",
+      )}
+    >
+      <p className="truncate text-xs font-semibold md:text-sm">
         {event.parentName && event.parentName + " "}
         {event.name}
       </p>
