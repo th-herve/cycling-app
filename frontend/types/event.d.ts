@@ -21,7 +21,7 @@ export default interface Event {
   distance?: number;
   distanceUnit?: string;
 
-  singleEvent: boolean;
+  isSingleDay: boolean;
   countryCode?: string;
 
   stages?: Event[];
