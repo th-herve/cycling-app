@@ -10,6 +10,7 @@ import { format, getDate, getMonth, isToday } from "date-fns";
 import { LuChevronLeft, LuChevronRight, LuFilter } from "react-icons/lu";
 import { LoadingCalendarBody } from "../loading";
 import { useDebouncedLoader } from "@/lib/hooks/useDebouncedLoader";
+import CountryIcon from "@/components/common/countryIcon";
 
 const weekDayNames = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
@@ -159,6 +160,11 @@ const EventCard = ({ event }: { event: Event }) => {
         event.parentEventId ? "bg-green-700" : "bg-cyan-700",
       )}
     >
+      <CountryIcon
+        className="mt-0.5 hidden md:block"
+        countryCode={event.country?.alpha2 || ""}
+        aria-label={event.country?.name}
+      />
       <p className="truncate text-xs font-semibold md:text-sm">
         {event.parentName && event.parentName + " "}
         {event.name}
