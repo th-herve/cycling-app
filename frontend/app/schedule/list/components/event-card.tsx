@@ -1,6 +1,6 @@
 import CountryIcon from "@/components/common/countryIcon";
 import { Card, CardContent } from "@/components/ui/card";
-import { cn, formatDateRange } from "@/lib/utils";
+import { cn, formatDateRange, isEventToday } from "@/lib/utils";
 import Event from "@/types/event";
 import { ResultSnapshot } from "@/types/result";
 import { LucideCrown } from "lucide-react";
@@ -13,9 +13,13 @@ const EventCard = ({ event }: Props) => {
   const dateRange = formatDateRange(event.start, event.end);
   const titleId = `event-${event.id}-title`;
 
+
+  // Chek if the event is taking place today.
+  const isToday = isEventToday(event)
+
   return (
     <article aria-labelledby={titleId}>
-      <Card>
+      <Card className={cn({ "outline-primary outline-2": isToday })}>
         <CardContent className="grid min-h-40 grid-rows-[auto_1fr_auto] md:min-h-0 md:grid-cols-[2fr_1fr] md:grid-rows-[auto_auto]">
           <div>
             <header className="flex gap-2">
@@ -61,7 +65,7 @@ const ResultDisplay = ({
 }) => {
   const winner = results?.[0];
   if (!winner) {
-    return null
+    return null;
   }
   const rider = winner.rider;
   if (!rider.lastName || winner.rank !== 1) return null;

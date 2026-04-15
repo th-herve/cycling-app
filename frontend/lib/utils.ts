@@ -1,3 +1,4 @@
+import Event from "@/types/event";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -40,4 +41,15 @@ export const formatDateRange = (start: string, end?: string) => {
   }
 
   return `${formatDateShort(start)} - ${formatDateShort(end)}`;
+};
+
+export const isEventToday = (event: Event) => {
+  const today = new Date().toISOString().slice(0, 10);
+
+  const startDate = event.start.slice(0, 10);
+  const endDate = event.end?.slice(0, 10);
+
+  return event.isSingleDay
+    ? startDate === today
+    : endDate && startDate <= today && endDate >= today;
 };
