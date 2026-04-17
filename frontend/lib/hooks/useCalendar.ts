@@ -98,11 +98,11 @@ export const useCalendar = (year?: string) => {
 };
 
 /*
- * Generate an array with an entry or each month of a year.
+ * Generate an array with an entry for each month of a year.
  * With each entry containing the days of that month.
  *
  * Include the full weeks for the month, even if it contains day outside the given month.
- * (ex: If the month start a Wednesday, include Monday 30th and Tuesday 31st of last month)
+ * (ex: If the month start a Wednesday, include Monday 30th and Tuesday 31st of previous month)
  */
 function generateDaysOfMonthsArray(year: number) {
   return Array.from({ length: 12 }, (_, month) => getMonthDaysArr(month, year));
