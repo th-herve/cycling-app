@@ -6,8 +6,8 @@ const weekDayNames = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
 const Loading = () => {
   return (
-    <DefaultLayout className="max-w-500">
-      <div className="flex max-w-500 flex-col">
+    <DefaultLayout className="max-w-600">
+      <div className="flex max-w-600 flex-col">
         <h1>Calendar</h1>
         <div className="space-y-2">
           <div className="flex h-9">
