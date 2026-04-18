@@ -13,7 +13,7 @@ import { parseAsInteger, useQueryState } from "nuqs";
 import { UTCDate } from "@date-fns/utc";
 
 export const useCalendar = (year?: string) => {
-  // these are the calendar current month and year relative to the current date. NOT the month and year displayed, which come from the props.
+  // These are the calendar current month and year relative to the current date. NOT the month and year displayed, which come from the props.
   const currentMonth = getMonth(new Date());
   const currentYear = getYear(new Date()).toString();
 
@@ -28,7 +28,10 @@ export const useCalendar = (year?: string) => {
   const [displayedMonth, setDisplayedMonth] = useQueryState(
     "month",
     // set January as default month. Unless the current year is displayed, then display the current month
-    parseAsInteger.withDefault(year === currentYear ? currentMonth : 0),
+    parseAsInteger
+      .withDefault(displayedYear === currentYear ? currentMonth : 0)
+      // The clearOnDefault option fix the bug where clicking on prev month would not go to january if the year != currentYear.
+      .withOptions({ clearOnDefault: false }),
   );
 
   const handleNextMonth = () => {
@@ -38,7 +41,7 @@ export const useCalendar = (year?: string) => {
     } else {
       startTransition(() => {
         urlNav.updateAndPushUrl({
-          year: String(Number(year) + 1),
+          year: String(Number(displayedYear) + 1),
           month: "0", // January
         });
       });
@@ -51,7 +54,7 @@ export const useCalendar = (year?: string) => {
     } else {
       startTransition(() => {
         urlNav.updateAndPushUrl({
-          year: String(Number(year) - 1),
+          year: String(Number(displayedYear) - 1),
           month: "11", // December
         });
       });
