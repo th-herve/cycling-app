@@ -3,6 +3,6 @@ import Event from "@/types/event";
 
 export const getEvents = async (year: string, gender: string) => {
   const resp = await api.get(`/events?year=${year}&gender=${gender}`);
-  const data: Event[] = resp.data || [];
+  const data: Event[] = resp && resp.data || [];
   return data;
 };
