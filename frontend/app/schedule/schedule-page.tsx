@@ -5,7 +5,7 @@ import ListView from "./list/components/list-view";
 
 interface Props {
   data: Event[];
-  year: string;
+  year: number;
   gender: string;
   view: View;
   className?: string;
