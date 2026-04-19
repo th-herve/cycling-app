@@ -8,7 +8,7 @@ import {
   startOfWeek,
 } from "date-fns";
 import { useUrlParamsNavigation } from "./useUrlParamsNavigation";
-import { useTransition } from "react";
+import { useMemo, useTransition } from "react";
 import { parseAsInteger, useQueryState } from "nuqs";
 import { UTCDate } from "@date-fns/utc";
 
@@ -19,10 +19,13 @@ export const useCalendar = (year?: string) => {
 
   const displayedYear = year || currentYear;
 
-  const daysOfMonths = generateDaysOfMonthsArray(Number(displayedYear));
-
   const urlNav = useUrlParamsNavigation();
   const [isPending, startTransition] = useTransition();
+
+  const daysOfMonths = useMemo(
+    () => generateDaysOfMonthsArray(Number(displayedYear)),
+    [displayedYear],
+  );
 
   // uses nuqs query state for the month so that it does not trigger a refresh of the page when the month update
   const [displayedMonth, setDisplayedMonth] = useQueryState(
