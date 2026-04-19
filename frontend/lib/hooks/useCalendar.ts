@@ -37,32 +37,25 @@ export const useCalendar = (year?: string) => {
       .withOptions({ clearOnDefault: false }),
   );
 
-  const handleNextMonth = () => {
-    // increase the month or go to the next year if December
-    if (displayedMonth < 11) {
-      setDisplayedMonth(displayedMonth + 1);
-    } else {
-      startTransition(() => {
-        urlNav.updateAndPushUrl({
-          year: String(displayedYear + 1),
-          month: "0", // January
-        });
-      });
+  const changeMonth = (delta: number) => {
+    const newMonth = displayedMonth + delta;
+
+    if (newMonth >= 0 && newMonth <= 11) {
+      setDisplayedMonth(newMonth);
+      return;
     }
-  };
-  const handlePrevMonth = () => {
-    // decrease the month or go to the previous year if January
-    if (displayedMonth > 0) {
-      setDisplayedMonth(displayedMonth - 1);
-    } else {
-      startTransition(() => {
-        urlNav.updateAndPushUrl({
-          year: String(displayedYear - 1),
-          month: "11", // December
-        });
+
+    startTransition(() => {
+      urlNav.updateAndPushUrl({
+        year: String(displayedYear + Math.sign(delta)),
+        month: String((newMonth + 12) % 12),
       });
-    }
+    });
   };
+
+  const handleNextMonth = () => changeMonth(1);
+  const handlePrevMonth = () => changeMonth(-1);
+
   const handleToday = () => {
     startTransition(() => {
       urlNav.updateAndPushUrl({
