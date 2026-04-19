@@ -15,6 +15,14 @@ import { UTCDate } from "@date-fns/utc";
 const LAST_MONTH = 11;
 const FIRST_MONTH = 0;
 
+/*
+ * Hook to generate a calendar and navigate it.
+ * Generate for the given year the days to display each month.
+ *
+ * Months navigation across the same year are client side, and the state is reflected in the url query params with month=0.
+ * Years navigation is trigger when going to prev month in January or next month in December. It pushes the new year with the right month
+ * in the query params which trigger a re fetch.
+ */
 export const useCalendar = (year?: string) => {
   const now = new Date();
   // These are the calendar current month and year relative to the current date. NOT the month and year displayed, which come from the props.
@@ -73,6 +81,10 @@ export const useCalendar = (year?: string) => {
     });
   };
 
+  /*
+   * Days to display in the calendar for the displayed month.
+   * Include padding day outside the month to have only full weeks.
+   */
   const displayedDays = daysOfMonths[displayedMonth];
 
   return {
