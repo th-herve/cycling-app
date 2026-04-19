@@ -23,7 +23,11 @@ const FIRST_MONTH = 0;
  * Years navigation is trigger when going to prev month in January or next month in December. It pushes the new year with the right month
  * in the query params which trigger a re fetch.
  */
-export const useCalendar = (year?: number) => {
+export const useCalendar = (
+  year?: number,
+  minYear?: number,
+  maxYear?: number,
+) => {
   const now = new Date();
   // These are the calendar current month and year relative to the current date. NOT the month and year displayed, which come from the props.
   const currentMonth = getMonth(now);
@@ -39,16 +43,23 @@ export const useCalendar = (year?: number) => {
     [displayedYear],
   );
 
-  // uses nuqs query state for the month so that it does not trigger a refresh of the page when the month update
+  // Uses nuqs query state for the month so that it does not trigger a refresh of the page when the month update.
   const [displayedMonth, setDisplayedMonth] = useQueryState(
     "month",
-    // set January as default month. Unless the current year is displayed, then display the current month
+    // Set January as default month. Unless the current year is displayed, then display the current month.
     parseAsInteger
       .withDefault(displayedYear === currentYear ? currentMonth : FIRST_MONTH)
       // The clearOnDefault option fix the bug where clicking on prev month would not go to january if the year != currentYear.
       .withOptions({ clearOnDefault: false }),
   );
 
+  /*
+   * Update the displayed month given a delta. Ex: changeMonth(1), changeMonth(-1), changeMonth(-3)...
+   * If the requested month is < 0 or > 11, it change the year instead to go up or down.
+   *
+   * If a min year and/or max year is specify in the hook argument, it first check if the year change would be in range.
+   * Otherwise do nothing.
+   */
   const changeMonth = (delta: number) => {
     const newMonth = displayedMonth + delta;
 
@@ -57,9 +68,14 @@ export const useCalendar = (year?: number) => {
       return;
     }
 
+    const newYear = displayedYear + Math.sign(delta);
+    if ((minYear && newYear < minYear) || (maxYear && newYear > maxYear)) {
+      return;
+    }
+
     startTransition(() => {
       urlNav.updateAndPushUrl({
-        year: String(displayedYear + Math.sign(delta)),
+        year: String(newYear),
         month: String((newMonth + 12) % 12),
       });
     });

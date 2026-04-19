@@ -35,7 +35,7 @@ const EventCalendar = ({ eventsByDay, year, gender }: Props) => {
     displayedDays,
     displayedMonth,
     displayedYear,
-  } = useCalendar(year);
+  } = useCalendar(year, 2025, 2026);
 
   const debouncedLoading = useDebouncedLoader(isPending);
 
