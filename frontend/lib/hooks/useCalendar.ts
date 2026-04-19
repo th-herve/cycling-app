@@ -12,10 +12,14 @@ import { useMemo, useTransition } from "react";
 import { parseAsInteger, useQueryState } from "nuqs";
 import { UTCDate } from "@date-fns/utc";
 
+const LAST_MONTH = 11;
+const FIRST_MONTH = 0;
+
 export const useCalendar = (year?: string) => {
+  const now = new Date();
   // These are the calendar current month and year relative to the current date. NOT the month and year displayed, which come from the props.
-  const currentMonth = getMonth(new Date());
-  const currentYear = getYear(new Date());
+  const currentMonth = getMonth(now);
+  const currentYear = getYear(now);
 
   const displayedYear = Number(year || currentYear);
 
@@ -32,7 +36,7 @@ export const useCalendar = (year?: string) => {
     "month",
     // set January as default month. Unless the current year is displayed, then display the current month
     parseAsInteger
-      .withDefault(displayedYear === currentYear ? currentMonth : 0)
+      .withDefault(displayedYear === currentYear ? currentMonth : FIRST_MONTH)
       // The clearOnDefault option fix the bug where clicking on prev month would not go to january if the year != currentYear.
       .withOptions({ clearOnDefault: false }),
   );
@@ -40,7 +44,7 @@ export const useCalendar = (year?: string) => {
   const changeMonth = (delta: number) => {
     const newMonth = displayedMonth + delta;
 
-    if (newMonth >= 0 && newMonth <= 11) {
+    if (newMonth >= FIRST_MONTH && newMonth <= LAST_MONTH) {
       setDisplayedMonth(newMonth);
       return;
     }
@@ -52,9 +56,6 @@ export const useCalendar = (year?: string) => {
       });
     });
   };
-
-  const handleNextMonth = () => changeMonth(1);
-  const handlePrevMonth = () => changeMonth(-1);
 
   const handleToday = () => {
     startTransition(() => {
@@ -84,8 +85,8 @@ export const useCalendar = (year?: string) => {
   const displayedDays = daysOfMonths[displayedMonth];
 
   return {
-    handlePrevMonth,
-    handleNextMonth,
+    handleNextMonth: () => changeMonth(1),
+    handlePrevMonth: () => changeMonth(-1),
     handleToday,
     handleYearSelect,
     handleGenderSelect,
