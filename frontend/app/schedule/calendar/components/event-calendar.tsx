@@ -196,7 +196,7 @@ const CalendarHeader = ({
   onGenderSelect,
   isPending = false,
 }: {
-  year: string;
+  year: number;
   gender: string;
   displayedMonth: number;
   onNextMonth: () => void;
@@ -217,7 +217,7 @@ const CalendarHeader = ({
           <LuFilter className="text-primary" />
           <p>Filters</p>
           <YearSelectLinks
-            value={year}
+            value={String(year)}
             onValueChange={onYearSelect}
             disabled={isPending}
           />

@@ -15,9 +15,9 @@ import { UTCDate } from "@date-fns/utc";
 export const useCalendar = (year?: string) => {
   // These are the calendar current month and year relative to the current date. NOT the month and year displayed, which come from the props.
   const currentMonth = getMonth(new Date());
-  const currentYear = getYear(new Date()).toString();
+  const currentYear = getYear(new Date());
 
-  const displayedYear = year || currentYear;
+  const displayedYear = Number(year || currentYear);
 
   const urlNav = useUrlParamsNavigation();
   const [isPending, startTransition] = useTransition();
@@ -44,7 +44,7 @@ export const useCalendar = (year?: string) => {
     } else {
       startTransition(() => {
         urlNav.updateAndPushUrl({
-          year: String(Number(displayedYear) + 1),
+          year: String(displayedYear + 1),
           month: "0", // January
         });
       });
@@ -57,7 +57,7 @@ export const useCalendar = (year?: string) => {
     } else {
       startTransition(() => {
         urlNav.updateAndPushUrl({
-          year: String(Number(displayedYear) - 1),
+          year: String(displayedYear - 1),
           month: "11", // December
         });
       });
@@ -66,7 +66,7 @@ export const useCalendar = (year?: string) => {
   const handleToday = () => {
     startTransition(() => {
       urlNav.updateAndPushUrl({
-        year: currentYear,
+        year: String(currentYear),
         month: String(currentMonth),
       });
     });
