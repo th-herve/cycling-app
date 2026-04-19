@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,7 +14,7 @@ export type View = "calendar" | "list";
 
 interface Props {
   currentView: View;
-  year?: string;
+  year?: number;
   gender?: string;
   className?: string;
 }
@@ -22,7 +22,7 @@ interface Props {
 const ViewSelector = ({ currentView, className, gender, year }: Props) => {
   const params = new URLSearchParams();
 
-  if (year) params.set("year", year);
+  if (year) params.set("year", String(year));
   if (gender) params.set("gender", gender);
 
   return (

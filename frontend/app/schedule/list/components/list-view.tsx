@@ -7,7 +7,7 @@ import EventCard from "./event-card";
 
 interface Props {
   className?: string;
-  year: string;
+  year: number;
   gender: string;
   data: Event[];
 }
@@ -20,7 +20,7 @@ const ListView = ({ data, year, gender, className }: Props) => {
           <LucideFilter className="text-primary" size={14} />
           <p>Filters</p>
         </div>
-        <YearSelectLinks value={year} />
+        <YearSelectLinks value={String(year)} />
         <GenderSelectLinks value={gender} />
       </div>
 

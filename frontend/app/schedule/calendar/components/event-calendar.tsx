@@ -19,7 +19,7 @@ const weekDayNames = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 type EventsByDay = Map<string, Event[]>;
 
 interface Props {
-  year: string;
+  year: number;
   gender: string;
   eventsByDay: EventsByDay;
   className?: string;

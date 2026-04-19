@@ -2,7 +2,7 @@ import { siteConfig } from "@/siteConfig";
 import { getYear } from "date-fns";
 
 export type EventFilters = {
-  year: string;
+  year: number;
   gender: string;
 };
 
@@ -11,20 +11,22 @@ const defaultGender = "men";
 export function parseEventSearchParams(
   searchParams: Record<string, string | string[] | undefined>,
 ): EventFilters {
-  const defaultYear = getYear(new Date()).toString();
+  const defaultYear = getYear(new Date());
+  let year = defaultYear;
 
-  // get the year and check if valid
-  let year = searchParams.year ? (searchParams.year as string) : defaultYear;
-  const yearAsNumber = Number(year);
+  // Get the year and check if valid.
+  if (searchParams.year) {
+    const yearAsNumber = Number(searchParams.year);
 
-  if (
-    isNaN(yearAsNumber) ||
-    !siteConfig.availableYears.includes(yearAsNumber)
-  ) {
-    year = defaultYear;
+    if (
+      !isNaN(yearAsNumber) &&
+      siteConfig.availableYears.includes(yearAsNumber)
+    ) {
+      year = yearAsNumber;
+    }
   }
 
-  // get the gender and check if valid
+  // Get the gender and check if valid.
   let gender = searchParams.gender
     ? (searchParams.gender as "men" | "women")
     : defaultGender;

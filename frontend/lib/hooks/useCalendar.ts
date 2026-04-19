@@ -23,7 +23,7 @@ const FIRST_MONTH = 0;
  * Years navigation is trigger when going to prev month in January or next month in December. It pushes the new year with the right month
  * in the query params which trigger a re fetch.
  */
-export const useCalendar = (year?: string) => {
+export const useCalendar = (year?: number) => {
   const now = new Date();
   // These are the calendar current month and year relative to the current date. NOT the month and year displayed, which come from the props.
   const currentMonth = getMonth(now);

@@ -3,7 +3,7 @@ import EventCalendar from "./event-calendar";
 
 interface Props {
   data: Event[];
-  year: string;
+  year: number;
   gender: string;
   className?: string;
 }
