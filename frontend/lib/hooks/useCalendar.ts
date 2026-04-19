@@ -44,14 +44,10 @@ export const useCalendar = (
   );
 
   // Uses nuqs query state for the month so that it does not trigger a refresh of the page when the month update.
-  const [displayedMonth, setDisplayedMonth] = useQueryState(
-    "month",
-    // Set January as default month. Unless the current year is displayed, then display the current month.
-    parseAsInteger
-      .withDefault(displayedYear === currentYear ? currentMonth : FIRST_MONTH)
-      // The clearOnDefault option fix the bug where clicking on prev month would not go to january if the year != currentYear.
-      .withOptions({ clearOnDefault: false }),
-  );
+  const [monthParam, setMonthParam] = useQueryState("month", parseAsInteger);
+
+  const displayedMonth =
+    monthParam ?? (displayedYear === currentYear ? currentMonth : FIRST_MONTH);
 
   /*
    * Update the displayed month given a delta. Ex: changeMonth(1), changeMonth(-1), changeMonth(-3)...
@@ -64,7 +60,7 @@ export const useCalendar = (
     const newMonth = displayedMonth + delta;
 
     if (newMonth >= FIRST_MONTH && newMonth <= LAST_MONTH) {
-      setDisplayedMonth(newMonth);
+      setMonthParam(newMonth);
       return;
     }
 
