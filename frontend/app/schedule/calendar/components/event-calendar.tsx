@@ -13,6 +13,7 @@ import { useDebouncedLoader } from "@/lib/hooks/useDebouncedLoader";
 import CountryIcon from "@/components/common/countryIcon";
 import { startTransition } from "react";
 import { useUrlParamsNavigation } from "@/lib/hooks/useUrlParamsNavigation";
+import { siteConfig } from "@/siteConfig";
 
 const weekDayNames = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
@@ -35,7 +36,9 @@ const EventCalendar = ({ eventsByDay, year, gender }: Props) => {
     displayedDays,
     displayedMonth,
     displayedYear,
-  } = useCalendar(year, 2025, 2026);
+    hasNextMonth,
+    hasPrevMonth,
+  } = useCalendar(year, siteConfig.minYear, siteConfig.maxYear);
 
   const debouncedLoading = useDebouncedLoader(isPending);
 
@@ -61,6 +64,8 @@ const EventCalendar = ({ eventsByDay, year, gender }: Props) => {
         onYearSelect={handleYearSelect}
         onGenderSelect={handleGenderSelect}
         isPending={isPending}
+        hasNextMonth={hasNextMonth}
+        hasPrevMonth={hasPrevMonth}
       />
 
       {debouncedLoading ? (
@@ -206,6 +211,8 @@ const CalendarHeader = ({
   onYearSelect,
   onGenderSelect,
   isPending = false,
+  hasNextMonth,
+  hasPrevMonth,
 }: {
   year: number;
   gender: string;
@@ -216,6 +223,8 @@ const CalendarHeader = ({
   onYearSelect: (year: string) => void;
   onGenderSelect: (gender: string) => void;
   isPending?: boolean;
+  hasNextMonth: boolean;
+  hasPrevMonth: boolean;
 }) => {
   return (
     <div className="flex flex-col justify-between gap-2 md:flex-row md:items-center">
@@ -251,18 +260,18 @@ const CalendarHeader = ({
         </Button>
 
         <Button
-          aria-label="Display next month"
+          aria-label="Display previous month"
           onClick={onPrevMonth}
           variant="card"
-          disabled={isPending}
+          disabled={isPending || !hasPrevMonth}
         >
           <LuChevronLeft />
         </Button>
         <Button
-          aria-label="Display previous month"
+          aria-label="Display next month"
           onClick={onNextMonth}
           variant="card"
-          disabled={isPending}
+          disabled={isPending || !hasNextMonth}
         >
           <LuChevronRight />
         </Button>

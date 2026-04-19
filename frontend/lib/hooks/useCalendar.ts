@@ -33,13 +33,13 @@ export const useCalendar = (
   const currentMonth = getMonth(now);
   const currentYear = getYear(now);
 
-  const displayedYear = Number(year || currentYear);
+  const displayedYear = Number(year ?? currentYear);
 
   const urlNav = useUrlParamsNavigation();
   const [isPending, startTransition] = useTransition();
 
   const daysOfMonths = useMemo(
-    () => generateDaysOfMonthsArray(Number(displayedYear)),
+    () => generateDaysOfMonthsArray(displayedYear),
     [displayedYear],
   );
 
@@ -69,7 +69,10 @@ export const useCalendar = (
     }
 
     const newYear = displayedYear + Math.sign(delta);
-    if ((minYear && newYear < minYear) || (maxYear && newYear > maxYear)) {
+    if (
+      (minYear !== undefined && newYear < minYear) ||
+      (maxYear !== undefined && newYear > maxYear)
+    ) {
       return;
     }
 
@@ -103,6 +106,16 @@ export const useCalendar = (
    */
   const displayedDays = daysOfMonths[displayedMonth];
 
+  const hasNextMonth =
+    maxYear === undefined ||
+    displayedYear < maxYear ||
+    (displayedYear === maxYear && displayedMonth < LAST_MONTH);
+
+  const hasPrevMonth =
+    minYear === undefined ||
+    displayedYear > minYear ||
+    (displayedYear === minYear && displayedMonth > FIRST_MONTH);
+
   return {
     handleNextMonth: () => changeMonth(1),
     handlePrevMonth: () => changeMonth(-1),
@@ -112,6 +125,8 @@ export const useCalendar = (
     isPending,
     displayedMonth,
     displayedYear,
+    hasNextMonth,
+    hasPrevMonth,
   };
 };
 
