@@ -73,15 +73,6 @@ export const useCalendar = (year?: string) => {
     });
   };
 
-  // TODO should not be there since not calendar specific
-  const handleGenderSelect = (newGender: string) => {
-    startTransition(() => {
-      urlNav.updateAndPushUrl({
-        gender: newGender,
-      });
-    });
-  };
-
   const displayedDays = daysOfMonths[displayedMonth];
 
   return {
@@ -89,7 +80,6 @@ export const useCalendar = (year?: string) => {
     handlePrevMonth: () => changeMonth(-1),
     handleToday,
     handleYearSelect,
-    handleGenderSelect,
     displayedDays,
     isPending,
     displayedMonth,

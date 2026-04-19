@@ -11,6 +11,8 @@ import { LuChevronLeft, LuChevronRight, LuFilter } from "react-icons/lu";
 import { LoadingCalendarBody } from "../loading";
 import { useDebouncedLoader } from "@/lib/hooks/useDebouncedLoader";
 import CountryIcon from "@/components/common/countryIcon";
+import { startTransition } from "react";
+import { useUrlParamsNavigation } from "@/lib/hooks/useUrlParamsNavigation";
 
 const weekDayNames = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
@@ -25,7 +27,6 @@ interface Props {
 
 const EventCalendar = ({ eventsByDay, year, gender }: Props) => {
   const {
-    handleGenderSelect,
     handleYearSelect,
     handleToday,
     handleNextMonth,
@@ -37,6 +38,16 @@ const EventCalendar = ({ eventsByDay, year, gender }: Props) => {
   } = useCalendar(year);
 
   const debouncedLoading = useDebouncedLoader(isPending);
+
+  const urlNav = useUrlParamsNavigation();
+
+  const handleGenderSelect = (newGender: string) => {
+    startTransition(() => {
+      urlNav.updateAndPushUrl({
+        gender: newGender,
+      });
+    });
+  };
 
   return (
     <div className="space-y-2">
