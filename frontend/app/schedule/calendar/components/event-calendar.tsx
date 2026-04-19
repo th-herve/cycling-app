@@ -173,7 +173,7 @@ const EventCard = ({ event }: { event: Event }) => {
     <div
       className={cn(
         "flex items-center gap-2 rounded-xl px-0.5 md:px-2",
-        event.parentEventId ? "bg-green-700" : "bg-cyan-700",
+        event.parentEventId ? "bg-multi-day-event" : "bg-single-day-event",
       )}
     >
       <CountryIcon
