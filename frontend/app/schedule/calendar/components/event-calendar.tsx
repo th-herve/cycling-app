@@ -11,9 +11,18 @@ import { LuChevronLeft, LuChevronRight, LuFilter } from "react-icons/lu";
 import { LoadingCalendarBody } from "../loading";
 import { useDebouncedLoader } from "@/lib/hooks/useDebouncedLoader";
 import CountryIcon from "@/components/common/countryIcon";
-import { startTransition } from "react";
+import React, { ReactElement, startTransition } from "react";
 import { useUrlParamsNavigation } from "@/lib/hooks/useUrlParamsNavigation";
 import { siteConfig } from "@/siteConfig";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ResultSnapshot } from "@/types/result";
 
 const weekDayNames = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
@@ -161,20 +170,28 @@ const DayCell = ({
       </time>
       <div className="space-y-1 md:space-y-2">
         {events?.map((e) => (
-          <EventCard key={`event-card-${e.id}`} event={e} />
+          <EventDialog key={`event-card-${e.id}`} event={e}>
+            <EventCard className="cursor-pointer" event={e} />
+          </EventDialog>
         ))}
       </div>
     </div>
   );
 };
 
-const EventCard = ({ event }: { event: Event }) => {
+const EventCard = React.forwardRef<
+  HTMLDivElement,
+  { event: Event } & React.HTMLAttributes<HTMLDivElement>
+>(({ event, className, ...props }, ref) => {
   return (
     <div
+      ref={ref}
       className={cn(
         "flex items-center gap-2 rounded-xl px-0.5 md:px-2",
         event.parentEventId ? "bg-multi-day-event" : "bg-single-day-event",
+        className,
       )}
+      {...props}
     >
       <CountryIcon
         className="mt-0.5 hidden md:block"
@@ -185,6 +202,81 @@ const EventCard = ({ event }: { event: Event }) => {
         {event.parentName && event.parentName + " "}
         {event.name}
       </p>
+    </div>
+  );
+});
+EventCard.displayName = "EventCard";
+
+const EventDialog = ({
+  children,
+  event,
+}: {
+  children: React.ReactNode;
+  event: Event;
+}) => {
+  const title = `${event.parentName ?? ""} ${event.name}`.trim();
+  const result = event.results?.general || null;
+
+  const getByRank = (rank: number) => result?.find((r) => r.rank === rank);
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <CountryIcon
+              className="mt-0.5 hidden md:block"
+              countryCode={event.country?.alpha2 || ""}
+              aria-label={event.country?.name}
+            />
+            {title}
+          </DialogTitle>
+          <DialogDescription className="sr-only">
+            Event details dialog
+          </DialogDescription>
+        </DialogHeader>
+        {result && (
+          <div className="space-y-1">
+            <h4 className="sr-only">Top 3 result</h4>
+            <ResultLine result={getByRank(1)} rank={1} />
+            <ResultLine result={getByRank(2)} rank={2} />
+            <ResultLine result={getByRank(3)} rank={3} />
+          </div>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+const ResultLine = ({
+  result,
+  rank,
+}: {
+  result?: ResultSnapshot;
+  rank: 1 | 2 | 3;
+}) => {
+  const rankDisplay = {
+    1: "1st",
+    2: "2nd",
+    3: "3rd",
+  };
+  return (
+    <div
+      className={cn(
+        "bg-card flex items-center gap-2 px-3 py-1",
+        { "ml-4": rank === 2 },
+        { "ml-8": rank === 3 },
+      )}
+    >
+      <p className="font-race">{rankDisplay[rank]}</p>
+      {result ? (
+        <p>
+          {result.rider.firstName} {result.rider.lastName}
+        </p>
+      ) : (
+        <p>-</p>
+      )}
     </div>
   );
 };
