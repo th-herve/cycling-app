@@ -54,3 +54,7 @@ type Event struct {
 
 	Timestamps
 }
+
+func (e *Event) GetCountryCode() *string {
+	return e.CountryCode
+}

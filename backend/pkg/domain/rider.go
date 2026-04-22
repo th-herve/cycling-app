@@ -16,3 +16,7 @@ type Rider struct {
 
 	Timestamps
 }
+
+func (r *Rider) GetCountryCode() *string {
+	return r.Nationality
+}
