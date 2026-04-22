@@ -271,9 +271,16 @@ const ResultLine = ({
     >
       <p className="font-race">{rankDisplay[rank]}</p>
       {result ? (
-        <p>
-          {result.rider.firstName} {result.rider.lastName}
-        </p>
+        <div className="flex gap-2">
+          <CountryIcon
+            className="mt-0.5 hidden md:block"
+            countryCode={result.rider.nationality?.alpha2 || ""}
+            aria-label={result.rider.nationality?.name}
+          />
+          <p>
+            {result.rider.firstName} {result.rider.lastName}
+          </p>
+        </div>
       ) : (
         <p>-</p>
       )}
