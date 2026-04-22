@@ -274,16 +274,24 @@ const EventSheet = ({
   return (
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
-      <SheetContent className="min-w-125 p-3" showCloseButton={false}>
+      <SheetContent
+        className="min-w-125 p-3 focus:outline-none"
+        showCloseButton={false}
+      >
         <SheetHeader>
-          <SheetTitle className="flex items-center gap-2">
-            <CountryIcon
-              className="mt-0.5 hidden md:block"
-              countryCode={event.country?.alpha2 || ""}
-              aria-label={event.country?.name}
-            />
-            {title}
+          <SheetTitle asChild className="flex items-center gap-2">
+            <h3 className="flex items-start gap-2">
+              <CountryIcon
+                className="mt-1.5 text-xl"
+                countryCode={event.country?.alpha2 || ""}
+                aria-label={event.country?.name}
+              />
+              <span>{title}</span>
+            </h3>
           </SheetTitle>
+          <SheetDescription className="sr-only">
+            Event infos sheet
+          </SheetDescription>
         </SheetHeader>
         {result && (
           <div className="space-y-1">
