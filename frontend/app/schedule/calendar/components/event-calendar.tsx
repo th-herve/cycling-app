@@ -23,6 +23,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ResultSnapshot } from "@/types/result";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const weekDayNames = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
@@ -170,9 +180,9 @@ const DayCell = ({
       </time>
       <div className="space-y-1 md:space-y-2">
         {events?.map((e) => (
-          <EventDialog key={`event-card-${e.id}`} event={e}>
+          <EventSheet key={`event-card-${e.id}`} event={e}>
             <EventCard className="cursor-pointer" event={e} />
-          </EventDialog>
+          </EventSheet>
         ))}
       </div>
     </div>
@@ -249,6 +259,45 @@ const EventDialog = ({
   );
 };
 
+const EventSheet = ({
+  children,
+  event,
+}: {
+  children: React.ReactNode;
+  event: Event;
+}) => {
+  const title = `${event.parentName ?? ""} ${event.name}`.trim();
+  const result = event.results?.general || null;
+
+  const getByRank = (rank: number) => result?.find((r) => r.rank === rank);
+
+  return (
+    <Sheet>
+      <SheetTrigger asChild>{children}</SheetTrigger>
+      <SheetContent className="min-w-125 p-3" showCloseButton={false}>
+        <SheetHeader>
+          <SheetTitle className="flex items-center gap-2">
+            <CountryIcon
+              className="mt-0.5 hidden md:block"
+              countryCode={event.country?.alpha2 || ""}
+              aria-label={event.country?.name}
+            />
+            {title}
+          </SheetTitle>
+        </SheetHeader>
+        {result && (
+          <div className="space-y-1">
+            <h4 className="sr-only">Top 3 result</h4>
+            <ResultLine result={getByRank(1)} rank={1} />
+            <ResultLine result={getByRank(2)} rank={2} />
+            <ResultLine result={getByRank(3)} rank={3} />
+          </div>
+        )}
+      </SheetContent>
+    </Sheet>
+  );
+};
+
 const ResultLine = ({
   result,
   rank,
@@ -262,13 +311,7 @@ const ResultLine = ({
     3: "3rd",
   };
   return (
-    <div
-      className={cn(
-        "bg-card flex items-center gap-2 px-3 py-1",
-        { "ml-4": rank === 2 },
-        { "ml-8": rank === 3 },
-      )}
-    >
+    <div className={cn("bg-card flex items-center gap-2 px-3 py-1")}>
       <p className="font-race">{rankDisplay[rank]}</p>
       {result ? (
         <div className="flex gap-2">
