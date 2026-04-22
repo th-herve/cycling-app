@@ -204,7 +204,7 @@ const EventCard = React.forwardRef<
       {...props}
     >
       <CountryIcon
-        className="mt-0.5 hidden md:block"
+        className="hidden! md:block!"
         countryCode={event.country?.alpha2 || ""}
         aria-label={event.country?.name}
       />
@@ -316,7 +316,6 @@ const ResultLine = ({
       {result ? (
         <div className="flex gap-2">
           <CountryIcon
-            className="mt-0.5 hidden md:block"
             countryCode={result.rider.nationality?.alpha2 || ""}
             aria-label={result.rider.nationality?.name}
           />

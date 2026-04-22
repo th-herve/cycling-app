@@ -13,9 +13,8 @@ const EventCard = ({ event }: Props) => {
   const dateRange = formatDateRange(event.start, event.end);
   const titleId = `event-${event.id}-title`;
 
-
   // Chek if the event is taking place today.
-  const isToday = isEventToday(event)
+  const isToday = isEventToday(event);
 
   return (
     <article aria-labelledby={titleId}>
@@ -24,7 +23,6 @@ const EventCard = ({ event }: Props) => {
           <div>
             <header className="flex gap-2">
               <CountryIcon
-                className="mt-0.5"
                 countryCode={event.country?.alpha2 || ""}
                 aria-label={event.country?.name}
               />
