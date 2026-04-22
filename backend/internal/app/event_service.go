@@ -20,7 +20,7 @@ type EventService struct {
 type EventHydrationContext struct {
 	Countries storage.CountryMap
 	Results   []domain.Result
-	Riders    []domain.Rider
+	Riders    []*domain.Rider
 }
 
 func NewEventService(
@@ -51,18 +51,11 @@ func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender dom
 		return nil, common.GetErr("EventService FindAllBySeason", err)
 	}
 
-	countryCodes := collectCountriesCodes(events)
-	countryMap, err := s.countryStorage.FindManyByAlpha3Code(ctx, countryCodes)
-
-	if err != nil {
-		log.Warn().Caller().Err(err).Msg("Error getting countries, they won't be added to the response")
-	}
-
 	eventsId := collectEventsId(events)
 	results, err := s.resultService.FindManyByEventIds(ctx, eventsId,
 		&storage.ResultSearchOptions{Limit: 3, Type: []domain.ResultType{domain.ResultTypeGeneral}})
 
-	var riders []domain.Rider
+	var riders []*domain.Rider
 	if err != nil {
 		log.Warn().Err(err).Msg("Error getting results, they won't be added to the response")
 	} else {
@@ -71,6 +64,20 @@ func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender dom
 		if err != nil {
 			log.Warn().Caller().Err(err).Msg("Error getting riders, they won't be added to the response")
 		}
+	}
+
+	var combined []domain.HasCountryCode
+	for _, e := range events {
+		combined = append(combined, e)
+	}
+	for _, r := range riders {
+		combined = append(combined, r)
+	}
+	countryCodes := collectCountriesCodes(combined)
+	countryMap, err := s.countryStorage.FindManyByAlpha3Code(ctx, countryCodes)
+
+	if err != nil {
+		log.Warn().Caller().Err(err).Msg("Error getting countries, they won't be added to the response")
 	}
 
 	response := createEventListResponse(events, EventHydrationContext{Countries: countryMap, Results: results, Riders: riders})

@@ -19,7 +19,14 @@ func createEventListResponse(events []*domain.Event, hydrationCtx EventHydration
 
 	withResult := hydrationCtx.Results != nil
 	if withResult {
-		hydrateResults(flatResponse, hydrationCtx.Results, hydrationCtx.Riders)
+		var riderById map[uuid.UUID]RiderSnapshot
+		riderById = toRiderSnapshotById(hydrationCtx.Riders, hydrationCtx.Countries)
+
+		hydrateResults(flatResponse, hydrationCtx.Results, riderById)
+	}
+
+	if len(flatResponse) == 1 {
+		return flatResponse
 	}
 
 	response := restructureStages(flatResponse)
@@ -110,19 +117,14 @@ func hydrateCountry(events []*EventResponse, countryMap storage.CountryMap) {
 
 // !!TODO For now it assumes it's only general ranking and does not group by result type
 // TODO maybe return a new array instead of mutating
-func hydrateResults(events []*EventResponse, results []domain.Result, riders []domain.Rider) {
+func hydrateResults(events []*EventResponse, results []domain.Result, riderByID map[uuid.UUID]RiderSnapshot) {
 	resultsSnapshotByEvent := make(map[uuid.UUID][]ResultSnapshot)
-	hydrateRider := len(riders) > 0
-
-	var riderById map[uuid.UUID]RiderSnapshot
-	if hydrateRider {
-		riderById = toRiderSnapshotById(riders)
-	}
+	hydrateRider := len(riderByID) > 0
 
 	for _, r := range results {
 		res := ResultToSnapshot(r)
 		if hydrateRider && r.RiderID != nil {
-			if rs, ok := riderById[*r.RiderID]; ok {
+			if rs, ok := riderByID[*r.RiderID]; ok {
 				res.Rider = rs
 			}
 		}
@@ -135,29 +137,6 @@ func hydrateResults(events []*EventResponse, results []domain.Result, riders []d
 			General: resultsSnapshotByEvent[e.ID],
 		}
 	}
-}
-
-// Take a list of events and returns a list of the country's id
-func collectCountriesCodes(events []*domain.Event) []string {
-	seen := map[string]bool{}
-	result := []string{}
-
-	for _, event := range events {
-		code := event.CountryCode
-		if code == nil {
-			continue
-		}
-
-		_, saw := seen[*code]
-		if saw {
-			continue
-		}
-
-		result = append(result, *code)
-		seen[*code] = true
-	}
-
-	return result
 }
 
 func collectEventsId(events []*domain.Event) []uuid.UUID {
@@ -187,10 +166,20 @@ func groupResultByType(results []domain.Result) ResultsByType {
 }
 
 // convert list of Rider to RiderSnapshot and map them by id
-func toRiderSnapshotById(riders []domain.Rider) map[uuid.UUID]RiderSnapshot {
+func toRiderSnapshotById(riders []*domain.Rider, countryMap storage.CountryMap) map[uuid.UUID]RiderSnapshot {
 	byId := make(map[uuid.UUID]RiderSnapshot, len(riders))
 	for _, r := range riders {
-		byId[r.ID] = RiderToSnapshot(r)
+		snap := RiderToSnapshot(r)
+		if snap.Nationality != nil {
+			a3 := snap.Nationality.Alpha3
+			c, ok := countryMap[a3]
+			if ok {
+				snap.Nationality = domain.CountryToSnapshot(*c)
+			}
+
+		}
+
+		byId[r.ID] = snap
 	}
 	return byId
 }

@@ -40,11 +40,20 @@ type RiderSnapshot struct {
 	Team        *TeamSnapshot           `json:"team,omitempty"`
 }
 
-func RiderToSnapshot(rider domain.Rider) RiderSnapshot {
+func RiderToSnapshot(rider *domain.Rider) RiderSnapshot {
+	var nat *domain.CountrySnapshot
+
+	if rider.Nationality != nil {
+		nat = &domain.CountrySnapshot{
+			Alpha3: *rider.Nationality,
+		}
+	}
+
 	return RiderSnapshot{
-		ID: rider.ID,
-		FirstName: rider.FirstName,
-		LastName: rider.LastName,
+		ID:          rider.ID,
+		FirstName:   rider.FirstName,
+		LastName:    rider.LastName,
+		Nationality: nat,
 	}
 }
 
