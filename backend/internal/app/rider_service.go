@@ -32,7 +32,7 @@ func (s *RiderService) FindById(ctx context.Context, riderId uuid.UUID) (domain.
 	return result, nil
 }
 
-func (s *RiderService) FindManyById(ctx context.Context, riderIds []uuid.UUID) ([]domain.Rider, error) {
+func (s *RiderService) FindManyById(ctx context.Context, riderIds []uuid.UUID) ([]*domain.Rider, error) {
 	riders, err := s.storage.FindManyIds(ctx, riderIds)
 
 	if err != nil {

@@ -36,14 +36,14 @@ func (s *RiderStorage) FindById(ctx context.Context, riderId uuid.UUID) (domain.
 	return rider, nil
 }
 
-func (s *RiderStorage) FindManyIds(ctx context.Context, ridersId []uuid.UUID) ([]domain.Rider, error) {
+func (s *RiderStorage) FindManyIds(ctx context.Context, ridersId []uuid.UUID) ([]*domain.Rider, error) {
 	query, args, err := db.Q.Select("*").From("riders").Where(squirrel.Eq{"id": ridersId}).ToSql()
 
 	if err != nil {
 		return nil, err
 	}
 
-	var riders []domain.Rider
+	var riders []*domain.Rider
 
 	err = s.db.Select(&riders, query, args...)
 
