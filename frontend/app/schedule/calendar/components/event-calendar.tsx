@@ -23,6 +23,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useIsMobile } from "@/lib/hooks/useIsMobile";
 
 const weekDayNames = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
@@ -216,6 +217,7 @@ const EventSheet = ({
 }) => {
   const title = `${event.parentName ?? ""} ${event.name}`.trim();
   const result = event.results?.general || null;
+  const isMobile = useIsMobile();
 
   const getByRank = (rank: number) => result?.find((r) => r.rank === rank);
 
@@ -223,14 +225,15 @@ const EventSheet = ({
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent
-        className="min-w-125 p-3 focus:outline-none"
-        showCloseButton={false}
+        side={isMobile ? "bottom" : "right"}
+        className="min-h-[50vh] p-3 focus:outline-none md:min-w-125"
+        showCloseButton={isMobile}
       >
         <SheetHeader>
           <SheetTitle asChild className="flex items-center gap-2">
-            <h3 className="flex items-start gap-2">
+            <h3 className="flex items-start gap-2 text-base">
               <CountryIcon
-                className="mt-1.5 text-xl"
+                className="text-xl"
                 countryCode={event.country?.alpha2 || ""}
                 aria-label={event.country?.name}
               />
@@ -268,7 +271,9 @@ const ResultLine = ({
   };
   return (
     <div className={cn("bg-card flex items-center gap-2 px-3 py-1")}>
-      <p className="font-race">{rankDisplay[rank]}</p>
+      <div className="min-w-5">
+        <p className="font-race">{rankDisplay[rank]}</p>
+      </div>
       {result ? (
         <div className="flex gap-2">
           <CountryIcon
