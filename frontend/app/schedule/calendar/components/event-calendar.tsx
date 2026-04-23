@@ -226,7 +226,7 @@ const EventSheet = ({
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent
         side={isMobile ? "bottom" : "right"}
-        className="min-h-[50vh] p-3 focus:outline-none md:min-w-125"
+        className="min-h-[50vh] focus:outline-none md:min-w-125"
         showCloseButton={isMobile}
       >
         <SheetHeader>
@@ -244,14 +244,18 @@ const EventSheet = ({
             Event infos sheet
           </SheetDescription>
         </SheetHeader>
-        {result && (
-          <div className="space-y-1">
-            <h4 className="sr-only">Top 3 result</h4>
-            <ResultLine result={getByRank(1)} rank={1} />
-            <ResultLine result={getByRank(2)} rank={2} />
-            <ResultLine result={getByRank(3)} rank={3} />
-          </div>
-        )}
+        <div className="px-4">
+          {result ? (
+            <div className="space-y-1">
+              <h4 className="sr-only">Top 3 result</h4>
+              <ResultLine result={getByRank(1)} rank={1} />
+              <ResultLine result={getByRank(2)} rank={2} />
+              <ResultLine result={getByRank(3)} rank={3} />
+            </div>
+          ) : (
+            <p>No result yet</p>
+          )}
+        </div>
       </SheetContent>
     </Sheet>
   );
