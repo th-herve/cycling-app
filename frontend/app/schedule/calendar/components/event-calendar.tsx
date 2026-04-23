@@ -11,24 +11,14 @@ import { LuChevronLeft, LuChevronRight, LuFilter } from "react-icons/lu";
 import { LoadingCalendarBody } from "../loading";
 import { useDebouncedLoader } from "@/lib/hooks/useDebouncedLoader";
 import CountryIcon from "@/components/common/countryIcon";
-import React, { ReactElement, startTransition } from "react";
+import React, { startTransition } from "react";
 import { useUrlParamsNavigation } from "@/lib/hooks/useUrlParamsNavigation";
 import { siteConfig } from "@/siteConfig";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { ResultSnapshot } from "@/types/result";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -216,48 +206,6 @@ const EventCard = React.forwardRef<
   );
 });
 EventCard.displayName = "EventCard";
-
-const EventDialog = ({
-  children,
-  event,
-}: {
-  children: React.ReactNode;
-  event: Event;
-}) => {
-  const title = `${event.parentName ?? ""} ${event.name}`.trim();
-  const result = event.results?.general || null;
-
-  const getByRank = (rank: number) => result?.find((r) => r.rank === rank);
-
-  return (
-    <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <CountryIcon
-              className="mt-0.5 hidden md:block"
-              countryCode={event.country?.alpha2 || ""}
-              aria-label={event.country?.name}
-            />
-            {title}
-          </DialogTitle>
-          <DialogDescription className="sr-only">
-            Event details dialog
-          </DialogDescription>
-        </DialogHeader>
-        {result && (
-          <div className="space-y-1">
-            <h4 className="sr-only">Top 3 result</h4>
-            <ResultLine result={getByRank(1)} rank={1} />
-            <ResultLine result={getByRank(2)} rank={2} />
-            <ResultLine result={getByRank(3)} rank={3} />
-          </div>
-        )}
-      </DialogContent>
-    </Dialog>
-  );
-};
 
 const EventSheet = ({
   children,
