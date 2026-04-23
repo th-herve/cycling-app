@@ -230,7 +230,7 @@ const EventSheet = ({
         showCloseButton={isMobile}
       >
         <SheetHeader>
-          <SheetTitle asChild className="flex items-center gap-2">
+          <SheetTitle asChild className="flex items-center gap-2 mr-5">
             <h3 className="flex items-start gap-2 text-base">
               <CountryIcon
                 className="text-xl"
