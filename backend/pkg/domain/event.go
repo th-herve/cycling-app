@@ -47,7 +47,7 @@ type Event struct {
 	End            *time.Time  `db:"end" json:"end,omitempty"`
 	DepartureCity  *string     `db:"departure_city" json:"departureCity,omitempty"`
 	ArrivalCity    *string     `db:"arrival_city" json:"arrivalCity,omitempty"`
-	Distance       *string     `db:"distance" json:"distance,omitempty"`
+	Distance       *float64    `db:"distance" json:"distance,omitempty"`
 	DistanceUnit   *string     `db:"distance_unit" json:"distanceUnit,omitempty"`
 	IsSingleDay    bool        `db:"is_single_day" json:"isSingleDay"`
 	CountryCode    *string     `db:"country_code" json:"countryCode,omitempty"`
