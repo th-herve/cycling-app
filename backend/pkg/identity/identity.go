@@ -12,10 +12,11 @@ import (
 )
 
 var (
-	NamespaceRider        = uuid.MustParse("00000000-0000-0000-0000-000000000001")
-	NamespaceTeamSeason   = uuid.MustParse("00000000-0000-0000-0000-000000000002")
-	NamespaceEvent        = uuid.MustParse("00000000-0000-0000-0000-000000000003")
-	NamespaceResult       = uuid.MustParse("00000000-0000-0000-0000-000000000004")
+	NamespaceRider       = uuid.MustParse("00000000-0000-0000-0000-000000000001")
+	NamespaceTeamSeason  = uuid.MustParse("00000000-0000-0000-0000-000000000002")
+	NamespaceEvent       = uuid.MustParse("00000000-0000-0000-0000-000000000003")
+	NamespaceResult      = uuid.MustParse("00000000-0000-0000-0000-000000000004")
+	NamespaceEventSeries = uuid.MustParse("00000000-0000-0000-0000-000000000005")
 )
 
 func RiderID(firstName, lastName, nationality string, dob time.Time) uuid.UUID {
@@ -34,8 +35,9 @@ func NewTeamID() uuid.UUID {
 	return uuid.New()
 }
 
-func NewEventSerieID() uuid.UUID {
-	return uuid.New()
+func NewEventSerieID(name string) uuid.UUID {
+	data := fmt.Appendf(nil, "%s", name)
+	return uuid.NewSHA1(NamespaceEventSeries, data)
 }
 
 // Generate an id for an event of type 'race'
