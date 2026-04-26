@@ -35,8 +35,8 @@ func NewTeamID() uuid.UUID {
 	return uuid.New()
 }
 
-func NewEventSerieID(name string) uuid.UUID {
-	data := fmt.Appendf(nil, "%s", name)
+func NewEventSerieID(name string, gender domain.Gender) uuid.UUID {
+	data := fmt.Appendf(nil, "%s|%s", name, gender)
 	return uuid.NewSHA1(NamespaceEventSeries, data)
 }
 
