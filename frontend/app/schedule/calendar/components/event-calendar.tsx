@@ -4,7 +4,7 @@ import YearSelectLinks from "@/components/common/yearSelect";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCalendar } from "@/lib/hooks/useCalendar";
-import { cn } from "@/lib/utils";
+import { cn, formatDateLong } from "@/lib/utils";
 import Event from "@/types/event";
 import { format, getDate, getMonth, isToday } from "date-fns";
 import { LuChevronLeft, LuChevronRight, LuFilter } from "react-icons/lu";
@@ -24,6 +24,14 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useIsMobile } from "@/lib/hooks/useIsMobile";
+import ClassificationIcon from "@/components/common/classificationIcon";
+import { classificationLabels } from "@/types/classification";
+import {
+  FaCalendar,
+  FaLocationDot,
+  FaRoad,
+  FaArrowRight,
+} from "react-icons/fa6";
 
 const weekDayNames = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
@@ -220,40 +228,76 @@ const EventSheet = ({
   const isMobile = useIsMobile();
 
   const getByRank = (rank: number) => result?.find((r) => r.rank === rank);
+  console.log(event);
 
   return (
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent
+        className="min-h-[50vh] p-6 focus:outline-none md:min-w-125"
         side={isMobile ? "bottom" : "right"}
-        className="min-h-[50vh] focus:outline-none md:min-w-125"
-        showCloseButton={isMobile}
+        onOpenAutoFocus={(event) => {
+          event.preventDefault();
+        }}
       >
         <SheetHeader>
-          <SheetTitle asChild className="flex items-center gap-2 mr-5">
-            <h3 className="flex items-start gap-2 text-base">
-              <CountryIcon
-                className="text-xl"
-                countryCode={event.country?.alpha2 || ""}
-                aria-label={event.country?.name}
-              />
-              <span>{title}</span>
-            </h3>
+          <SheetTitle className="text-2xl">
+            <CountryIcon
+              className="mr-2 text-xl"
+              countryCode={event.country?.alpha2 || ""}
+              aria-label={event.country?.name}
+            />
+            {title}
           </SheetTitle>
+
           <SheetDescription className="sr-only">
             Event infos sheet
           </SheetDescription>
         </SheetHeader>
-        <div className="px-4">
-          {result ? (
-            <div className="space-y-1">
-              <h4 className="sr-only">Top 3 result</h4>
-              <ResultLine result={getByRank(1)} rank={1} />
-              <ResultLine result={getByRank(2)} rank={2} />
-              <ResultLine result={getByRank(3)} rank={3} />
+
+        <div className="space-y-6 px-4">
+          {event.classification && (
+            <div className="flex items-center gap-2">
+              <ClassificationIcon classification={event.classification} />
+              <p className="font-bold">
+                {classificationLabels[event.classification]}
+              </p>
             </div>
-          ) : (
-            <p>No result yet</p>
+          )}
+          <Card>
+            <CardContent className="space-y-2">
+              <div className="flex items-center gap-2">
+                <FaCalendar />
+                <p>{formatDateLong(event.start)}</p>
+              </div>
+              {event.departureCity && event.arrivalCity && (
+                <div className="flex items-center gap-2">
+                  <FaLocationDot />
+                  <span>{event.departureCity}</span>
+                  <span aria-hidden="true">
+                    <FaArrowRight />
+                  </span>
+                  <span>{event.arrivalCity}</span>
+                </div>
+              )}
+              {event.distance && (
+                <div className="flex items-center gap-2">
+                  <FaRoad />
+                  <p>{event.distance} km</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {result && (
+            <div className="space-y-3">
+              <h4 className="font-bold">Top 3</h4>
+              <div className="space-y-1">
+                <ResultLine result={getByRank(1)} rank={1} />
+                <ResultLine result={getByRank(2)} rank={2} />
+                <ResultLine result={getByRank(3)} rank={3} />
+              </div>
+            </div>
           )}
         </div>
       </SheetContent>

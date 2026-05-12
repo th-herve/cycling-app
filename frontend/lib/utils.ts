@@ -15,6 +15,16 @@ export const formatDateShort = (date: string) => {
   });
 };
 
+export const formatDateLong = (date: string) => {
+  if (!date) return null;
+
+  return new Date(date).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};
+
 export const getMonthShort = (date: string) => {
   return new Date(date).toLocaleDateString("en-GB", {
     month: "short",
