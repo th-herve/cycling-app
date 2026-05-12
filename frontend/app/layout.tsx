@@ -9,6 +9,7 @@ import {
 import "./globals.css";
 import "flag-icons/css/flag-icons.min.css";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const anton = Anton({
   weight: "400",
@@ -52,7 +53,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${shareTechMono.variable} ${anton.variable} ${teko.variable} antialiased`}
       >
-        <NuqsAdapter>{children}</NuqsAdapter>
+        <NuqsAdapter>
+          <TooltipProvider>{children}</TooltipProvider>
+        </NuqsAdapter>
       </body>
     </html>
   );

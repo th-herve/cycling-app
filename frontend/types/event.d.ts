@@ -1,3 +1,4 @@
+import Classification from "./classification";
 import Country from "./country";
 import EventType from "./event-type";
 import { ResultsSnapshot } from "./result";
@@ -8,7 +9,7 @@ export default interface Event {
   categoryCode?: string;
   seasonGender: string;
   seasonYear: int;
-  classification?: string;
+  classification?: Classification;
   type: EventType;
   status: string;
   name: string;
