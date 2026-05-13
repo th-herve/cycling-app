@@ -14,9 +14,13 @@ type EventResponse struct {
 }
 
 type ResultsSnapshot struct {
-	General  []ResultSnapshot `json:"general,omitempty"`
-	Mountain []ResultSnapshot `json:"mountain,omitempty"`
-	Point    []ResultSnapshot `json:"point,omitempty"`
+	General         []ResultSnapshot `json:"general,omitempty"`
+	Mountain        []ResultSnapshot `json:"mountain,omitempty"`
+	Point           []ResultSnapshot `json:"point,omitempty"`
+	Stage           []ResultSnapshot `json:"stage,omitempty"`
+	OverallGeneral  []ResultSnapshot `json:"overallGeneral,omitempty"`
+	OverallPoint    []ResultSnapshot `json:"overallPoint,omitempty"`
+	OverallMountain []ResultSnapshot `json:"overallMountain,omitempty"`
 }
 
 type ResultSnapshot struct {

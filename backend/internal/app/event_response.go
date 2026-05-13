@@ -115,10 +115,8 @@ func hydrateCountry(events []*EventResponse, countryMap storage.CountryMap) {
 	}
 }
 
-// !!TODO For now it assumes it's only general ranking and does not group by result type
-// TODO maybe return a new array instead of mutating
 func hydrateResults(events []*EventResponse, results []domain.Result, riderByID map[uuid.UUID]RiderSnapshot) {
-	resultsSnapshotByEvent := make(map[uuid.UUID][]ResultSnapshot)
+	resultsSnapshotByEvent := make(map[uuid.UUID]map[domain.ResultType][]ResultSnapshot)
 	hydrateRider := len(riderByID) > 0
 
 	for _, r := range results {
@@ -128,13 +126,21 @@ func hydrateResults(events []*EventResponse, results []domain.Result, riderByID 
 				res.Rider = rs
 			}
 		}
-		resultsSnapshotByEvent[r.EventID] = append(resultsSnapshotByEvent[r.EventID], res)
+		if _, ok := resultsSnapshotByEvent[r.EventID]; !ok {
+			resultsSnapshotByEvent[r.EventID] = make(map[domain.ResultType][]ResultSnapshot)
+		}
+		resultsSnapshotByEvent[r.EventID][r.Type] = append(resultsSnapshotByEvent[r.EventID][r.Type], res)
 	}
 
-	// TODO handle other result type
 	for _, e := range events {
 		e.Results = &ResultsSnapshot{
-			General: resultsSnapshotByEvent[e.ID],
+			General:         resultsSnapshotByEvent[e.ID][domain.ResultTypeGeneral],
+			Stage:           resultsSnapshotByEvent[e.ID][domain.ResultTypeStageGeneral],
+			OverallGeneral:  resultsSnapshotByEvent[e.ID][domain.ResultTypeOverallGeneral],
+			OverallPoint:    resultsSnapshotByEvent[e.ID][domain.ResultTypeOverallPoint],
+			OverallMountain: resultsSnapshotByEvent[e.ID][domain.ResultTypeOverallMountain],
+			Mountain:        resultsSnapshotByEvent[e.ID][domain.ResultTypeMountain],
+			Point:           resultsSnapshotByEvent[e.ID][domain.ResultTypePoint],
 		}
 	}
 }

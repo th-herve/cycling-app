@@ -53,7 +53,7 @@ func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender dom
 
 	eventsId := collectEventsId(events)
 	results, err := s.resultService.FindManyByEventIds(ctx, eventsId,
-		&storage.ResultSearchOptions{Limit: 3, Type: []domain.ResultType{domain.ResultTypeGeneral, domain.ResultTypeStageGeneral}})
+		&storage.ResultSearchOptions{Limit: 3})
 
 	var riders []*domain.Rider
 	if err != nil {
