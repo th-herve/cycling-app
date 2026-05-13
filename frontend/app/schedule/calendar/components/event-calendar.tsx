@@ -32,6 +32,8 @@ import {
   FaRoad,
   FaArrowRight,
 } from "react-icons/fa6";
+import JerseyIcon, { JerseyType } from "@/components/common/jerseyIcon";
+import { RiderSnapshot } from "@/types/rider";
 
 const weekDayNames = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
@@ -224,11 +226,42 @@ const EventSheet = ({
   event: Event;
 }) => {
   const title = `${event.parentName ?? ""} ${event.name}`.trim();
-  const result = event.results?.general || null;
+
+  const result = event.parentEventId
+    ? event.results?.stage || null
+    : event.results?.general || null;
+
+  const winner =
+    event.parentEventId && event.results?.general
+      ? event.results.general.find((r) => r.rank === 1)?.rider
+      : undefined;
+
+  const leader = event.results?.overallGeneral
+    ? event.results.overallGeneral.find((r) => r.rank === 1)?.rider
+    : undefined;
+
+  const overallMountain = event.results?.overallMountain
+    ? event.results.overallMountain.find((r) => r.rank === 1)?.rider
+    : undefined;
+
+  const mountain = event.results?.mountain
+    ? event.results.mountain.find((r) => r.rank === 1)?.rider
+    : undefined;
+
+  const overallPoint = event.results?.overallPoint
+    ? event.results.overallPoint.find((r) => r.rank === 1)?.rider
+    : undefined;
+
+  const point = event.results?.point
+    ? event.results.point.find((r) => r.rank === 1)?.rider
+    : undefined;
+
+  const hasStandingSection =
+    winner || leader || overallMountain || overallPoint;
+
   const isMobile = useIsMobile();
 
   const getByRank = (rank: number) => result?.find((r) => r.rank === rank);
-  console.log(event);
 
   return (
     <Sheet>
@@ -291,7 +324,9 @@ const EventSheet = ({
 
           {result && (
             <div className="space-y-3">
-              <h4 className="font-bold">Top 3</h4>
+              <h4 className="font-bold">
+                {event.parentEventId ? "Stage top 3" : "Top 3 result"}
+              </h4>
               <div className="space-y-1">
                 <ResultLine result={getByRank(1)} rank={1} />
                 <ResultLine result={getByRank(2)} rank={2} />
@@ -299,9 +334,51 @@ const EventSheet = ({
               </div>
             </div>
           )}
+
+          {hasStandingSection && (
+            <div className="space-y-3">
+              <h4 className="font-bold">
+                {winner ? "Final result" : "Standing"}
+              </h4>
+              <div className="space-y-1">
+                {winner && <JerseyLine type="general" rider={winner} />}
+                {leader && <JerseyLine type="general" rider={leader} />}
+                {overallPoint && (
+                  <JerseyLine type="point" rider={overallPoint} />
+                )}
+                {point && <JerseyLine type="point" rider={point} />}
+                {mountain && <JerseyLine type="mountain" rider={mountain} />}
+                {overallMountain && (
+                  <JerseyLine type="mountain" rider={overallMountain} />
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </SheetContent>
     </Sheet>
+  );
+};
+
+const JerseyLine = ({
+  type,
+  rider,
+}: {
+  type: JerseyType;
+  rider: RiderSnapshot;
+}) => {
+  return (
+    <div className="bg-card flex items-center gap-2 px-3 py-1">
+      <JerseyIcon type={type} />
+
+      <CountryIcon
+        countryCode={rider.nationality?.alpha2 || ""}
+        aria-label={rider.nationality?.name}
+      />
+      <p>
+        {rider.firstName} {rider.lastName}
+      </p>
+    </div>
   );
 };
 

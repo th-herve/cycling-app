@@ -16,5 +16,11 @@ export interface ResultSnapshot {
 }
 
 export interface ResultsSnapshot {
-  general: ResultSnapshot[];
+  general?: ResultSnapshot[];
+  stage?: ResultSnapshot[];
+  overallGeneral?: ResultSnapshot[];
+  overallPoint?: ResultSnapshot[];
+  overallMountain?: ResultSnapshot[];
+  point?: ResultSnapshot[];
+  mountain?: ResultSnapshot[];
 }

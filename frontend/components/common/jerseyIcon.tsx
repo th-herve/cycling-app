@@ -2,8 +2,10 @@ import { cn } from "@/lib/utils";
 import { CSSProperties } from "react";
 import { FaCircle, FaShirt } from "react-icons/fa6";
 
+export type JerseyType = "general" | "mountain" | "point" | "young";
+
 interface Props {
-  type: "general" | "mountain" | "point" | "young";
+  type: JerseyType;
   className?: string;
 }
 
@@ -59,7 +61,6 @@ const MountainJerseyIcon = ({ className }: Omit<Props, "type">) => {
       {dots.map(([top, left]) => (
         <Dot style={{ top: top, left: left }} key={`${top}-${left}`} />
       ))}
-
     </div>
   );
 };
