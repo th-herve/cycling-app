@@ -1,3 +1,4 @@
+import ClassificationIcon from "@/components/common/classificationIcon";
 import CountryIcon from "@/components/common/countryIcon";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -26,35 +27,52 @@ const EventsTable = ({ events }: Props) => {
               <TableHead>Date</TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Winner</TableHead>
+              <TableHead>Type</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {events.map((event, i) => (
-              <TableRow
-                key={event.id + i}
-                className="odd:bg-muted odd:hover:bg-muted p-20 hover:bg-transparent"
-              >
-                <TableCell className="py-5">
-                  {formatDateShort(event.start)}
-                </TableCell>
-
-                <TableCell className="flex gap-2 py-5">
-                  <CountryIcon countryCode={event.country?.alpha2 || ""} />
-                  {event.name}
-                </TableCell>
-
-                <TableCell className="py-5">
-                  <div className="flex items-center gap-2">
-                    <LucideCrown className="size-4 text-yellow-400" />
-                    {event.results ? event.results.general[0].rider.lastName : ""}
-                  </div>
-                </TableCell>
-              </TableRow>
+              <Row event={event} key={event.id + i} />
             ))}
           </TableBody>
         </Table>
       </CardContent>
     </Card>
+  );
+};
+
+const Row = ({ event }: { event: Event }) => {
+  let hasResult = false;
+
+  if (event.results?.general) {
+    const winner = event.results.general[0];
+    if (winner) {
+      hasResult = true;
+    }
+  }
+
+  return (
+    <TableRow className="odd:bg-muted odd:hover:bg-muted p-20 hover:bg-transparent">
+      <TableCell className="py-5">{formatDateShort(event.start)}</TableCell>
+
+      <TableCell className="flex gap-2 py-5">
+        <CountryIcon countryCode={event.country?.alpha2 || ""} />
+        {event.name}
+      </TableCell>
+
+      <TableCell className="py-5">
+        {hasResult && (
+          <div className="flex items-center gap-2">
+            <LucideCrown className="size-4 text-yellow-400" />
+            {event.results?.general[0].rider.firstName?.charAt(0)}{" "}
+            {event.results?.general[0].rider.lastName}
+          </div>
+        )}
+      </TableCell>
+      <TableCell>
+        {event.stages ? <ClassificationIcon classification={event.stages[4].classification} /> : <ClassificationIcon classification="ttt" />}
+      </TableCell>
+    </TableRow>
   );
 };
 
