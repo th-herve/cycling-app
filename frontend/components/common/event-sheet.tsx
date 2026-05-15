@@ -21,6 +21,10 @@ import {
   FaRoad,
 } from "react-icons/fa6";
 import { JerseyLine, ResultLine } from "./result-line";
+import { ResultSnapshot } from "@/types/result";
+
+const getFirstRider = (result?: ResultSnapshot[]) =>
+  result?.find((r) => r.rank === 1)?.rider;
 
 const EventSheet = ({
   children,
@@ -31,49 +35,53 @@ const EventSheet = ({
 }) => {
   const title = `${event.parentName ?? ""} ${event.name}`.trim();
 
-  const result = event.parentEventId
-    ? event.results?.stage || null
-    : event.results?.general || null;
+  const isStageEvent = event.type === "stage";
 
-  const winner =
-    event.parentEventId && event.results?.general
-      ? event.results.general.find((r) => r.rank === 1)?.rider
-      : undefined;
+  const hasFinalGeneral = !!event.results?.general?.length;
 
-  const leader = event.results?.overallGeneral
-    ? event.results.overallGeneral.find((r) => r.rank === 1)?.rider
-    : undefined;
+  const eventMode =
+    event.type === "race"
+      ? "single-day"
+      : hasFinalGeneral
+        ? "final-stage"
+        : "intermediate-stage";
 
-  const overallMountain = event.results?.overallMountain
-    ? event.results.overallMountain.find((r) => r.rank === 1)?.rider
-    : undefined;
+  // Get the podium of the stage or the single day race.
+  const podium =
+    eventMode === "single-day" ? event.results?.general : event.results?.stage;
 
-  const mountain = event.results?.mountain
-    ? event.results.mountain.find((r) => r.rank === 1)?.rider
-    : undefined;
+  // Helper to extract the rider at a specific rank from the podium.
+  const getByRank = (rank: number) => podium?.find((r) => r.rank === rank);
 
-  const overallPoint = event.results?.overallPoint
-    ? event.results.overallPoint.find((r) => r.rank === 1)?.rider
-    : undefined;
+  // Extract the standing leader or the final winner for each jersey for stage event.
+  const general =
+    eventMode === "final-stage"
+      ? getFirstRider(event.results?.general)
+      : eventMode === "intermediate-stage"
+        ? getFirstRider(event.results?.overallGeneral)
+        : undefined;
+  const mountain =
+    eventMode === "final-stage"
+      ? getFirstRider(event.results?.mountain)
+      : eventMode === "intermediate-stage"
+        ? getFirstRider(event.results?.overallMountain)
+        : undefined;
+  const point =
+    eventMode === "final-stage"
+      ? getFirstRider(event.results?.point)
+      : eventMode === "intermediate-stage"
+        ? getFirstRider(event.results?.overallPoint)
+        : undefined;
+  const young =
+    eventMode === "final-stage"
+      ? getFirstRider(event.results?.young)
+      : eventMode === "intermediate-stage"
+        ? getFirstRider(event.results?.overallYoung)
+        : undefined;
 
-  const point = event.results?.point
-    ? event.results.point.find((r) => r.rank === 1)?.rider
-    : undefined;
-
-  const overallYoung = event.results?.overallYoung
-    ? event.results.overallYoung.find((r) => r.rank === 1)?.rider
-    : undefined;
-
-  const young = event.results?.young
-    ? event.results.young.find((r) => r.rank === 1)?.rider
-    : undefined;
-
-  const hasStandingSection =
-    winner || leader || overallMountain || overallPoint;
+  const hasJerseySection = general || mountain || point || young;
 
   const isMobile = useIsMobile();
-
-  const getByRank = (rank: number) => result?.find((r) => r.rank === rank);
 
   return (
     <Sheet>
@@ -135,10 +143,10 @@ const EventSheet = ({
               </CardContent>
             </Card>
 
-            {result && (
+            {podium && (
               <div className="space-y-3">
                 <h4 className="font-bold">
-                  {event.parentEventId ? "Stage top 3" : "Top 3 result"}
+                  {isStageEvent ? "Stage top 3" : "Top 3 result"}
                 </h4>
                 <div className="space-y-1">
                   <ResultLine result={getByRank(1)} rank={1} />
@@ -148,25 +156,15 @@ const EventSheet = ({
               </div>
             )}
 
-            {hasStandingSection && (
+            {hasJerseySection && (
               <div className="space-y-3">
                 <h4 className="font-bold">
-                  {winner ? "Final result" : "Standing"}
+                  {eventMode === "final-stage" ? "Final result" : "Standing"}
                 </h4>
                 <div className="space-y-1">
-                  {winner && <JerseyLine type="general" rider={winner} />}
-                  {leader && <JerseyLine type="general" rider={leader} />}
-                  {overallPoint && (
-                    <JerseyLine type="point" rider={overallPoint} />
-                  )}
+                  {general && <JerseyLine type="general" rider={general} />}
                   {point && <JerseyLine type="point" rider={point} />}
                   {mountain && <JerseyLine type="mountain" rider={mountain} />}
-                  {overallMountain && (
-                    <JerseyLine type="mountain" rider={overallMountain} />
-                  )}
-                  {overallYoung && (
-                    <JerseyLine type="young" rider={overallYoung} />
-                  )}
                   {young && <JerseyLine type="young" rider={young} />}
                 </div>
               </div>
