@@ -42,14 +42,6 @@ const EventsTable = ({ events }: Props) => {
 };
 
 const Row = ({ event }: { event: Event }) => {
-  let hasResult = false;
-
-  if (event.results?.general) {
-    const winner = event.results.general[0];
-    if (winner) {
-      hasResult = true;
-    }
-  }
 
   return (
     <TableRow className="odd:bg-muted odd:hover:bg-muted p-20 hover:bg-transparent">
@@ -61,7 +53,7 @@ const Row = ({ event }: { event: Event }) => {
       </TableCell>
 
       <TableCell className="py-5">
-        {hasResult && (
+        {event.results?.general && (
           <div className="flex items-center gap-2">
             <LucideCrown className="size-4 text-yellow-400" />
             {event.results?.general[0].rider.firstName?.charAt(0)}{" "}
@@ -70,7 +62,11 @@ const Row = ({ event }: { event: Event }) => {
         )}
       </TableCell>
       <TableCell>
-        {event.stages ? <ClassificationIcon classification={event.stages[4].classification} /> : <ClassificationIcon classification="ttt" />}
+        {event.stages ? (
+          <ClassificationIcon classification={event.stages[4].classification} />
+        ) : (
+          <ClassificationIcon classification="ttt" />
+        )}
       </TableCell>
     </TableRow>
   );

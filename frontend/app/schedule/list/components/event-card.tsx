@@ -40,7 +40,7 @@ const EventCard = ({ event }: Props) => {
             {dateRange}
           </time>
 
-          {event.results && (
+          {event.results?.general && (
             <ResultDisplay
               className="self-end md:row-span-2"
               results={event.results.general}
