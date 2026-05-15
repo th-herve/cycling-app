@@ -34,6 +34,7 @@ import {
 } from "react-icons/fa6";
 import JerseyIcon, { JerseyType } from "@/components/common/jerseyIcon";
 import { RiderSnapshot } from "@/types/rider";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const weekDayNames = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
@@ -267,7 +268,7 @@ const EventSheet = ({
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent
-        className="min-h-[50vh] p-6 focus:outline-none md:min-w-125"
+        className="p-6 focus:outline-none md:min-h-screen md:min-w-125"
         side={isMobile ? "bottom" : "right"}
         onOpenAutoFocus={(event) => {
           event.preventDefault();
@@ -288,73 +289,75 @@ const EventSheet = ({
           </SheetDescription>
         </SheetHeader>
 
-        <div className="space-y-6 px-4">
-          {event.classification && (
-            <div className="flex items-center gap-2">
-              <ClassificationIcon classification={event.classification} />
-              <p className="font-bold">
-                {classificationLabels[event.classification]}
-              </p>
-            </div>
-          )}
-          <Card>
-            <CardContent className="space-y-2">
+        <ScrollArea className={cn(isMobile ? "h-80" : "h-175")}>
+          <div className="space-y-6 px-4">
+            {event.classification && (
               <div className="flex items-center gap-2">
-                <FaCalendar />
-                <p>{formatDateLong(event.start)}</p>
+                <ClassificationIcon classification={event.classification} />
+                <p className="font-bold">
+                  {classificationLabels[event.classification]}
+                </p>
               </div>
-              {event.departureCity && event.arrivalCity && (
+            )}
+            <Card>
+              <CardContent className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <FaLocationDot />
-                  <span>{event.departureCity}</span>
-                  <span aria-hidden="true">
-                    <FaArrowRight />
-                  </span>
-                  <span>{event.arrivalCity}</span>
+                  <FaCalendar />
+                  <p>{formatDateLong(event.start)}</p>
                 </div>
-              )}
-              {event.distance && (
-                <div className="flex items-center gap-2">
-                  <FaRoad />
-                  <p>{event.distance} km</p>
+                {event.departureCity && event.arrivalCity && (
+                  <div className="flex items-center gap-2">
+                    <FaLocationDot />
+                    <span>{event.departureCity}</span>
+                    <span aria-hidden="true">
+                      <FaArrowRight />
+                    </span>
+                    <span>{event.arrivalCity}</span>
+                  </div>
+                )}
+                {event.distance && (
+                  <div className="flex items-center gap-2">
+                    <FaRoad />
+                    <p>{event.distance} km</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {result && (
+              <div className="space-y-3">
+                <h4 className="font-bold">
+                  {event.parentEventId ? "Stage top 3" : "Top 3 result"}
+                </h4>
+                <div className="space-y-1">
+                  <ResultLine result={getByRank(1)} rank={1} />
+                  <ResultLine result={getByRank(2)} rank={2} />
+                  <ResultLine result={getByRank(3)} rank={3} />
                 </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {result && (
-            <div className="space-y-3">
-              <h4 className="font-bold">
-                {event.parentEventId ? "Stage top 3" : "Top 3 result"}
-              </h4>
-              <div className="space-y-1">
-                <ResultLine result={getByRank(1)} rank={1} />
-                <ResultLine result={getByRank(2)} rank={2} />
-                <ResultLine result={getByRank(3)} rank={3} />
               </div>
-            </div>
-          )}
+            )}
 
-          {hasStandingSection && (
-            <div className="space-y-3">
-              <h4 className="font-bold">
-                {winner ? "Final result" : "Standing"}
-              </h4>
-              <div className="space-y-1">
-                {winner && <JerseyLine type="general" rider={winner} />}
-                {leader && <JerseyLine type="general" rider={leader} />}
-                {overallPoint && (
-                  <JerseyLine type="point" rider={overallPoint} />
-                )}
-                {point && <JerseyLine type="point" rider={point} />}
-                {mountain && <JerseyLine type="mountain" rider={mountain} />}
-                {overallMountain && (
-                  <JerseyLine type="mountain" rider={overallMountain} />
-                )}
+            {hasStandingSection && (
+              <div className="space-y-3">
+                <h4 className="font-bold">
+                  {winner ? "Final result" : "Standing"}
+                </h4>
+                <div className="space-y-1">
+                  {winner && <JerseyLine type="general" rider={winner} />}
+                  {leader && <JerseyLine type="general" rider={leader} />}
+                  {overallPoint && (
+                    <JerseyLine type="point" rider={overallPoint} />
+                  )}
+                  {point && <JerseyLine type="point" rider={point} />}
+                  {mountain && <JerseyLine type="mountain" rider={mountain} />}
+                  {overallMountain && (
+                    <JerseyLine type="mountain" rider={overallMountain} />
+                  )}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        </ScrollArea>
       </SheetContent>
     </Sheet>
   );
