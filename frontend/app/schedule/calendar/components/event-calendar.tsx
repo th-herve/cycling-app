@@ -257,6 +257,14 @@ const EventSheet = ({
     ? event.results.point.find((r) => r.rank === 1)?.rider
     : undefined;
 
+  const overallYoung = event.results?.overallYoung
+    ? event.results.overallYoung.find((r) => r.rank === 1)?.rider
+    : undefined;
+
+  const young = event.results?.young
+    ? event.results.young.find((r) => r.rank === 1)?.rider
+    : undefined;
+
   const hasStandingSection =
     winner || leader || overallMountain || overallPoint;
 
@@ -353,6 +361,8 @@ const EventSheet = ({
                   {overallMountain && (
                     <JerseyLine type="mountain" rider={overallMountain} />
                   )}
+                  {overallYoung && <JerseyLine type="young" rider={overallYoung} />}
+                  {young && <JerseyLine type="young" rider={young} />}
                 </div>
               </div>
             )}

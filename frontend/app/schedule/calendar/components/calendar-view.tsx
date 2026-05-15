@@ -44,6 +44,7 @@ function groupEventsByDays(events: Event[]) {
           item.results.general = e.results?.general;
           item.results.mountain = e.results?.mountain;
           item.results.point = e.results?.point;
+          item.results.young = e.results?.young;
         }
       }
 

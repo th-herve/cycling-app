@@ -134,13 +134,16 @@ func hydrateResults(events []*EventResponse, results []domain.Result, riderByID 
 
 	for _, e := range events {
 		e.Results = &ResultsSnapshot{
-			General:         resultsSnapshotByEvent[e.ID][domain.ResultTypeGeneral],
+			General:  resultsSnapshotByEvent[e.ID][domain.ResultTypeGeneral],
+			Mountain: resultsSnapshotByEvent[e.ID][domain.ResultTypeMountain],
+			Point:    resultsSnapshotByEvent[e.ID][domain.ResultTypePoint],
+			Young:    resultsSnapshotByEvent[e.ID][domain.ResultTypeYoung],
+
 			Stage:           resultsSnapshotByEvent[e.ID][domain.ResultTypeStageGeneral],
 			OverallGeneral:  resultsSnapshotByEvent[e.ID][domain.ResultTypeOverallGeneral],
 			OverallPoint:    resultsSnapshotByEvent[e.ID][domain.ResultTypeOverallPoint],
 			OverallMountain: resultsSnapshotByEvent[e.ID][domain.ResultTypeOverallMountain],
-			Mountain:        resultsSnapshotByEvent[e.ID][domain.ResultTypeMountain],
-			Point:           resultsSnapshotByEvent[e.ID][domain.ResultTypePoint],
+			OverallYoung:    resultsSnapshotByEvent[e.ID][domain.ResultTypeOverallYoung],
 		}
 	}
 }
