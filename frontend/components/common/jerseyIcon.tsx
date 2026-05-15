@@ -41,7 +41,7 @@ const JerseySvg = ({ className }: { className?: string }) => {
           fill="currentColor"
         />
         <path
-          d="M9 4.5C9 3.94772 9.44772 3.5 10 3.5H14C14.5523 3.5 15 3.94772 15 4.5V5H9V4.5Z"
+          d="M9 4.5C9 3.94772 9.44772 3.5 10 3.5H14C14.5523 3.5 15 3.94772 15 4.5V5.5H9V4.5Z"
           fill="currentColor"
         />
       </g>
@@ -70,7 +70,7 @@ const PolkaJerseySvg = ({ className }: { className?: string }) => {
           fill="white"
         />
         <path
-          d="M9 4.5C9 3.94772 9.44772 3.5 10 3.5H14C14.5523 3.5 15 3.94772 15 4.5V5H9V4.5Z"
+          d="M9 4.5C9 3.94772 9.44772 3.5 10 3.5H14C14.5523 3.5 15 3.94772 15 4.5V5.5H9V4.5Z"
           fill="white"
         />
         <circle cx="14.25" cy="7.25" r="1.25" fill="#D61F26" />
