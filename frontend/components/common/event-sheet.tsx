@@ -22,6 +22,8 @@ import {
 } from "react-icons/fa6";
 import { JerseyLine, ResultLine } from "./result-line";
 import { ResultSnapshot } from "@/types/result";
+import Image from "next/image";
+import ImageHideEmpty from "./ImageHideEmpty";
 
 const getFirstRider = (result?: ResultSnapshot[]) =>
   result?.find((r) => r.rank === 1)?.rider;
@@ -108,7 +110,7 @@ const EventSheet = ({
           </SheetDescription>
         </SheetHeader>
 
-        <ScrollArea className={cn(isMobile ? "h-80" : "h-175")}>
+        <ScrollArea className={cn(isMobile ? "h-80" : "")}>
           <div className="space-y-6 px-4">
             {event.classification && (
               <div className="flex items-center gap-2">
@@ -118,7 +120,18 @@ const EventSheet = ({
                 </p>
               </div>
             )}
-            <Card>
+
+            <ImageHideEmpty
+              src={`/profiles/${event.id}.svg`}
+              className="bg-card rounded-sm"
+              alt="test"
+              width={0}
+              height={0}
+              sizes="100vw"
+              style={{ width: "100%", height: "auto" }}
+            />
+
+            <Card className="rounded-sm">
               <CardContent className="space-y-2">
                 <div className="flex items-center gap-2">
                   <FaCalendar />
