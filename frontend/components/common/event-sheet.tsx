@@ -11,7 +11,7 @@ import {
 import CountryIcon from "./countryIcon";
 import { ScrollArea } from "../ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
-import { cn, formatDateLong } from "@/lib/utils";
+import { formatDateLong } from "@/lib/utils";
 import ClassificationIcon from "./classificationIcon";
 import { classificationLabels } from "@/types/classification";
 import {
@@ -22,7 +22,6 @@ import {
 } from "react-icons/fa6";
 import { JerseyLine, ResultLine } from "./result-line";
 import { ResultSnapshot } from "@/types/result";
-import Image from "next/image";
 import ImageHideEmpty from "./ImageHideEmpty";
 
 const getFirstRider = (result?: ResultSnapshot[]) =>
@@ -89,7 +88,7 @@ const EventSheet = ({
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent
-        className="p-6 focus:outline-none md:min-h-screen md:min-w-125"
+        className="flex h-[60dvh] flex-col p-6 focus:outline-none md:h-dvh md:min-w-125"
         side={isMobile ? "bottom" : "right"}
         onOpenAutoFocus={(event) => {
           event.preventDefault();
@@ -110,7 +109,7 @@ const EventSheet = ({
           </SheetDescription>
         </SheetHeader>
 
-        <ScrollArea className={cn(isMobile ? "h-80" : "")}>
+        <ScrollArea className="min-h-0 flex-1">
           <div className="space-y-6 px-4">
             {event.classification && (
               <div className="flex items-center gap-2">
