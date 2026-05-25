@@ -15,6 +15,7 @@ const EventCard = ({ event }: Props) => {
 
   // Chek if the event is taking place today.
   const isToday = isEventToday(event);
+  const isCanceled = event.status === "canceled";
 
   return (
     <article aria-labelledby={titleId}>
@@ -40,9 +41,15 @@ const EventCard = ({ event }: Props) => {
             {dateRange}
           </time>
 
-          {event.results?.general && (
+          {isCanceled && (
+            <div className="md:self-start md:row-span-2">
+              <p className="text-destructive font-bold px-2 py-3">Canceled</p>
+            </div>
+          )}
+
+          {!isCanceled && event.results?.general && (
             <ResultDisplay
-              className="self-end md:row-span-2"
+              className="md:self-start md:row-span-2"
               results={event.results.general}
             />
           )}

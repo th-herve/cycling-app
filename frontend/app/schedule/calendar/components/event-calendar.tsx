@@ -190,7 +190,11 @@ const EventCard = React.forwardRef<
         countryCode={event.country?.alpha2 || ""}
         aria-label={event.country?.name}
       />
-      <p className="truncate text-xs font-semibold md:text-sm">
+      <p
+        className={cn("truncate text-xs font-semibold md:text-sm", {
+          "line-through": event.status === "canceled",
+        })}
+      >
         {event.parentName && event.parentName + " "}
         {event.name}
       </p>

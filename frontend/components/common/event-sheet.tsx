@@ -111,6 +111,10 @@ const EventSheet = ({
 
         <ScrollArea className="min-h-0 flex-1">
           <div className="space-y-6 px-4">
+            {event.status === "canceled" && (
+              <p className="font-bold text-destructive">Canceled</p>
+            )}
+
             {event.classification && (
               <div className="flex items-center gap-2">
                 <ClassificationIcon classification={event.classification} />
