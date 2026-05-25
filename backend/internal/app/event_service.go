@@ -15,6 +15,7 @@ type EventService struct {
 	resultService  *ResultService
 	riderService   *RiderService
 	countryStorage *storage.CountryStorage
+	teamService    *TeamService
 }
 
 type EventHydrationContext struct {
@@ -29,6 +30,7 @@ func NewEventService(
 	resultService *ResultService,
 	riderService *RiderService,
 	countryStorage *storage.CountryStorage,
+	teamService *TeamService,
 ) *EventService {
 	return &EventService{
 		storage:        storage,
@@ -36,6 +38,7 @@ func NewEventService(
 		resultService:  resultService,
 		riderService:   riderService,
 		countryStorage: countryStorage,
+		teamService:    teamService,
 	}
 }
 

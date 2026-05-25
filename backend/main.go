@@ -117,7 +117,7 @@ func main() {
 	teamService := app.NewTeamService(teamStorage)
 
 	eventStorage := storage.NewEventStorage(db)
-	eventService := app.NewEventService(eventStorage, seasonService, resultService, riderService, countryStorage)
+	eventService := app.NewEventService(eventStorage, seasonService, resultService, riderService, countryStorage, teamService)
 	eventHandler := handler.NewEventHandler(eventService)
 
 	if AppMode == "prod" {
