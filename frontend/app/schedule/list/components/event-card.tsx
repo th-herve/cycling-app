@@ -42,14 +42,14 @@ const EventCard = ({ event }: Props) => {
           </time>
 
           {isCanceled && (
-            <div className="md:self-start md:row-span-2">
-              <p className="text-destructive font-bold px-2 py-3">Canceled</p>
+            <div className="md:row-span-2 md:self-start">
+              <p className="text-destructive px-2 py-3 font-bold">Canceled</p>
             </div>
           )}
 
           {!isCanceled && event.results?.general && (
             <ResultDisplay
-              className="md:self-start md:row-span-2"
+              className="md:row-span-2 md:self-start"
               results={event.results.general}
             />
           )}
@@ -72,7 +72,12 @@ const ResultDisplay = ({
   if (!winner) {
     return null;
   }
+
   const rider = winner.rider;
+  if (!rider) {
+    return null;
+  }
+
   if (!rider.lastName || winner.rank !== 1) return null;
 
   const firstInitial = rider.firstName?.charAt(0);

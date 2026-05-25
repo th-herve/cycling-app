@@ -15,6 +15,29 @@ export const ResultLine = ({
     2: "2nd",
     3: "3rd",
   };
+
+  const isRiderResult = !!result?.rider;
+
+  if (!isRiderResult && !result?.team) {
+    return (
+      <Line>
+        <p>-</p>
+      </Line>
+    );
+  }
+
+  const countryCode = isRiderResult
+    ? result.rider?.nationality?.alpha2 || ""
+    : result.team?.country?.alpha2 || "";
+
+  const countryName = isRiderResult
+    ? result.rider?.nationality?.name
+    : result.team?.country?.name;
+
+  const label = isRiderResult
+    ? `${result.rider?.firstName} ${result.rider?.lastName}`
+    : result.team?.name;
+
   return (
     <Line>
       <>
@@ -23,13 +46,8 @@ export const ResultLine = ({
         </div>
         {result ? (
           <div className="flex gap-2">
-            <CountryIcon
-              countryCode={result.rider.nationality?.alpha2 || ""}
-              aria-label={result.rider.nationality?.name}
-            />
-            <p>
-              {result.rider.firstName} {result.rider.lastName}
-            </p>
+            <CountryIcon countryCode={countryCode} aria-label={countryName} />
+            <p>{label}</p>
           </div>
         ) : (
           <p>-</p>
