@@ -18,32 +18,32 @@ func NewTeamStorage(db *sqlx.DB) *TeamStorage {
 	return &TeamStorage{db: db}
 }
 
-func (s *TeamStorage) FindById(ctx context.Context, teamId uuid.UUID) (domain.Team, error) {
-	query, args, err := db.Q.Select("*").From("teams").Where(squirrel.Eq{"id": teamId.String()}).ToSql()
+func (s *TeamStorage) FindById(ctx context.Context, teamId uuid.UUID) (domain.TeamSeason, error) {
+	query, args, err := db.Q.Select("*").From("team_seasons").Where(squirrel.Eq{"id": teamId.String()}).ToSql()
 
 	if err != nil {
-		return domain.Team{}, err
+		return domain.TeamSeason{}, err
 	}
 
-	var team domain.Team
+	var team domain.TeamSeason
 
 	err = s.db.QueryRow(query, args...).Scan(team)
 
 	if err != nil {
-		return domain.Team{}, err
+		return domain.TeamSeason{}, err
 	}
 
 	return team, nil
 }
 
-func (s *TeamStorage) FindManyIds(ctx context.Context, teamsId []uuid.UUID) ([]*domain.Team, error) {
-	query, args, err := db.Q.Select("*").From("teams").Where(squirrel.Eq{"id": teamsId}).ToSql()
+func (s *TeamStorage) FindManyIds(ctx context.Context, teamsId []uuid.UUID) ([]*domain.TeamSeason, error) {
+	query, args, err := db.Q.Select("*").From("team_seasons").Where(squirrel.Eq{"id": teamsId}).ToSql()
 
 	if err != nil {
 		return nil, err
 	}
 
-	var teams []*domain.Team
+	var teams []*domain.TeamSeason
 
 	err = s.db.Select(&teams, query, args...)
 
