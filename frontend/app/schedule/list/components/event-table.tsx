@@ -56,8 +56,8 @@ const Row = ({ event }: { event: Event }) => {
         {event.results?.general && (
           <div className="flex items-center gap-2">
             <LucideCrown className="size-4 text-yellow-400" />
-            {event.results?.general[0].rider.firstName?.charAt(0)}{" "}
-            {event.results?.general[0].rider.lastName}
+            {event.results?.general[0].rider?.firstName?.charAt(0)}{" "}
+            {event.results?.general[0].rider?.lastName}
           </div>
         )}
       </TableCell>
