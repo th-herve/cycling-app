@@ -113,6 +113,9 @@ func main() {
 	riderStorage := storage.NewRiderStorage(db)
 	riderService := app.NewRiderService(riderStorage, countryStorage)
 
+	teamStorage := storage.NewTeamStorage(db)
+	teamService := app.NewTeamService(teamStorage)
+
 	eventStorage := storage.NewEventStorage(db)
 	eventService := app.NewEventService(eventStorage, seasonService, resultService, riderService, countryStorage)
 	eventHandler := handler.NewEventHandler(eventService)
