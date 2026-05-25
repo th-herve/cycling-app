@@ -28,7 +28,8 @@ type ResultsSnapshot struct {
 
 type ResultSnapshot struct {
 	Rank  int16         `json:"rank"`
-	Rider RiderSnapshot `json:"rider"`
+	Rider RiderSnapshot `json:"rider,omitzero"`
+	Team  TeamSnapshot  `json:"team,omitzero"`
 }
 
 func ResultToSnapshot(result domain.Result) ResultSnapshot {
@@ -69,4 +70,21 @@ type TeamSnapshot struct {
 	Name         string                  `json:"name"`
 	Abbreviation string                  `json:"abbreviation"`
 	Country      *domain.CountrySnapshot `json:"country,omitempty"`
+}
+
+func TeamToSnapshot(team *domain.TeamSeason) TeamSnapshot {
+	var c *domain.CountrySnapshot
+
+	if team.CountryCode != nil {
+		c = &domain.CountrySnapshot{
+			Alpha3: *team.CountryCode,
+		}
+	}
+
+	return TeamSnapshot{
+		ID:           team.ID,
+		Name:         team.Name,
+		Abbreviation: team.Abbreviation,
+		Country:      c,
+	}
 }

@@ -22,6 +22,7 @@ type EventHydrationContext struct {
 	Countries storage.CountryMap
 	Results   []domain.Result
 	Riders    []*domain.Rider
+	Teams     []*domain.TeamSeason
 }
 
 func NewEventService(
@@ -54,21 +55,31 @@ func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender dom
 		return nil, common.GetErr("EventService FindAllBySeason", err)
 	}
 
-	eventsId := collectEventsId(events)
+	// Collect events ids to find their results.
+	eventsId := collectEventsID(events)
 	results, err := s.resultService.FindManyByEventIds(ctx, eventsId,
 		&storage.ResultSearchOptions{Limit: 3})
 
+	// Collect the riders ids in the results, and find them.
 	var riders []*domain.Rider
+	var teams []*domain.TeamSeason
 	if err != nil {
 		log.Warn().Err(err).Msg("Error getting results, they won't be added to the response")
 	} else {
-		ridersId := collectRidersId(results)
-		riders, err = s.riderService.FindManyById(ctx, ridersId)
+		ridersID := collectRidersId(results)
+		riders, err = s.riderService.FindManyById(ctx, ridersID)
 		if err != nil {
 			log.Warn().Caller().Err(err).Msg("Error getting riders, they won't be added to the response")
 		}
+
+		teamsID := collectTeamsId(results)
+		teams, err = s.teamService.FindManyById(ctx, teamsID)
+		if err != nil {
+			log.Warn().Caller().Err(err).Msg("Error getting teams, they won't be added to the response")
+		}
 	}
 
+	// Collect the countries code in the events and riders. And find them.
 	var combined []domain.HasCountryCode
 	for _, e := range events {
 		combined = append(combined, e)
@@ -83,7 +94,7 @@ func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender dom
 		log.Warn().Caller().Err(err).Msg("Error getting countries, they won't be added to the response")
 	}
 
-	response := createEventListResponse(events, EventHydrationContext{Countries: countryMap, Results: results, Riders: riders})
+	response := createEventListResponse(events, EventHydrationContext{Countries: countryMap, Results: results, Riders: riders, Teams: teams})
 
 	return response, nil
 }

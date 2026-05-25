@@ -19,10 +19,10 @@ func createEventListResponse(events []*domain.Event, hydrationCtx EventHydration
 
 	withResult := hydrationCtx.Results != nil
 	if withResult {
-		var riderById map[uuid.UUID]RiderSnapshot
-		riderById = toRiderSnapshotById(hydrationCtx.Riders, hydrationCtx.Countries)
+		riderByID := toRiderSnapshotByID(hydrationCtx.Riders, hydrationCtx.Countries)
+		teamsByID := toTeamSnapshotByID(hydrationCtx.Teams, hydrationCtx.Countries)
 
-		hydrateResults(flatResponse, hydrationCtx.Results, riderById)
+		hydrateResults(flatResponse, hydrationCtx.Results, riderByID, teamsByID)
 	}
 
 	if len(flatResponse) == 1 {
@@ -115,9 +115,10 @@ func hydrateCountry(events []*EventResponse, countryMap storage.CountryMap) {
 	}
 }
 
-func hydrateResults(events []*EventResponse, results []domain.Result, riderByID map[uuid.UUID]RiderSnapshot) {
+func hydrateResults(events []*EventResponse, results []domain.Result, riderByID map[uuid.UUID]RiderSnapshot, teamByID map[uuid.UUID]TeamSnapshot) {
 	resultsSnapshotByEvent := make(map[uuid.UUID]map[domain.ResultType][]ResultSnapshot)
 	hydrateRider := len(riderByID) > 0
+	hydrateTeam := len(teamByID) > 0 // Teams are for ttt stage result.
 
 	for _, r := range results {
 		res := ResultToSnapshot(r)
@@ -126,6 +127,12 @@ func hydrateResults(events []*EventResponse, results []domain.Result, riderByID 
 				res.Rider = rs
 			}
 		}
+		if r.RiderID == nil && hydrateTeam && r.TeamSeasonID != nil {
+			if t, ok := teamByID[*r.TeamSeasonID]; ok {
+				res.Team = t
+			}
+		}
+
 		if _, ok := resultsSnapshotByEvent[r.EventID]; !ok {
 			resultsSnapshotByEvent[r.EventID] = make(map[domain.ResultType][]ResultSnapshot)
 		}
@@ -148,7 +155,7 @@ func hydrateResults(events []*EventResponse, results []domain.Result, riderByID 
 	}
 }
 
-func collectEventsId(events []*domain.Event) []uuid.UUID {
+func collectEventsID(events []*domain.Event) []uuid.UUID {
 	result := make([]uuid.UUID, len(events))
 
 	for _, e := range events {
@@ -158,24 +165,8 @@ func collectEventsId(events []*domain.Event) []uuid.UUID {
 	return result
 }
 
-func groupResultByType(results []domain.Result) ResultsByType {
-	byType := ResultsByType{}
-
-	for _, r := range results {
-		t := r.Type
-		arr, ok := byType[t]
-		if !ok {
-			arr = []domain.Result{}
-		}
-		arr = append(arr, r)
-		byType[t] = arr
-	}
-
-	return byType
-}
-
 // convert list of Rider to RiderSnapshot and map them by id
-func toRiderSnapshotById(riders []*domain.Rider, countryMap storage.CountryMap) map[uuid.UUID]RiderSnapshot {
+func toRiderSnapshotByID(riders []*domain.Rider, countryMap storage.CountryMap) map[uuid.UUID]RiderSnapshot {
 	byId := make(map[uuid.UUID]RiderSnapshot, len(riders))
 	for _, r := range riders {
 		snap := RiderToSnapshot(r)
@@ -189,6 +180,25 @@ func toRiderSnapshotById(riders []*domain.Rider, countryMap storage.CountryMap) 
 		}
 
 		byId[r.ID] = snap
+	}
+	return byId
+}
+
+// convert list of Team to TeamSnapshot and map them by id
+func toTeamSnapshotByID(teams []*domain.TeamSeason, countryMap storage.CountryMap) map[uuid.UUID]TeamSnapshot {
+	byId := make(map[uuid.UUID]TeamSnapshot, len(teams))
+	for _, t := range teams {
+		snap := TeamToSnapshot(t)
+		if snap.Country != nil {
+			a3 := snap.Country.Alpha3
+			c, ok := countryMap[a3]
+			if ok {
+				snap.Country = domain.CountryToSnapshot(*c)
+			}
+
+		}
+
+		byId[t.ID] = snap
 	}
 	return byId
 }
