@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 	"github.com/th-herve/cycling-app/backend/internal/app/storage"
 	"github.com/th-herve/cycling-app/backend/internal/common"
@@ -97,4 +98,26 @@ func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender dom
 	response := createEventListResponse(events, EventHydrationContext{Countries: countryMap, Results: results, Riders: riders, Teams: teams})
 
 	return response, nil
+}
+
+func (s *EventService) FindByID(ctx context.Context, id uuid.UUID) (*EventResponse, error) {
+	event, err := s.storage.FindByID(ctx, id)
+
+	if err != nil {
+		log.Debug().
+			Caller().
+			Msg("Error getting team")
+		return nil, common.GetErr("EventService FindById", err)
+	}
+
+	countryMap, err := s.countryStorage.FindManyByAlpha3Code(ctx, []string{*event.CountryCode})
+
+	if err != nil {
+		log.Warn().Caller().Err(err).Msg("Error getting countries, they won't be added to the response")
+	}
+
+
+	response := createEventListResponse([]*domain.Event{&event}, EventHydrationContext{Countries: countryMap})
+
+	return response[0], nil
 }
