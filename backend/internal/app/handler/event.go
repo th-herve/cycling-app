@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/th-herve/cycling-app/backend/internal/app"
 	"github.com/th-herve/cycling-app/backend/internal/common"
 	"github.com/th-herve/cycling-app/backend/pkg/domain"
@@ -53,4 +54,24 @@ func (sc *EventHandler) Get(c *gin.Context) {
 	}
 
 	SuccessResponse(c, events)
+}
+
+func (h *EventHandler) GetOne(c *gin.Context) {
+	idParam := c.Param("id")
+
+	id, err := uuid.Parse(idParam)
+
+	if err != nil {
+		c.Error(common.ErrInvalidInput)
+		return
+	}
+
+	event, err := h.eventService.FindByID(c.Request.Context(), id)
+
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	SuccessResponse(c, event)
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/Masterminds/squirrel"
+	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"github.com/th-herve/cycling-app/backend/internal/common/db"
 	"github.com/th-herve/cycling-app/backend/pkg/domain"
@@ -34,4 +35,23 @@ func (s *EventStorage) FindAllBySeason(ctx context.Context, seasonYear int, seas
 	}
 
 	return events, nil
+}
+
+func (s *EventStorage) FindByID(ctx context.Context, id uuid.UUID) (domain.Event, error) {
+
+	var event domain.Event
+
+	query, args, err := db.Q.Select("*").From("events").Where(squirrel.Eq{"id": id.String()}).ToSql()
+
+	if err != nil {
+		return event, err
+	}
+
+	err = s.db.GetContext(ctx, &event, query, args...)
+
+	if err != nil {
+		return event, err
+	}
+
+	return event, nil
 }
