@@ -58,7 +58,7 @@ func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender dom
 
 	// Collect events ids to find their results.
 	eventsId := collectEventsID(events)
-	results, err := s.resultService.FindManyByEventIds(ctx, eventsId,
+	results, err := s.resultService.FindManyByEventIDs(ctx, eventsId,
 		&storage.ResultSearchOptions{Limit: 3})
 
 	// Collect the riders ids in the results, and find them.

@@ -116,7 +116,7 @@ func hydrateCountry(events []*EventResponse, countryMap storage.CountryMap) {
 }
 
 func hydrateResults(events []*EventResponse, results []domain.Result, riderByID map[uuid.UUID]RiderSnapshot, teamByID map[uuid.UUID]TeamSnapshot) {
-	resultsSnapshotByEvent := make(map[uuid.UUID]map[domain.ResultType][]ResultSnapshot)
+	resultsSnapshotByEvent := make(map[uuid.UUID]map[domain.ResultType][]ResultResponse)
 	hydrateRider := len(riderByID) > 0
 	hydrateTeam := len(teamByID) > 0 // Teams are for ttt stage result.
 
@@ -124,23 +124,23 @@ func hydrateResults(events []*EventResponse, results []domain.Result, riderByID 
 		res := ResultToSnapshot(r)
 		if hydrateRider && r.RiderID != nil {
 			if rs, ok := riderByID[*r.RiderID]; ok {
-				res.Rider = rs
+				res.Rider = &rs
 			}
 		}
 		if r.RiderID == nil && hydrateTeam && r.TeamSeasonID != nil {
 			if t, ok := teamByID[*r.TeamSeasonID]; ok {
-				res.Team = t
+				res.Team = &t
 			}
 		}
 
 		if _, ok := resultsSnapshotByEvent[r.EventID]; !ok {
-			resultsSnapshotByEvent[r.EventID] = make(map[domain.ResultType][]ResultSnapshot)
+			resultsSnapshotByEvent[r.EventID] = make(map[domain.ResultType][]ResultResponse)
 		}
 		resultsSnapshotByEvent[r.EventID][r.Type] = append(resultsSnapshotByEvent[r.EventID][r.Type], res)
 	}
 
 	for _, e := range events {
-		e.Results = &ResultsSnapshot{
+		e.Results = &ResultsResponse{
 			General:  resultsSnapshotByEvent[e.ID][domain.ResultTypeGeneral],
 			Mountain: resultsSnapshotByEvent[e.ID][domain.ResultTypeMountain],
 			Point:    resultsSnapshotByEvent[e.ID][domain.ResultTypePoint],
