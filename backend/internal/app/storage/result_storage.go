@@ -25,22 +25,13 @@ func NewResultStorage(db *sqlx.DB) *ResultStorage {
 	return &ResultStorage{db: db}
 }
 
-func (s *ResultStorage) FindManyByEventIds(ctx context.Context, eventsId []uuid.UUID, options *ResultSearchOptions) ([]domain.Result, error) {
+func (s *ResultStorage) FindManyByEventIDs(ctx context.Context, eventsId []uuid.UUID, options *ResultSearchOptions) ([]domain.Result, error) {
 	queryBuilder := db.Q.Select("*").From("results").Where(squirrel.Eq{"event_id": eventsId})
 
-	// since we don't just want to limit the number of row returned, but limit for each result type,
-	// we instead query for the all the rank in the limit for each type.
-	if options != nil && options.Limit > 0 {
-		acceptedRanks := common.AscendingInts(options.Limit, false)
-		queryBuilder = queryBuilder.Where(squirrel.Eq{"rank": acceptedRanks})
-	}
+	queryBuilder = s.applyOptions(queryBuilder, options)
 
-	if options != nil && len(options.Type) > 0 {
-		queryBuilder = queryBuilder.Where(squirrel.Eq{"type": options.Type})
-	}
-
-	// order by rank but put ranks 0 at the end. 0 is for DNS, DNF...
-	// it work by first ordering by if the rank is eq 0. Where 0=0 -> 1 (true) and not0=0 -> 0 (false). So false>true in the order.
+	// Order by rank but put ranks 0 at the end. 0 is for DNS, DNF...
+	// It works by first ordering by if the rank is eq 0. Where 0=0 -> 1 (true) and not0=0 -> 0 (false). So false>true in the order.
 	queryBuilder = queryBuilder.OrderBy("event_id", "type", "rank = 0", "rank")
 
 	query, args, err := queryBuilder.ToSql()
@@ -60,20 +51,13 @@ func (s *ResultStorage) FindManyByEventIds(ctx context.Context, eventsId []uuid.
 	return result, nil
 }
 
-func (s *ResultStorage) FindByEventId(ctx context.Context, eventId uuid.UUID, options *ResultSearchOptions) ([]domain.Result, error) {
+func (s *ResultStorage) FindByEventID(ctx context.Context, eventId uuid.UUID, options *ResultSearchOptions) ([]domain.Result, error) {
 
 	queryBuilder := db.Q.Select("*").From("results").Where(squirrel.Eq{"event_id": eventId})
 
-	// since we don't just want to limit the number of row returned, but limit for each result type,
-	// we instead query for the all the rank in the limit for each type.
-	if options != nil && options.Limit > 0 {
-		acceptedRanks := common.AscendingInts(options.Limit, false)
-		queryBuilder.Where(squirrel.Eq{"rank": acceptedRanks})
-	}
+	queryBuilder = s.applyOptions(queryBuilder, options)
 
-	// order by rank but put ranks 0 at the end. 0 is for DNS, DNF...
-	// it work by first ordering by if the rank is eq 0. Where 0=0 -> 1 (true) and not0=0 -> 0 (false). So false>true in the order.
-	queryBuilder.OrderBy("type", "rank = 0", "rank")
+	queryBuilder = queryBuilder.OrderBy("type", "rank = 0", "rank")
 
 	query, args, err := queryBuilder.ToSql()
 
@@ -90,4 +74,24 @@ func (s *ResultStorage) FindByEventId(ctx context.Context, eventId uuid.UUID, op
 	}
 
 	return results, nil
+}
+
+func (s *ResultStorage) applyOptions(b squirrel.SelectBuilder, options *ResultSearchOptions) squirrel.SelectBuilder {
+
+	if options == nil {
+		return b
+	}
+
+	// The limit need to apply to each result type.
+	// So we do `WHERE rank IN (acceptedRanks)`.
+	if options.Limit > 0 {
+		acceptedRanks := common.AscendingInts(options.Limit, false)
+		b = b.Where(squirrel.Eq{"rank": acceptedRanks})
+	}
+
+	if len(options.Type) > 0 {
+		b = b.Where(squirrel.Eq{"type": options.Type})
+	}
+
+	return b
 }
