@@ -10,34 +10,7 @@ type EventResponse struct {
 	Country    *domain.CountrySnapshot `json:"country,omitempty"`
 	Stages     []*EventResponse        `json:"stages,omitempty"`
 	ParentName *string                 `json:"parentName,omitempty"`
-	Results    *ResultsSnapshot        `json:"results,omitempty"`
-}
-
-type ResultsSnapshot struct {
-	General  []ResultSnapshot `json:"general,omitempty"`
-	Mountain []ResultSnapshot `json:"mountain,omitempty"`
-	Point    []ResultSnapshot `json:"point,omitempty"`
-	Young    []ResultSnapshot `json:"young,omitempty"`
-
-	Stage           []ResultSnapshot `json:"stage,omitempty"`
-	OverallGeneral  []ResultSnapshot `json:"overallGeneral,omitempty"`
-	OverallPoint    []ResultSnapshot `json:"overallPoint,omitempty"`
-	OverallMountain []ResultSnapshot `json:"overallMountain,omitempty"`
-	OverallYoung    []ResultSnapshot `json:"overallYoung,omitempty"`
-}
-
-type ResultSnapshot struct {
-	Rank  int16         `json:"rank"`
-	Rider RiderSnapshot `json:"rider,omitzero"`
-	Team  TeamSnapshot  `json:"team,omitzero"`
-}
-
-func ResultToSnapshot(result domain.Result) ResultSnapshot {
-	snapshot := ResultSnapshot{}
-	if result.Rank != nil {
-		snapshot.Rank = *result.Rank
-	}
-	return snapshot
+	Results    *ResultsResponse        `json:"results,omitempty"`
 }
 
 type RiderSnapshot struct {
