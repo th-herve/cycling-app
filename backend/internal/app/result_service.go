@@ -26,13 +26,27 @@ func NewResultService(storage *storage.ResultStorage, countryStorage *storage.Co
 	return &ResultService{storage: storage, countryStorage: countryStorage}
 }
 
-func (s *ResultService) FindManyByEventIds(ctx context.Context, eventsId []uuid.UUID, options *storage.ResultSearchOptions) ([]domain.Result, error) {
-	results, err := s.storage.FindManyByEventIds(ctx, eventsId, options)
+func (s *ResultService) FindManyByEventIDs(ctx context.Context, eventsID []uuid.UUID, options *storage.ResultSearchOptions) ([]domain.Result, error) {
+	results, err := s.storage.FindManyByEventIDs(ctx, eventsID, options)
 
 	if err != nil {
 		log.Debug().
 			Caller().
 			Msg("Error getting many results")
+		return nil, common.GetErr("ResultService FindManyByEventIds", err)
+	}
+
+	return results, nil
+}
+
+func (s *ResultService) FindByEventID(ctx context.Context, eventID uuid.UUID, options *storage.ResultSearchOptions) ([]domain.Result, error) {
+	results, err := s.storage.FindByEventID(ctx, eventID, options)
+
+	if err != nil {
+		log.Debug().
+			Caller().
+			Str("eventID", eventID.String()).
+			Msg("Error getting results for event")
 		return nil, common.GetErr("ResultService FindManyByEventIds", err)
 	}
 
