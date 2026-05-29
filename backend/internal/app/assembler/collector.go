@@ -60,25 +60,27 @@ func CollectEventsID(events []*domain.Event) []uuid.UUID {
 }
 
 // Take a list of entity implementing HasCountryCode and returns a list of the country's id
-func CollectCountriesCodes(entities []domain.HasCountryCode) []string {
+func CollectCountriesCodes(entities ...[]domain.HasCountryCode) []string {
 	seen := map[string]bool{}
 	result := []string{}
 
-	for _, entity := range entities {
-		code := entity.GetCountryCode()
-		if code == nil {
-			continue
-		}
+	for _, e1 := range entities {
+		for _, e2 := range e1 {
+			code := e2.GetCountryCode()
+			if code == nil {
+				continue
+			}
 
-		_, saw := seen[*code]
-		if saw {
-			continue
-		}
+			_, saw := seen[*code]
+			if saw {
+				continue
+			}
 
-		result = append(result, *code)
-		seen[*code] = true
+			result = append(result, *code)
+			seen[*code] = true
+
+		}
 	}
 
 	return result
 }
-

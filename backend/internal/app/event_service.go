@@ -8,6 +8,7 @@ import (
 	"github.com/th-herve/cycling-app/backend/internal/app/assembler"
 	"github.com/th-herve/cycling-app/backend/internal/app/dto"
 	"github.com/th-herve/cycling-app/backend/internal/app/hydrator"
+	"github.com/th-herve/cycling-app/backend/internal/app/mapper"
 	"github.com/th-herve/cycling-app/backend/internal/app/storage"
 	"github.com/th-herve/cycling-app/backend/internal/common"
 	"github.com/th-herve/cycling-app/backend/pkg/domain"
@@ -77,14 +78,10 @@ func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender dom
 	}
 
 	// Collect the countries code in the events and riders. And find them.
-	var combined []domain.HasCountryCode
-	for _, e := range events {
-		combined = append(combined, e)
-	}
-	for _, r := range riders {
-		combined = append(combined, r)
-	}
-	countryCodes := assembler.CollectCountriesCodes(combined)
+	countryCodes := assembler.CollectCountriesCodes(
+		mapper.ToHasCountryCodeSlice(events),
+		mapper.ToHasCountryCodeSlice(riders),
+	)
 	countryMap, err := s.countryStorage.FindManyByAlpha3Code(ctx, countryCodes)
 
 	if err != nil {
@@ -111,7 +108,6 @@ func (s *EventService) FindByID(ctx context.Context, id uuid.UUID) (*dto.EventDT
 	if err != nil {
 		log.Warn().Caller().Err(err).Msg("Error getting countries, they won't be added to the response")
 	}
-
 
 	response := assembler.CreateEventListResponse([]*domain.Event{&event}, hydrator.EventHydrationContext{Countries: countryMap})
 
