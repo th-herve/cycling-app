@@ -1,0 +1,84 @@
+package assembler
+
+import (
+	"github.com/google/uuid"
+	"github.com/th-herve/cycling-app/backend/pkg/domain"
+)
+
+func CollectRidersId(results []domain.Result) []uuid.UUID {
+	seen := map[uuid.UUID]bool{}
+	ridersID := []uuid.UUID{}
+
+	for _, r := range results {
+		riderId := r.RiderID
+		if riderId == nil {
+			continue
+		}
+
+		_, saw := seen[*riderId]
+		if saw {
+			continue
+		}
+
+		ridersID = append(ridersID, *riderId)
+		seen[*riderId] = true
+	}
+
+	return ridersID
+}
+
+func CollectTeamsId(results []domain.Result) []uuid.UUID {
+	seen := map[uuid.UUID]bool{}
+	teamsID := []uuid.UUID{}
+
+	for _, r := range results {
+		teamID := r.TeamSeasonID
+		if teamID == nil {
+			continue
+		}
+
+		_, saw := seen[*teamID]
+		if saw {
+			continue
+		}
+
+		teamsID = append(teamsID, *teamID)
+		seen[*teamID] = true
+	}
+
+	return teamsID
+}
+
+func CollectEventsID(events []*domain.Event) []uuid.UUID {
+	result := make([]uuid.UUID, len(events))
+
+	for _, e := range events {
+		result = append(result, e.ID)
+	}
+
+	return result
+}
+
+// Take a list of entity implementing HasCountryCode and returns a list of the country's id
+func CollectCountriesCodes(entities []domain.HasCountryCode) []string {
+	seen := map[string]bool{}
+	result := []string{}
+
+	for _, entity := range entities {
+		code := entity.GetCountryCode()
+		if code == nil {
+			continue
+		}
+
+		_, saw := seen[*code]
+		if saw {
+			continue
+		}
+
+		result = append(result, *code)
+		seen[*code] = true
+	}
+
+	return result
+}
+

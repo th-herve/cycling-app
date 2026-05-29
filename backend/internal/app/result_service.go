@@ -12,18 +12,29 @@ import (
 
 type ResultService struct {
 	storage        *storage.ResultStorage
+	riderService   *RiderService
+	teamService    *TeamService
 	countryStorage *storage.CountryStorage
 }
 
 type ResultsByType = map[domain.ResultType][]domain.Result
 
-
 type ResultHydrationContext struct {
-	Countries storage.CountryMap
+	Countries domain.CountryMap
+	Riders    []*domain.Rider
 }
 
-func NewResultService(storage *storage.ResultStorage, countryStorage *storage.CountryStorage) *ResultService {
-	return &ResultService{storage: storage, countryStorage: countryStorage}
+func NewResultService(
+	storage *storage.ResultStorage,
+	riderService *RiderService,
+	countryStorage *storage.CountryStorage,
+	teamService *TeamService,
+) *ResultService {
+	return &ResultService{storage: storage,
+		riderService:   riderService,
+		countryStorage: countryStorage,
+		teamService:    teamService,
+	}
 }
 
 func (s *ResultService) FindManyByEventIDs(ctx context.Context, eventsID []uuid.UUID, options *storage.ResultSearchOptions) ([]domain.Result, error) {

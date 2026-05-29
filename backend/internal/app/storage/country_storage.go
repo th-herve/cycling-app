@@ -9,8 +9,6 @@ import (
 	"github.com/th-herve/cycling-app/backend/pkg/domain"
 )
 
-type CountryMap map[string]*domain.Country
-
 type CountryStorage struct {
 	db *sqlx.DB
 }
@@ -37,7 +35,7 @@ func (s *CountryStorage) FindOneByAlpha3Code(ctx context.Context, code string) (
 	return &country, nil
 }
 
-func (s *CountryStorage) FindManyByAlpha3Code(ctx context.Context, codes []string) (CountryMap, error) {
+func (s *CountryStorage) FindManyByAlpha3Code(ctx context.Context, codes []string) (domain.CountryMap, error) {
 
 	query, args, err := db.Q.Select("*").From("countries").Where(squirrel.Eq{"alpha_3_code": codes}).ToSql()
 
@@ -56,8 +54,8 @@ func (s *CountryStorage) FindManyByAlpha3Code(ctx context.Context, codes []strin
 	return s.groupByCode(countries), nil
 }
 
-func (s *CountryStorage) groupByCode(countries []*domain.Country) CountryMap {
-	result := CountryMap{}
+func (s *CountryStorage) groupByCode(countries []*domain.Country) domain.CountryMap {
+	result := domain.CountryMap{}
 
 	for _, country := range countries {
 		result[country.Alpha3] = country
