@@ -11,16 +11,4 @@ type Country struct {
 	Timestamps
 }
 
-type CountrySnapshot struct {
-	Alpha3 string `json:"alpha3"`
-	Alpha2 string `json:"alpha2"`
-	Name   string `json:"name"`
-}
-
-func CountryToSnapshot(country Country) *CountrySnapshot {
-	return &CountrySnapshot{
-		Alpha3: country.Alpha3,
-		Alpha2: country.Alpha2,
-		Name:   country.Name,
-	}
-}
+type CountryMap map[string]*Country

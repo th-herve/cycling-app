@@ -5,6 +5,9 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
+	"github.com/th-herve/cycling-app/backend/internal/app/assembler"
+	"github.com/th-herve/cycling-app/backend/internal/app/dto"
+	"github.com/th-herve/cycling-app/backend/internal/app/hydrator"
 	"github.com/th-herve/cycling-app/backend/internal/app/storage"
 	"github.com/th-herve/cycling-app/backend/internal/common"
 	"github.com/th-herve/cycling-app/backend/pkg/domain"
@@ -17,13 +20,6 @@ type EventService struct {
 	riderService   *RiderService
 	countryStorage *storage.CountryStorage
 	teamService    *TeamService
-}
-
-type EventHydrationContext struct {
-	Countries storage.CountryMap
-	Results   []domain.Result
-	Riders    []*domain.Rider
-	Teams     []*domain.TeamSeason
 }
 
 func NewEventService(
@@ -44,7 +40,7 @@ func NewEventService(
 	}
 }
 
-func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender domain.Gender) ([]*EventResponse, error) {
+func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender domain.Gender) ([]*dto.EventDTO, error) {
 	events, err := s.storage.FindAllBySeason(ctx, year, gender)
 
 	if err != nil {
@@ -57,7 +53,7 @@ func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender dom
 	}
 
 	// Collect events ids to find their results.
-	eventsId := collectEventsID(events)
+	eventsId := assembler.CollectEventsID(events)
 	results, err := s.resultService.FindManyByEventIDs(ctx, eventsId,
 		&storage.ResultSearchOptions{Limit: 3})
 
@@ -67,13 +63,13 @@ func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender dom
 	if err != nil {
 		log.Warn().Err(err).Msg("Error getting results, they won't be added to the response")
 	} else {
-		ridersID := collectRidersId(results)
+		ridersID := assembler.CollectRidersId(results)
 		riders, err = s.riderService.FindManyById(ctx, ridersID)
 		if err != nil {
 			log.Warn().Caller().Err(err).Msg("Error getting riders, they won't be added to the response")
 		}
 
-		teamsID := collectTeamsId(results)
+		teamsID := assembler.CollectTeamsId(results)
 		teams, err = s.teamService.FindManyById(ctx, teamsID)
 		if err != nil {
 			log.Warn().Caller().Err(err).Msg("Error getting teams, they won't be added to the response")
@@ -88,19 +84,19 @@ func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender dom
 	for _, r := range riders {
 		combined = append(combined, r)
 	}
-	countryCodes := collectCountriesCodes(combined)
+	countryCodes := assembler.CollectCountriesCodes(combined)
 	countryMap, err := s.countryStorage.FindManyByAlpha3Code(ctx, countryCodes)
 
 	if err != nil {
 		log.Warn().Caller().Err(err).Msg("Error getting countries, they won't be added to the response")
 	}
 
-	response := createEventListResponse(events, EventHydrationContext{Countries: countryMap, Results: results, Riders: riders, Teams: teams})
+	response := assembler.CreateEventListResponse(events, hydrator.EventHydrationContext{Countries: countryMap, Results: results, Riders: riders, Teams: teams})
 
 	return response, nil
 }
 
-func (s *EventService) FindByID(ctx context.Context, id uuid.UUID) (*EventResponse, error) {
+func (s *EventService) FindByID(ctx context.Context, id uuid.UUID) (*dto.EventDTO, error) {
 	event, err := s.storage.FindByID(ctx, id)
 
 	if err != nil {
@@ -117,7 +113,7 @@ func (s *EventService) FindByID(ctx context.Context, id uuid.UUID) (*EventRespon
 	}
 
 
-	response := createEventListResponse([]*domain.Event{&event}, EventHydrationContext{Countries: countryMap})
+	response := assembler.CreateEventListResponse([]*domain.Event{&event}, hydrator.EventHydrationContext{Countries: countryMap})
 
 	return response[0], nil
 }
