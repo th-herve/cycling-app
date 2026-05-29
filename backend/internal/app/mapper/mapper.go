@@ -100,3 +100,15 @@ func CountryToSnapshot(country domain.Country) *dto.CountryDTO {
 		Name:   country.Name,
 	}
 }
+
+// ToHasCountryCodeSlice take a slice of entity implementing HasCountryCode
+// and convert them to HasCountryCode.
+func ToHasCountryCodeSlice[T domain.HasCountryCode](items []T) []domain.HasCountryCode {
+	result := make([]domain.HasCountryCode, len(items))
+
+	for i, item := range items {
+		result[i] = item
+	}
+
+	return result
+}
