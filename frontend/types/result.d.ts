@@ -3,6 +3,7 @@ import { TeamSnapshot } from "./team";
 
 export default interface Result {
   rank?: number;
+  status?: string;
   type?: string;
   eventId?: string;
   timeSeconds?: number;

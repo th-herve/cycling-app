@@ -3,6 +3,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDateLong } from "@/lib/utils";
 import Event from "@/types/event";
 import EventProfile from "./profile";
+import Result from "@/types/result";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface Props {
   event: Event;
@@ -10,6 +19,7 @@ interface Props {
 }
 
 const EventPage = ({ event, className }: Props) => {
+  const hasResult = event.results;
   return (
     <section className={className}>
       <h1 className="mb-20">
@@ -27,6 +37,7 @@ const EventPage = ({ event, className }: Props) => {
           <h2 className="mb-2">Profile</h2>
           <EventProfile id={event.id} />
         </div>
+        {hasResult && <ResultSection results={event.results?.general} />}
       </div>
     </section>
   );
@@ -65,8 +76,70 @@ const DataInfo = ({
   title: string;
   value?: string | null;
 }) => (
-  <div className="flex w-full flex-col items-center border-r border-gray-400 last:border-r-0">
-    <dt className="text-gray-400">{title}</dt>
+  <div className="border-muted-foreground flex w-full flex-col items-center border-r last:border-r-0">
+    <dt className="text-muted-foreground">{title}</dt>
     <dd className="font-bold">{value || "-"}</dd>
   </div>
 );
+
+// TODO move it
+function formatHHMMSS(totalSeconds: number): string {
+  const h = Math.floor(totalSeconds / 3600);
+  const m = Math.floor((totalSeconds % 3600) / 60);
+  const s = totalSeconds % 60;
+
+  if (h > 0) {
+    return `${h}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+  }
+
+  if (m > 0) {
+    return `${m}:${s.toString().padStart(2, "0")}`;
+  }
+
+  return s.toString().padStart(2, "0");
+}
+
+const ResultSection = ({ results }: { results?: Result[] }) => {
+  if (!results) {
+    return;
+  }
+
+  const firstTime = results[0].timeSeconds || 0;
+
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Rank</TableHead>
+          <TableHead>Rider</TableHead>
+          <TableHead>Time</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {results.map((result) => (
+          <TableRow key={result.rider?.id ? result.rider.id : result.team?.id}>
+            <TableCell className="font-medium font-mono">
+              {result.rank || result.status}
+            </TableCell>
+            <TableCell className="flex items-center gap-2">
+              <CountryIcon
+                countryCode={result.rider?.nationality?.alpha2 || ""}
+              />
+              <p>
+                {result.rider?.firstName} {result.rider?.lastName}
+              </p>
+            </TableCell>
+            <TableCell>
+              <span className="inline-block w-[9ch] text-right font-mono">
+                {result.timeSeconds &&
+                  (result.rank === 1
+                    ? formatHHMMSS(result.timeSeconds)
+                    : `+${formatHHMMSS(result.timeSeconds - firstTime)}`)}
+              </span>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+};
