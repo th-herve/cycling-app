@@ -73,9 +73,9 @@ func TeamToSnapshot(team *domain.TeamSeason) dto.TeamDTO {
 	}
 }
 
-// Converts a result to a result snapshot (DTO with only the rank added).
+// Converts a result to a result DTO.
 // Set the ids for the rider/team, but let the caller fully hydrate them.
-func ResultToSnapshot(result domain.Result) dto.ResultDTO {
+func ResultToDTO(result domain.Result) dto.ResultDTO {
 	var rider *dto.RiderDTO
 	var team *dto.TeamDTO
 
@@ -92,23 +92,14 @@ func ResultToSnapshot(result domain.Result) dto.ResultDTO {
 	}
 
 	return dto.ResultDTO{
-		Rank:  result.Rank,
-		Rider: rider,
-		Team:  team,
+		Rank:        result.Rank,
+		Rider:       rider,
+		Team:        team,
+		Status:      result.Status,
+		Points:      result.Points,
+		TimeSeconds: result.TimeSeconds,
+		Type:        result.Type,
 	}
-}
-
-// Converts a result to a result DTO.
-// Set the ids for the rider/team, but let the caller fully hydrate them.
-func ResultToDTO(result domain.Result) dto.ResultDTO {
-	// Call toSnapshot to set the rider/team ids and rank.
-	dto := ResultToSnapshot(result)
-	dto.Status = result.Status
-	dto.Points = result.Points
-	dto.TimeSeconds = result.TimeSeconds
-	dto.Type = result.Type
-
-	return dto
 }
 
 func ResultsToDTOs(results []domain.Result) []dto.ResultDTO {
@@ -172,4 +163,3 @@ func ResultDtoToResponse(resultDTO []dto.ResultDTO) dto.ResultsResponse {
 		OverallYoung:    byType[domain.ResultTypeOverallYoung],
 	}
 }
-

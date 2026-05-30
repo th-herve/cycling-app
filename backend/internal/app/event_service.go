@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"errors"
 
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
@@ -53,10 +54,42 @@ func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender dom
 		return nil, common.GetErr("EventService FindAllBySeason", err)
 	}
 
+	hydrationCtx := s.getHydrationContext(ctx, events, 3)
+
+	response := assembler.CreateEventListResponse(events, hydrationCtx)
+
+	return response, nil
+}
+
+func (s *EventService) FindByID(ctx context.Context, id uuid.UUID) (*dto.EventDTO, error) {
+	event, err := s.storage.FindByID(ctx, id)
+
+	if err != nil {
+		log.Debug().
+			Caller().
+			Msg("Error getting team")
+		return nil, common.GetErr("EventService FindById", err)
+	}
+
+	asList := []*domain.Event{&event}
+
+	hydrationCtx := s.getHydrationContext(ctx, asList, 0)
+
+	response := assembler.CreateEventListResponse(asList, hydrationCtx)
+
+	if len(response) == 0 {
+		return nil, common.GetErr("EventService FindByID", errors.New("response not found"))
+	}
+
+	return response[0], nil
+}
+
+func (s *EventService) getHydrationContext(ctx context.Context, events []*domain.Event, resultLimit int) hydrator.EventHydrationContext {
+
 	// Collect events ids to find their results.
 	eventsId := assembler.CollectEventsID(events)
 	results, err := s.resultService.FindManyByEventIDs(ctx, eventsId,
-		&storage.ResultSearchOptions{Limit: 3})
+		&storage.ResultSearchOptions{Limit: resultLimit})
 
 	// Collect the riders ids in the results, and find them.
 	var riders []*domain.Rider
@@ -88,28 +121,10 @@ func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender dom
 		log.Warn().Caller().Err(err).Msg("Error getting countries, they won't be added to the response")
 	}
 
-	response := assembler.CreateEventListResponse(events, hydrator.EventHydrationContext{Countries: countryMap, Results: results, Riders: riders, Teams: teams})
-
-	return response, nil
-}
-
-func (s *EventService) FindByID(ctx context.Context, id uuid.UUID) (*dto.EventDTO, error) {
-	event, err := s.storage.FindByID(ctx, id)
-
-	if err != nil {
-		log.Debug().
-			Caller().
-			Msg("Error getting team")
-		return nil, common.GetErr("EventService FindById", err)
+	return hydrator.EventHydrationContext{
+		Countries: countryMap,
+		Results:   results,
+		Riders:    riders,
+		Teams:     teams,
 	}
-
-	countryMap, err := s.countryStorage.FindManyByAlpha3Code(ctx, []string{*event.CountryCode})
-
-	if err != nil {
-		log.Warn().Caller().Err(err).Msg("Error getting countries, they won't be added to the response")
-	}
-
-	response := assembler.CreateEventListResponse([]*domain.Event{&event}, hydrator.EventHydrationContext{Countries: countryMap})
-
-	return response[0], nil
 }
