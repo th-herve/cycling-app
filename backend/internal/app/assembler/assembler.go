@@ -14,7 +14,7 @@ func CreateEventListResponse(events []*domain.Event, hydrationCtx hydrator.Event
 
 	withCountry := hydrationCtx.Countries != nil
 	if withCountry {
-		hydrator.HydrateCountry(flatResponse, hydrationCtx.Countries)
+		hydrator.HydrateEventCountry(flatResponse, hydrationCtx.Countries)
 	}
 
 	withResult := hydrationCtx.Results != nil
@@ -22,7 +22,7 @@ func CreateEventListResponse(events []*domain.Event, hydrationCtx hydrator.Event
 		riderByID := mapper.RidersToSnapshotsByID(hydrationCtx.Riders)
 		teamsByID := mapper.TeamsToSnapshotsByID(hydrationCtx.Teams)
 
-		hydrator.HydrateResults(flatResponse, hydrationCtx.Results, riderByID, teamsByID)
+		hydrator.HydrateEventResults(flatResponse, hydrationCtx.Results, riderByID, teamsByID, hydrationCtx.Countries)
 	}
 
 	if len(flatResponse) == 1 {
@@ -30,6 +30,14 @@ func CreateEventListResponse(events []*domain.Event, hydrationCtx hydrator.Event
 	}
 
 	response := restructureStages(flatResponse)
+
+	return response
+}
+
+func CreateResultsResponse(results []domain.Result, hydrationCtx hydrator.ResultHydrationContext) dto.ResultsResponse {
+	dtos := mapper.ResultsToDTOs(results)
+
+	response := mapper.ResultDtoToResponse(dtos)
 
 	return response
 }

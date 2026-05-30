@@ -49,6 +49,7 @@ type ResultDTO struct {
 	Points      *int16               `json:"points,omitempty"`
 	TimeSeconds *int32               `json:"time_seconds,omitempty"`
 	GapSeconds  *int32               `json:"gap_seconds,omitempty"`
+	Type        domain.ResultType    `json:"-"` // Not in the response, but usefull for processing.
 }
 
 type CountryDTO struct {

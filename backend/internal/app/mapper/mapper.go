@@ -23,7 +23,7 @@ func EventsToDTO(events []*domain.Event) []*dto.EventDTO {
 func RidersToSnapshotsByID(riders []*domain.Rider) map[uuid.UUID]dto.RiderDTO {
 	byId := make(map[uuid.UUID]dto.RiderDTO, len(riders))
 	for _, r := range riders {
-		byId[r.ID] = RiderToSnapshot(r) // TODO hydrate country in hydrator
+		byId[r.ID] = RiderToSnapshot(r)
 	}
 	return byId
 }
@@ -32,7 +32,7 @@ func RidersToSnapshotsByID(riders []*domain.Rider) map[uuid.UUID]dto.RiderDTO {
 func TeamsToSnapshotsByID(teams []*domain.TeamSeason) map[uuid.UUID]dto.TeamDTO {
 	byId := make(map[uuid.UUID]dto.TeamDTO, len(teams))
 	for _, t := range teams {
-		byId[t.ID] = TeamToSnapshot(t) // TODO hydrate country in hydrator
+		byId[t.ID] = TeamToSnapshot(t)
 	}
 	return byId
 }
@@ -74,24 +74,65 @@ func TeamToSnapshot(team *domain.TeamSeason) dto.TeamDTO {
 }
 
 // Converts a result to a result snapshot (DTO with only the rank added).
-// Let the caller hydrate the rider/team.
+// Set the ids for the rider/team, but let the caller fully hydrate them.
 func ResultToSnapshot(result domain.Result) dto.ResultDTO {
+	var rider *dto.RiderDTO
+	var team *dto.TeamDTO
+
+	if result.RiderID != nil {
+		rider = &dto.RiderDTO{
+			ID: *result.RiderID,
+		}
+	}
+
+	if result.TeamSeasonID != nil {
+		team = &dto.TeamDTO{
+			ID: *result.TeamSeasonID,
+		}
+	}
+
 	return dto.ResultDTO{
-		Rank: result.Rank,
+		Rank:  result.Rank,
+		Rider: rider,
+		Team:  team,
 	}
 }
 
 // Converts a result to a result DTO.
-// Let the caller hydrate the rider/team.
+// Set the ids for the rider/team, but let the caller fully hydrate them.
 func ResultToDTO(result domain.Result) dto.ResultDTO {
-	return dto.ResultDTO{
-		Rank:        result.Rank,
-		Status:      result.Status,
-		Points:      result.Points,
-		TimeSeconds: result.TimeSeconds,
-	}
+	// Call toSnapshot to set the rider/team ids and rank.
+	dto := ResultToSnapshot(result)
+	dto.Status = result.Status
+	dto.Points = result.Points
+	dto.TimeSeconds = result.TimeSeconds
+	dto.Type = result.Type
+
+	return dto
 }
 
+func ResultsToDTOs(results []domain.Result) []dto.ResultDTO {
+	dtos := []dto.ResultDTO{}
+
+	for _, res := range results {
+		dtos = append(dtos, ResultToDTO(res))
+	}
+
+	return dtos
+}
+
+func ResultsDtoByType(resultsDTO []dto.ResultDTO) map[domain.ResultType][]dto.ResultDTO {
+	byType := map[domain.ResultType][]dto.ResultDTO{}
+
+	for _, res := range resultsDTO {
+		if _, ok := byType[res.Type]; !ok {
+			byType[res.Type] = make([]dto.ResultDTO, 0)
+		}
+		byType[res.Type] = append(byType[res.Type], res)
+	}
+
+	return byType
+}
 
 func CountryToSnapshot(country domain.Country) *dto.CountryDTO {
 	return &dto.CountryDTO{
@@ -112,3 +153,23 @@ func ToHasCountryCodeSlice[T domain.HasCountryCode](items []T) []domain.HasCount
 
 	return result
 }
+
+// ResultDtoToResponse takes a flat slice of ResultDTO
+// and map them in a ResultsResponse.
+func ResultDtoToResponse(resultDTO []dto.ResultDTO) dto.ResultsResponse {
+	byType := ResultsDtoByType(resultDTO)
+
+	return dto.ResultsResponse{
+		General:  byType[domain.ResultTypeGeneral],
+		Mountain: byType[domain.ResultTypeMountain],
+		Point:    byType[domain.ResultTypePoint],
+		Young:    byType[domain.ResultTypeYoung],
+
+		Stage:           byType[domain.ResultTypeStageGeneral],
+		OverallGeneral:  byType[domain.ResultTypeOverallGeneral],
+		OverallPoint:    byType[domain.ResultTypeOverallPoint],
+		OverallMountain: byType[domain.ResultTypeOverallMountain],
+		OverallYoung:    byType[domain.ResultTypeOverallYoung],
+	}
+}
+
