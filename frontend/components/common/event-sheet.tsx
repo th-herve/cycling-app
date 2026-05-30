@@ -21,10 +21,10 @@ import {
   FaRoad,
 } from "react-icons/fa6";
 import { JerseyLine, ResultLine } from "./result-line";
-import { ResultSnapshot } from "@/types/result";
 import ImageHideEmpty from "./ImageHideEmpty";
+import Result from "@/types/result";
 
-const getFirstRider = (result?: ResultSnapshot[]) =>
+const getFirstRider = (result?: Result[]) =>
   result?.find((r) => r.rank === 1)?.rider;
 
 const EventSheet = ({

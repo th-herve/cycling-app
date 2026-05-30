@@ -1,7 +1,7 @@
 import Classification from "./classification";
 import Country from "./country";
 import EventType from "./event-type";
-import { ResultsSnapshot } from "./result";
+import { ResultsResponse } from "./result";
 
 export default interface Event {
   id: string;
@@ -29,7 +29,7 @@ export default interface Event {
 
   country?: Country;
 
-  results?: ResultsSnapshot;
+  results?: ResultsResponse;
 
   parentName?: string;
 }

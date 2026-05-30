@@ -2,31 +2,25 @@ import { RiderSnapshot } from "./rider";
 import { TeamSnapshot } from "./team";
 
 export default interface Result {
-  id: string;
-  type: string;
-  eventId: string;
-  rank: number;
-  timeSeconds: number;
-  riderFirstName: string;
-  riderLastName: string;
-}
-
-export interface ResultSnapshot {
-  rank: number;
+  rank?: number;
+  type?: string;
+  eventId?: string;
+  timeSeconds?: number;
+  points?: number;
   rider?: RiderSnapshot;
   team?: TeamSnapshot; // Only for ttt results.
 }
 
-export interface ResultsSnapshot {
-  general?: ResultSnapshot[];
-  stage?: ResultSnapshot[];
+export interface ResultsResponse {
+  general?: Result[];
+  stage?: Result[];
 
-  overallGeneral?: ResultSnapshot[];
-  overallPoint?: ResultSnapshot[];
-  overallMountain?: ResultSnapshot[];
-  overallYoung?: ResultSnapshot[];
+  overallGeneral?: Result[];
+  overallPoint?: Result[];
+  overallMountain?: Result[];
+  overallYoung?: Result[];
 
-  point?: ResultSnapshot[];
-  mountain?: ResultSnapshot[];
-  young?: ResultSnapshot[];
+  point?: Result[];
+  mountain?: Result[];
+  young?: Result[];
 }

@@ -2,7 +2,7 @@ import CountryIcon from "@/components/common/countryIcon";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn, formatDateRange, isEventToday } from "@/lib/utils";
 import Event from "@/types/event";
-import { ResultSnapshot } from "@/types/result";
+import { Result } from "@/types/result";
 import { LucideCrown } from "lucide-react";
 import Link from "next/link";
 
@@ -68,7 +68,7 @@ const ResultDisplay = ({
   results,
   className,
 }: {
-  results: ResultSnapshot[];
+  results: Result[];
   className?: string;
 }) => {
   const winner = results?.[0];
