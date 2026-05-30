@@ -47,7 +47,7 @@ func HydrateEventResults(events []*dto.EventDTO, results []domain.Result, riderB
 	hasCountry := len(countries) > 0
 
 	for _, r := range results {
-		res := mapper.ResultToSnapshot(r)
+		res := mapper.ResultToDTO(r)
 
 		// Mutually exclusive.
 		isRider := r.RiderID != nil
