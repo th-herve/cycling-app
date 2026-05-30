@@ -4,6 +4,7 @@ import { cn, formatDateRange, isEventToday } from "@/lib/utils";
 import Event from "@/types/event";
 import { ResultSnapshot } from "@/types/result";
 import { LucideCrown } from "lucide-react";
+import Link from "next/link";
 
 interface Props {
   event: Event;
@@ -27,9 +28,11 @@ const EventCard = ({ event }: Props) => {
                 countryCode={event.country?.alpha2 || ""}
                 aria-label={event.country?.name}
               />
-              <h2 id={titleId} className="font-race text-2xl font-bold">
-                {event.name}
-              </h2>
+              <Link href={`/event/${event.id}`}>
+                <h2 id={titleId} className="font-race text-2xl font-bold">
+                  {event.name}
+                </h2>
+              </Link>
             </header>
           </div>
           <time
