@@ -15,7 +15,13 @@ type EventHydrationContext struct {
 	Teams     []*domain.TeamSeason
 }
 
-func HydrateCountry(events []*dto.EventDTO, countryMap domain.CountryMap) {
+type ResultHydrationContext struct {
+	Countries domain.CountryMap
+	Riders    []*domain.Rider
+	Teams     []*domain.TeamSeason
+}
+
+func HydrateEventCountry(events []*dto.EventDTO, countryMap domain.CountryMap) {
 	for _, event := range events {
 
 		if event.CountryCode != nil {
@@ -34,22 +40,42 @@ func HydrateCountry(events []*dto.EventDTO, countryMap domain.CountryMap) {
 	}
 }
 
-func HydrateResults(events []*dto.EventDTO, results []domain.Result, riderByID map[uuid.UUID]dto.RiderDTO, teamByID map[uuid.UUID]dto.TeamDTO) {
+func HydrateEventResults(events []*dto.EventDTO, results []domain.Result, riderByID map[uuid.UUID]dto.RiderDTO, teamByID map[uuid.UUID]dto.TeamDTO, countries domain.CountryMap) {
 	resultsSnapshotByEvent := make(map[uuid.UUID]map[domain.ResultType][]dto.ResultDTO)
-	hydrateRider := len(riderByID) > 0
-	hydrateTeam := len(teamByID) > 0 // Teams are for ttt stage result.
+	hasRider := len(riderByID) > 0
+	hasTeam := len(teamByID) > 0 // Teams are for ttt stage result.
+	hasCountry := len(countries) > 0
 
 	for _, r := range results {
 		res := mapper.ResultToSnapshot(r)
-		if hydrateRider && r.RiderID != nil {
-			if rs, ok := riderByID[*r.RiderID]; ok {
-				res.Rider = &rs
-			}
+
+		// Mutually exclusive.
+		isRider := r.RiderID != nil
+		isTeam := r.TeamSeasonID != nil
+
+		if isRider && isTeam {
+			continue
 		}
-		if r.RiderID == nil && hydrateTeam && r.TeamSeasonID != nil {
-			if t, ok := teamByID[*r.TeamSeasonID]; ok {
-				res.Team = &t
-			}
+		if isRider && !hasRider {
+			continue
+		}
+		if isTeam && !hasTeam {
+			log.Warn().Caller().
+				Str("resultID", r.ID.String()).
+				Msg("result has both rider and team id")
+			continue
+		}
+
+		if isRider {
+			res = hydrateResultRider(res, riderByID)
+		}
+
+		if isTeam {
+			res = hydrateResultTeam(res, teamByID)
+		}
+
+		if hasCountry {
+			res = hydrateResultCountry(res, countries)
 		}
 
 		if _, ok := resultsSnapshotByEvent[r.EventID]; !ok {
@@ -72,4 +98,47 @@ func HydrateResults(events []*dto.EventDTO, results []domain.Result, riderByID m
 			OverallYoung:    resultsSnapshotByEvent[e.ID][domain.ResultTypeOverallYoung],
 		}
 	}
+}
+
+func hydrateResultRider(res dto.ResultDTO, riderByID map[uuid.UUID]dto.RiderDTO) dto.ResultDTO {
+	if res.Rider == nil {
+		return res
+	}
+	rider, ok := riderByID[res.Rider.ID]
+	if !ok {
+		return res
+	}
+	res.Rider = &rider
+
+	return res
+}
+
+func hydrateResultTeam(res dto.ResultDTO, teamByID map[uuid.UUID]dto.TeamDTO) dto.ResultDTO {
+	if res.Team == nil {
+		return res
+	}
+	team, ok := teamByID[res.Team.ID]
+	if !ok {
+		return res
+	}
+	res.Team = &team
+
+	return res
+}
+
+func hydrateResultCountry(res dto.ResultDTO, countries domain.CountryMap) dto.ResultDTO {
+
+	if res.Rider != nil && res.Rider.Nationality != nil {
+		if c, ok := countries[res.Rider.Nationality.Alpha3]; ok {
+			res.Rider.Nationality = mapper.CountryToSnapshot(*c)
+		}
+	}
+
+	if res.Team != nil && res.Team.Country != nil {
+		if c, ok := countries[res.Team.Country.Alpha3]; ok {
+			res.Team.Country = mapper.CountryToSnapshot(*c)
+		}
+	}
+
+	return res
 }

@@ -5,6 +5,9 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
+	"github.com/th-herve/cycling-app/backend/internal/app/assembler"
+	"github.com/th-herve/cycling-app/backend/internal/app/dto"
+	"github.com/th-herve/cycling-app/backend/internal/app/hydrator"
 	"github.com/th-herve/cycling-app/backend/internal/app/storage"
 	"github.com/th-herve/cycling-app/backend/internal/common"
 	"github.com/th-herve/cycling-app/backend/pkg/domain"
@@ -18,11 +21,6 @@ type ResultService struct {
 }
 
 type ResultsByType = map[domain.ResultType][]domain.Result
-
-type ResultHydrationContext struct {
-	Countries domain.CountryMap
-	Riders    []*domain.Rider
-}
 
 func NewResultService(
 	storage *storage.ResultStorage,
@@ -50,7 +48,7 @@ func (s *ResultService) FindManyByEventIDs(ctx context.Context, eventsID []uuid.
 	return results, nil
 }
 
-func (s *ResultService) FindByEventID(ctx context.Context, eventID uuid.UUID, options *storage.ResultSearchOptions) ([]domain.Result, error) {
+func (s *ResultService) FindByEventID(ctx context.Context, eventID uuid.UUID, options *storage.ResultSearchOptions) (dto.ResultsResponse, error) {
 	results, err := s.storage.FindByEventID(ctx, eventID, options)
 
 	if err != nil {
@@ -58,8 +56,8 @@ func (s *ResultService) FindByEventID(ctx context.Context, eventID uuid.UUID, op
 			Caller().
 			Str("eventID", eventID.String()).
 			Msg("Error getting results for event")
-		return nil, common.GetErr("ResultService FindManyByEventIds", err)
+		return dto.ResultsResponse{}, common.GetErr("ResultService FindManyByEventIds", err)
 	}
 
-	return results, nil
+	return assembler.CreateResultsResponse(results, hydrator.ResultHydrationContext{}), nil
 }
