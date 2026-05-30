@@ -47,8 +47,8 @@ type ResultDTO struct {
 	Team        *TeamDTO             `json:"team,omitempty"`
 	Status      *domain.ResultStatus `json:"status,omitempty"`
 	Points      *int16               `json:"points,omitempty"`
-	TimeSeconds *int32               `json:"time_seconds,omitempty"`
-	GapSeconds  *int32               `json:"gap_seconds,omitempty"`
+	TimeSeconds *int32               `json:"timeSeconds,omitempty"`
+	GapSeconds  *int32               `json:"gapSeconds,omitempty"`
 	Type        domain.ResultType    `json:"-"` // Not in the response, but usefull for processing.
 }
 
