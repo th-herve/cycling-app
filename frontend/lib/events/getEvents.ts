@@ -6,3 +6,9 @@ export const getEvents = async (year: number, gender: string) => {
   const data: Event[] = (resp && resp.data) || [];
   return data;
 };
+
+export const getEvent = async (id: string) => {
+  const resp = await api.get(`/events/${id}`);
+  const data: Event = (resp && resp.data);
+  return data;
+};
