@@ -5,7 +5,7 @@ import (
 	"github.com/th-herve/cycling-app/backend/pkg/domain"
 )
 
-func CollectRidersId(results []domain.Result) []uuid.UUID {
+func CollectResultsRidersID(results []domain.Result) []uuid.UUID {
 	seen := map[uuid.UUID]bool{}
 	ridersID := []uuid.UUID{}
 
@@ -27,7 +27,7 @@ func CollectRidersId(results []domain.Result) []uuid.UUID {
 	return ridersID
 }
 
-func CollectTeamsId(results []domain.Result) []uuid.UUID {
+func CollectResultTeamsID(results []domain.Result) []uuid.UUID {
 	seen := map[uuid.UUID]bool{}
 	teamsID := []uuid.UUID{}
 
