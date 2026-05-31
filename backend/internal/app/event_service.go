@@ -91,19 +91,19 @@ func (s *EventService) getHydrationContext(ctx context.Context, events []*domain
 	results, err := s.resultService.FindManyByEventIDs(ctx, eventsId,
 		&storage.ResultSearchOptions{Limit: resultLimit})
 
-	// Collect the riders ids in the results, and find them.
+	// Collect the riders and teams ids in the results, and find them.
 	var riders []*domain.Rider
 	var teams []*domain.TeamSeason
 	if err != nil {
 		log.Warn().Err(err).Msg("Error getting results, they won't be added to the response")
 	} else {
-		ridersID := assembler.CollectRidersId(results)
+		ridersID := assembler.CollectResultsRidersID(results)
 		riders, err = s.riderService.FindManyById(ctx, ridersID)
 		if err != nil {
 			log.Warn().Caller().Err(err).Msg("Error getting riders, they won't be added to the response")
 		}
 
-		teamsID := assembler.CollectTeamsId(results)
+		teamsID := assembler.CollectResultTeamsID(results)
 		teams, err = s.teamService.FindManyById(ctx, teamsID)
 		if err != nil {
 			log.Warn().Caller().Err(err).Msg("Error getting teams, they won't be added to the response")
