@@ -53,3 +53,36 @@ func (s *TeamStorage) FindManyIds(ctx context.Context, teamsId []uuid.UUID) ([]*
 
 	return teams, nil
 }
+
+func (s *TeamStorage) FindManyByRiderIDsAndSeason(ctx context.Context, riderIDs []uuid.UUID, seasonYear int) (map[uuid.UUID]*domain.TeamSeason, error) {
+
+	queryBuilder := db.Q.Select("team_seasons.*, team_rosters.rider_id").
+		From("team_seasons").
+		Join("team_rosters ON team_rosters.team_season_id = team_seasons.id").
+		Where(squirrel.Eq{"team_rosters.rider_id": riderIDs, "team_seasons.season_year": seasonYear})
+
+	query, args, err := queryBuilder.ToSql()
+
+	if err != nil {
+		return nil, err
+	}
+
+	var rows []struct {
+		domain.TeamSeason
+		RiderID uuid.UUID `db:"rider_id"`
+	}
+
+	err = s.db.Select(&rows, query, args...)
+
+	if err != nil {
+		return nil, err
+	}
+
+	teamsByRiderID := make(map[uuid.UUID]*domain.TeamSeason, len(rows))
+
+	for i := range rows {
+		teamsByRiderID[rows[i].RiderID] = &rows[i].TeamSeason
+	}
+
+	return teamsByRiderID, nil
+}

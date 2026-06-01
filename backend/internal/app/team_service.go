@@ -11,7 +11,7 @@ import (
 )
 
 type TeamService struct {
-	storage        *storage.TeamStorage
+	storage *storage.TeamStorage
 }
 
 func NewTeamService(storage *storage.TeamStorage) *TeamService {
@@ -42,4 +42,18 @@ func (s *TeamService) FindManyById(ctx context.Context, teamIds []uuid.UUID) ([]
 	}
 
 	return teams, nil
+}
+
+func (s *TeamService) FindManyByRiderIDAndSeason(ctx context.Context, riderIDs []uuid.UUID, seasonYear int) (map[uuid.UUID]*domain.TeamSeason, error) {
+	teamByRiderIDs, err := s.storage.FindManyByRiderIDsAndSeason(ctx, riderIDs, seasonYear)
+
+	if err != nil {
+		log.Debug().
+			Caller().
+			Err(err).
+			Msg("Error getting teams for riders")
+		return nil, common.GetErr("TeamService FindManyByRiderIDsAndSeason", err)
+	}
+
+	return teamByRiderIDs, nil
 }
