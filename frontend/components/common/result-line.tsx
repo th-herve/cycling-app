@@ -1,7 +1,7 @@
-import { Result } from "@/types/result";
+import Result from "@/types/result";
 import CountryIcon from "./countryIcon";
 import JerseyIcon, { JerseyType } from "./jerseyIcon";
-import { RiderSnapshot } from "@/types/rider";
+import { Rider } from "@/types/rider";
 
 export const ResultLine = ({
   result,
@@ -62,7 +62,7 @@ export const JerseyLine = ({
   rider,
 }: {
   type: JerseyType;
-  rider: RiderSnapshot;
+  rider: Rider;
 }) => {
   return (
     <Line>
