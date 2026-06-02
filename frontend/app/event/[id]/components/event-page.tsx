@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Props {
   event: Event;
@@ -19,7 +20,6 @@ interface Props {
 }
 
 const EventPage = ({ event, className }: Props) => {
-  const hasResult = event.results;
   return (
     <section className={className}>
       <h1 className="mb-20">
@@ -37,7 +37,10 @@ const EventPage = ({ event, className }: Props) => {
           <h2 className="mb-2">Profile</h2>
           <EventProfile id={event.id} />
         </div>
-        {hasResult && <ResultSection results={event.results?.general} />}
+        <div>
+          <h2 className="mb-2">Results</h2>
+          <ResultTab event={event} />
+        </div>
       </div>
     </section>
   );
@@ -99,7 +102,56 @@ function formatHHMMSS(totalSeconds: number): string {
   return s.toString().padStart(2, "0");
 }
 
-const ResultSection = ({ results }: { results?: Result[] }) => {
+const ResultTab = ({ event }: { event: Event }) => {
+  if (!event.results) {
+    return <p>No results yet.</p>;
+  }
+
+  return (
+    <Tabs defaultValue="general">
+      <TabsList variant="line">
+        {event.results?.general && (
+          <TabsTrigger value="general">General</TabsTrigger>
+        )}
+        {event.results?.mountain && (
+          <TabsTrigger value="mountain">Mountain</TabsTrigger>
+        )}
+        {event.results?.point && (
+          <TabsTrigger value="points">Points</TabsTrigger>
+        )}
+        {event.results?.young && <TabsTrigger value="young">Young</TabsTrigger>}
+      </TabsList>
+      <TabsContent value="general">
+        {event.results?.general && (
+          <ResultSection type="time" results={event.results?.general} />
+        )}
+      </TabsContent>
+      <TabsContent value="mountain">
+        {event.results?.mountain && (
+          <ResultSection type="points" results={event.results?.mountain} />
+        )}
+      </TabsContent>
+      <TabsContent value="points">
+        {event.results?.point && (
+          <ResultSection type="points" results={event.results?.point} />
+        )}
+      </TabsContent>
+      <TabsContent value="young">
+        {event.results?.young && (
+          <ResultSection type="time" results={event.results?.young} />
+        )}
+      </TabsContent>
+    </Tabs>
+  );
+};
+
+const ResultSection = ({
+  results,
+  type,
+}: {
+  results?: Result[];
+  type: "time" | "points";
+}) => {
   if (!results) {
     return;
   }
@@ -107,39 +159,52 @@ const ResultSection = ({ results }: { results?: Result[] }) => {
   const firstTime = results[0].timeSeconds || 0;
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Rank</TableHead>
-          <TableHead>Rider</TableHead>
-          <TableHead>Time</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {results.map((result) => (
-          <TableRow key={result.rider?.id ? result.rider.id : result.team?.id}>
-            <TableCell className="font-medium font-mono">
-              {result.rank || result.status}
-            </TableCell>
-            <TableCell className="flex items-center gap-2">
-              <CountryIcon
-                countryCode={result.rider?.nationality?.alpha2 || ""}
-              />
-              <p>
-                {result.rider?.firstName} {result.rider?.lastName}
-              </p>
-            </TableCell>
-            <TableCell>
-              <span className="inline-block w-[9ch] text-right font-mono">
-                {result.timeSeconds &&
-                  (result.rank === 1
-                    ? formatHHMMSS(result.timeSeconds)
-                    : `+${formatHHMMSS(result.timeSeconds - firstTime)}`)}
-              </span>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <Card>
+      <CardContent>
+        <Table className="bg-card">
+          <TableHeader>
+            <TableRow className="hover:bg-card uppercase">
+              <TableHead className="w-20">Rank</TableHead>
+              <TableHead>Rider</TableHead>
+              <TableHead>Team</TableHead>
+              <TableHead className="text-right">
+                {type === "time" ? "Time" : "Points"}
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {results.map((result) => (
+              <TableRow
+                key={result.rider?.id ? result.rider.id : result.team?.id}
+                className="odd:bg-muted hover:bg-card odd:hover:bg-muted"
+              >
+                <TableCell>{result.rank || result.status}</TableCell>
+                <TableCell className="flex items-center gap-2">
+                  <CountryIcon
+                    countryCode={result.rider?.nationality?.alpha2 || ""}
+                  />
+                  {result.rider?.firstName} {result.rider?.lastName}
+                </TableCell>
+                <TableCell>
+                  <span className="hidden md:inline">
+                    {result.rider?.team?.name}
+                  </span>
+                  <span className="md:hidden">
+                    {result.rider?.team?.abbreviation}
+                  </span>
+                </TableCell>
+                <TableCell className="text-right tabular-nums">
+                  {result.timeSeconds
+                    ? result.rank === 1
+                      ? formatHHMMSS(result.timeSeconds)
+                      : `+${formatHHMMSS(result.timeSeconds - firstTime)}`
+                    : result.points}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
   );
 };
