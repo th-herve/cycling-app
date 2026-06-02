@@ -1,5 +1,5 @@
-import { RiderSnapshot } from "./rider";
-import { TeamSnapshot } from "./team";
+import { Rider } from "./rider";
+import { Team } from "./team";
 
 export default interface Result {
   rank?: number;
@@ -8,8 +8,8 @@ export default interface Result {
   eventId?: string;
   timeSeconds?: number;
   points?: number;
-  rider?: RiderSnapshot;
-  team?: TeamSnapshot; // Only for ttt results.
+  rider?: Rider;
+  team?: Team; // Only for ttt results.
 }
 
 export interface ResultsResponse {

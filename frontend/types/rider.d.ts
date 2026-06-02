@@ -1,9 +1,10 @@
 import Country from "./country";
+import { Team } from "./team";
 
-export interface RiderSnapshot {
+export interface Rider {
   id: string;
   firstName: string;
   lastName: string;
   nationality?: Country;
-  // Team;
+  team?: Team
 }
