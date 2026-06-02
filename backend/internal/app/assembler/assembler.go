@@ -22,7 +22,9 @@ func CreateEventListResponse(events []*domain.Event, hydrationCtx hydrator.Event
 		riderByID := mapper.RidersToSnapshotsByID(hydrationCtx.Riders)
 		teamsByID := mapper.TeamsToSnapshotsByID(hydrationCtx.Teams)
 
-		hydrator.HydrateEventResults(flatResponse, hydrationCtx.Results, riderByID, teamsByID, hydrationCtx.Countries)
+		ridersTeams := mapper.MapValues(hydrationCtx.RidersTeams, mapper.TeamToSnapshot)
+
+		hydrator.HydrateEventResults(flatResponse, hydrationCtx.Results, riderByID, teamsByID, ridersTeams, hydrationCtx.Countries)
 	}
 
 	if len(flatResponse) == 1 {

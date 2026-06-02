@@ -9,10 +9,11 @@ import (
 )
 
 type EventHydrationContext struct {
-	Countries domain.CountryMap
-	Results   []domain.Result
-	Riders    []*domain.Rider
-	Teams     []*domain.TeamSeason
+	Countries   domain.CountryMap
+	Results     []domain.Result
+	Riders      []*domain.Rider
+	Teams       []*domain.TeamSeason
+	RidersTeams map[uuid.UUID]*domain.TeamSeason
 }
 
 type ResultHydrationContext struct {
@@ -40,7 +41,14 @@ func HydrateEventCountry(events []*dto.EventDTO, countryMap domain.CountryMap) {
 	}
 }
 
-func HydrateEventResults(events []*dto.EventDTO, results []domain.Result, riderByID map[uuid.UUID]dto.RiderDTO, teamByID map[uuid.UUID]dto.TeamDTO, countries domain.CountryMap) {
+func HydrateEventResults(
+	events []*dto.EventDTO,
+	results []domain.Result,
+	riderByID map[uuid.UUID]dto.RiderDTO,
+	teamByID map[uuid.UUID]dto.TeamDTO,
+	ridersTeams map[uuid.UUID]dto.TeamDTO,
+	countries domain.CountryMap,
+) {
 	resultsSnapshotByEvent := make(map[uuid.UUID]map[domain.ResultType][]dto.ResultDTO)
 	hasRider := len(riderByID) > 0
 	hasTeam := len(teamByID) > 0 // Teams are for ttt stage result.
@@ -67,7 +75,7 @@ func HydrateEventResults(events []*dto.EventDTO, results []domain.Result, riderB
 		}
 
 		if isRider {
-			res = hydrateResultRider(res, riderByID)
+			res = hydrateResultRider(res, riderByID, ridersTeams)
 		}
 
 		if isTeam {
@@ -100,7 +108,7 @@ func HydrateEventResults(events []*dto.EventDTO, results []domain.Result, riderB
 	}
 }
 
-func hydrateResultRider(res dto.ResultDTO, riderByID map[uuid.UUID]dto.RiderDTO) dto.ResultDTO {
+func hydrateResultRider(res dto.ResultDTO, riderByID map[uuid.UUID]dto.RiderDTO, teamsByRider map[uuid.UUID]dto.TeamDTO) dto.ResultDTO {
 	if res.Rider == nil {
 		return res
 	}
@@ -109,6 +117,12 @@ func hydrateResultRider(res dto.ResultDTO, riderByID map[uuid.UUID]dto.RiderDTO)
 		return res
 	}
 	res.Rider = &rider
+
+	riderTeam, ok := teamsByRider[res.Rider.ID]
+	if !ok {
+		return res
+	}
+	res.Rider.Team = &riderTeam
 
 	return res
 }
