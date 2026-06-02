@@ -163,3 +163,15 @@ func ResultDtoToResponse(resultDTO []dto.ResultDTO) dto.ResultsResponse {
 		OverallYoung:    byType[domain.ResultTypeOverallYoung],
 	}
 }
+
+// MapValues takes a source composed of entities in a map and convert each value with a given mapper function.
+// Returns a new map with each value converted using the mapper.
+func MapValues[K comparable, T any, G any](source map[K]T, mapper func(T) G) map[K]G {
+	mapped := make(map[K]G)
+
+	for id, entity := range source {
+		mapped[id] = mapper(entity)
+	}
+
+	return mapped
+}
