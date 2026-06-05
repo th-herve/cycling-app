@@ -54,9 +54,9 @@ func (s *EventService) FindAllBySeason(ctx context.Context, year int, gender dom
 		return nil, common.GetErr("EventService FindAllBySeason", err)
 	}
 
-	hydrationCtx := s.getHydrationContext(ctx, events, 3, year)
+	hydrationCtx := s.getHydrationContext(ctx, events, year, &storage.ResultSearchOptions{Limit: 3})
 
-	response := assembler.CreateEventListResponse(events, hydrationCtx)
+	response := assembler.CreateEventListResponse(events, hydrationCtx, true)
 
 	return response, nil
 }
@@ -73,9 +73,9 @@ func (s *EventService) FindByID(ctx context.Context, id uuid.UUID) (*dto.EventDT
 
 	asList := []*domain.Event{&event}
 
-	hydrationCtx := s.getHydrationContext(ctx, asList, 0, event.SeasonYear)
+	hydrationCtx := s.getHydrationContext(ctx, asList, event.SeasonYear, nil)
 
-	response := assembler.CreateEventListResponse(asList, hydrationCtx)
+	response := assembler.CreateEventListResponse(asList, hydrationCtx, true)
 
 	if len(response) == 0 {
 		return nil, common.GetErr("EventService FindByID", errors.New("response not found"))
@@ -84,12 +84,31 @@ func (s *EventService) FindByID(ctx context.Context, id uuid.UUID) (*dto.EventDT
 	return response[0], nil
 }
 
-func (s *EventService) getHydrationContext(ctx context.Context, events []*domain.Event, resultLimit int, seasonYear int) hydrator.EventHydrationContext {
+func (s *EventService) FindStages(ctx context.Context, parentEventID uuid.UUID) ([]*dto.EventDTO, error) {
+	events, err := s.storage.FindStages(ctx, parentEventID)
+
+	if err != nil {
+		log.Debug().
+			Str("parentEventID", parentEventID.String()).
+			Caller().
+			Msg("Error getting events")
+		return nil, common.GetErr("EventService FindAllBySeason", err)
+	}
+
+	hydrationCtx := s.getHydrationContext(ctx, events, events[0].SeasonYear, &storage.ResultSearchOptions{Limit: 1, Type: []domain.ResultType{domain.ResultTypeStageGeneral}})
+
+	response := assembler.CreateEventListResponse(events, hydrationCtx, false)
+
+	return response, nil
+}
+
+// TODO refactor
+func (s *EventService) getHydrationContext(ctx context.Context, events []*domain.Event, seasonYear int, resultOpt *storage.ResultSearchOptions) hydrator.EventHydrationContext {
 
 	// Collect events ids to find their results.
 	eventsID := assembler.CollectEventsID(events)
 	results, err := s.resultService.FindManyByEventIDs(ctx, eventsID,
-		&storage.ResultSearchOptions{Limit: resultLimit})
+		resultOpt)
 
 	// Collect the riders and teams ids in the results, and find them.
 	var riders []*domain.Rider

@@ -20,7 +20,12 @@ func NewEventStorage(db *sqlx.DB) *EventStorage {
 
 func (s *EventStorage) FindAllBySeason(ctx context.Context, seasonYear int, seasonGender domain.Gender) ([]*domain.Event, error) {
 
-	query, args, err := db.Q.Select("*").From("events").Where(squirrel.Eq{"season_year": seasonYear, "season_gender": seasonGender}).OrderBy("start").ToSql()
+	query, args, err :=
+		db.Q.Select("*").
+			From("events").
+			Where(squirrel.Eq{"season_year": seasonYear, "season_gender": seasonGender}).
+			OrderBy("start").
+			ToSql()
 
 	if err != nil {
 		return nil, err
@@ -41,7 +46,11 @@ func (s *EventStorage) FindByID(ctx context.Context, id uuid.UUID) (domain.Event
 
 	var event domain.Event
 
-	query, args, err := db.Q.Select("*").From("events").Where(squirrel.Eq{"id": id.String()}).ToSql()
+	query, args, err :=
+		db.Q.Select("*").
+			From("events").
+			Where(squirrel.Eq{"id": id.String()}).
+			ToSql()
 
 	if err != nil {
 		return event, err
@@ -54,4 +63,28 @@ func (s *EventStorage) FindByID(ctx context.Context, id uuid.UUID) (domain.Event
 	}
 
 	return event, nil
+}
+
+func (s *EventStorage) FindStages(ctx context.Context, parentEventID uuid.UUID) ([]*domain.Event, error) {
+
+	query, args, err :=
+		db.Q.Select("*").
+			From("events").
+			Where(squirrel.Eq{"parent_event_id": parentEventID.String()}).
+			OrderBy("start").
+			ToSql()
+
+	if err != nil {
+		return nil, err
+	}
+
+	var stages []*domain.Event
+
+	err = s.db.Select(&stages, query, args...)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return stages, nil
 }

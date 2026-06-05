@@ -9,7 +9,7 @@ import (
 	"github.com/th-herve/cycling-app/backend/pkg/domain"
 )
 
-func CreateEventListResponse(events []*domain.Event, hydrationCtx hydrator.EventHydrationContext) []*dto.EventDTO {
+func CreateEventListResponse(events []*domain.Event, hydrationCtx hydrator.EventHydrationContext, restructure bool) []*dto.EventDTO {
 	flatResponse := mapper.EventsToDTO(events)
 
 	withCountry := hydrationCtx.Countries != nil
@@ -27,7 +27,7 @@ func CreateEventListResponse(events []*domain.Event, hydrationCtx hydrator.Event
 		hydrator.HydrateEventResults(flatResponse, hydrationCtx.Results, riderByID, teamsByID, ridersTeams, hydrationCtx.Countries)
 	}
 
-	if len(flatResponse) == 1 {
+	if len(flatResponse) == 1 || !restructure {
 		return flatResponse
 	}
 
