@@ -2,7 +2,6 @@ import CountryIcon from "@/components/common/countryIcon";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatDateLong } from "@/lib/utils";
 import Event from "@/types/event";
-import EventProfile from "./profile";
 import Result from "@/types/result";
 import {
   Table,
@@ -13,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import EventProfile from "./profile";
 
 interface Props {
   event: Event;
@@ -22,7 +22,7 @@ interface Props {
 const EventPage = ({ event, className }: Props) => {
   return (
     <section className={className}>
-      <h1 className="mb-20">
+      <h1>
         <CountryIcon
           className="mr-4"
           countryCode={event.country?.alpha2 || ""}
@@ -31,8 +31,9 @@ const EventPage = ({ event, className }: Props) => {
         {event.name} {event.seasonYear}
       </h1>
 
-      <div className="space-y-20">
+      <div className="space-y-10">
         <InfoSection event={event} />
+
         <div>
           <h2 className="mb-2">Profile</h2>
           <EventProfile id={event.id} />
