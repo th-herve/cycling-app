@@ -19,27 +19,27 @@ func NewRiderService(storage *storage.RiderStorage, countryStorage *storage.Coun
 	return &RiderService{storage: storage, countryStorage: countryStorage}
 }
 
-func (s *RiderService) FindById(ctx context.Context, riderId uuid.UUID) (domain.Rider, error) {
-	result, err := s.storage.FindById(ctx, riderId)
+func (s *RiderService) FindByID(ctx context.Context, riderID uuid.UUID) (domain.Rider, error) {
+	result, err := s.storage.FindByID(ctx, riderID)
 
 	if err != nil {
 		log.Debug().
 			Caller().
 			Msg("Error getting rider")
-		return domain.Rider{}, common.GetErr("RiderService FindById", err)
+		return domain.Rider{}, common.GetErr("RiderService FindByID", err)
 	}
 
 	return result, nil
 }
 
-func (s *RiderService) FindManyById(ctx context.Context, riderIds []uuid.UUID) ([]*domain.Rider, error) {
-	riders, err := s.storage.FindManyIds(ctx, riderIds)
+func (s *RiderService) FindManyByID(ctx context.Context, riderIDs []uuid.UUID) ([]*domain.Rider, error) {
+	riders, err := s.storage.FindManyIDs(ctx, riderIDs)
 
 	if err != nil {
 		log.Debug().
 			Caller().
 			Msg("Error getting rider")
-		return nil, common.GetErr("RiderService FindById", err)
+		return nil, common.GetErr("RiderService FindByID", err)
 	}
 
 	return riders, nil

@@ -64,9 +64,9 @@ func EventStageID(name string, seasonGender domain.Gender, start time.Time, main
 
 // Generate an id for a result row.
 //
-// ParticipantID is either a riderID or a teamSeasonId, depending on the result type.
-func ResultID(resultType domain.ResultType, eventId uuid.UUID, participantID uuid.UUID) uuid.UUID {
-	data := fmt.Appendf(nil, "%s|%s|%s", resultType, eventId.String(), participantID.String())
+// ParticipantID is either a riderID or a teamSeasonID, depending on the result type.
+func ResultID(resultType domain.ResultType, eventID uuid.UUID, participantID uuid.UUID) uuid.UUID {
+	data := fmt.Appendf(nil, "%s|%s|%s", resultType, eventID.String(), participantID.String())
 	return uuid.NewSHA1(NamespaceResult, data)
 }
 

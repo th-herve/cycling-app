@@ -25,8 +25,8 @@ func NewResultStorage(db *sqlx.DB) *ResultStorage {
 	return &ResultStorage{db: db}
 }
 
-func (s *ResultStorage) FindManyByEventIDs(ctx context.Context, eventsId []uuid.UUID, options *ResultSearchOptions) ([]domain.Result, error) {
-	queryBuilder := db.Q.Select("*").From("results").Where(squirrel.Eq{"event_id": eventsId})
+func (s *ResultStorage) FindManyByEventIDs(ctx context.Context, eventsID []uuid.UUID, options *ResultSearchOptions) ([]domain.Result, error) {
+	queryBuilder := db.Q.Select("*").From("results").Where(squirrel.Eq{"event_id": eventsID})
 
 	queryBuilder = s.applyOptions(queryBuilder, options)
 
@@ -51,9 +51,9 @@ func (s *ResultStorage) FindManyByEventIDs(ctx context.Context, eventsId []uuid.
 	return result, nil
 }
 
-func (s *ResultStorage) FindByEventID(ctx context.Context, eventId uuid.UUID, options *ResultSearchOptions) ([]domain.Result, error) {
+func (s *ResultStorage) FindByEventID(ctx context.Context, eventID uuid.UUID, options *ResultSearchOptions) ([]domain.Result, error) {
 
-	queryBuilder := db.Q.Select("*").From("results").Where(squirrel.Eq{"event_id": eventId})
+	queryBuilder := db.Q.Select("*").From("results").Where(squirrel.Eq{"event_id": eventID})
 
 	queryBuilder = s.applyOptions(queryBuilder, options)
 

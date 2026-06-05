@@ -39,7 +39,7 @@ func (s *ResultService) FindManyByEventIDs(ctx context.Context, eventsID []uuid.
 		log.Debug().
 			Caller().
 			Msg("Error getting many results")
-		return nil, common.GetErr("ResultService FindManyByEventIds", err)
+		return nil, common.GetErr("ResultService FindManyByEventIDs", err)
 	}
 
 	return results, nil

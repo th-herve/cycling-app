@@ -68,7 +68,7 @@ func (s *EventService) FindByID(ctx context.Context, id uuid.UUID) (*dto.EventDT
 		log.Debug().
 			Caller().
 			Msg("Error getting team")
-		return nil, common.GetErr("EventService FindById", err)
+		return nil, common.GetErr("EventService FindByID", err)
 	}
 
 	asList := []*domain.Event{&event}
@@ -87,8 +87,8 @@ func (s *EventService) FindByID(ctx context.Context, id uuid.UUID) (*dto.EventDT
 func (s *EventService) getHydrationContext(ctx context.Context, events []*domain.Event, resultLimit int, seasonYear int) hydrator.EventHydrationContext {
 
 	// Collect events ids to find their results.
-	eventsId := assembler.CollectEventsID(events)
-	results, err := s.resultService.FindManyByEventIDs(ctx, eventsId,
+	eventsID := assembler.CollectEventsID(events)
+	results, err := s.resultService.FindManyByEventIDs(ctx, eventsID,
 		&storage.ResultSearchOptions{Limit: resultLimit})
 
 	// Collect the riders and teams ids in the results, and find them.
@@ -99,14 +99,14 @@ func (s *EventService) getHydrationContext(ctx context.Context, events []*domain
 		log.Warn().Err(err).Msg("Error getting results, they won't be added to the response")
 	} else {
 		ridersID := assembler.CollectResultsRidersID(results)
-		riders, err = s.riderService.FindManyById(ctx, ridersID)
+		riders, err = s.riderService.FindManyByID(ctx, ridersID)
 		if err != nil {
 			log.Warn().Caller().Err(err).Msg("Error getting riders, they won't be added to the response")
 		}
 
 		// Get the teams from the result (for TTT or teams result).
 		teamsID := assembler.CollectResultTeamsID(results)
-		teams, err = s.teamService.FindManyById(ctx, teamsID)
+		teams, err = s.teamService.FindManyByID(ctx, teamsID)
 		if err != nil {
 			log.Warn().Caller().Err(err).Msg("Error getting teams, they won't be added to the response")
 		}
