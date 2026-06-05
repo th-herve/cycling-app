@@ -49,32 +49,32 @@ func CreateResultsResponse(results []domain.Result, hydrationCtx hydrator.Result
 // Returns the new sturcture.
 func restructureStages(flatEvents []*dto.EventDTO) []*dto.EventDTO {
 	result := make([]*dto.EventDTO, 0, len(flatEvents))
-	raceEventsById := make(map[uuid.UUID]*dto.EventDTO)
-	stagesEventsByRaceId := make(map[uuid.UUID][]*dto.EventDTO)
+	raceEventsByID := make(map[uuid.UUID]*dto.EventDTO)
+	stagesEventsByRaceID := make(map[uuid.UUID][]*dto.EventDTO)
 
 	for _, e := range flatEvents {
 		switch e.Type {
 		case domain.EventTypeRace:
-			raceEventsById[e.ID] = e
+			raceEventsByID[e.ID] = e
 			result = append(result, e)
 		case domain.EventTypeStage:
 			if e.ParentEventID == nil {
 				log.Warn().
-					Str("eventId", e.ID.String()).
-					Msg("Event of type stage does not have a parentId")
+					Str("eventID", e.ID.String()).
+					Msg("Event of type stage does not have a parentID")
 				continue
 			}
-			list, ok := stagesEventsByRaceId[*e.ParentEventID]
+			list, ok := stagesEventsByRaceID[*e.ParentEventID]
 			if !ok {
 				list = []*dto.EventDTO{}
 			}
-			stagesEventsByRaceId[*e.ParentEventID] = append(list, e)
+			stagesEventsByRaceID[*e.ParentEventID] = append(list, e)
 		}
 	}
 
 	// Add the parent name to the stages.
-	for parentId, stagesList := range stagesEventsByRaceId {
-		parent := raceEventsById[parentId]
+	for parentID, stagesList := range stagesEventsByRaceID {
+		parent := raceEventsByID[parentID]
 		if parent == nil {
 			continue
 		}
@@ -85,7 +85,7 @@ func restructureStages(flatEvents []*dto.EventDTO) []*dto.EventDTO {
 
 	// Add the stages to the response races.
 	for _, race := range result {
-		stages, ok := stagesEventsByRaceId[race.ID]
+		stages, ok := stagesEventsByRaceID[race.ID]
 		if ok {
 			race.Stages = stages
 		}

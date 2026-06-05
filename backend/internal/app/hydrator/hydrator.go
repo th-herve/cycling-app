@@ -31,7 +31,7 @@ func HydrateEventCountry(events []*dto.EventDTO, countryMap domain.CountryMap) {
 			if !ok {
 				log.Warn().Caller().
 					Str("countryCode", *event.CountryCode).
-					Str("eventId", event.ID.String()).
+					Str("eventID", event.ID.String()).
 					Msg("Could not retrieve country code from the country map")
 				continue
 			}

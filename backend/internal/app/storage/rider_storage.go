@@ -18,8 +18,8 @@ func NewRiderStorage(db *sqlx.DB) *RiderStorage {
 	return &RiderStorage{db: db}
 }
 
-func (s *RiderStorage) FindById(ctx context.Context, riderId uuid.UUID) (domain.Rider, error) {
-	query, args, err := db.Q.Select("*").From("riders").Where(squirrel.Eq{"id": riderId.String()}).ToSql()
+func (s *RiderStorage) FindByID(ctx context.Context, riderID uuid.UUID) (domain.Rider, error) {
+	query, args, err := db.Q.Select("*").From("riders").Where(squirrel.Eq{"id": riderID.String()}).ToSql()
 
 	if err != nil {
 		return domain.Rider{}, err
@@ -36,8 +36,8 @@ func (s *RiderStorage) FindById(ctx context.Context, riderId uuid.UUID) (domain.
 	return rider, nil
 }
 
-func (s *RiderStorage) FindManyIds(ctx context.Context, ridersId []uuid.UUID) ([]*domain.Rider, error) {
-	query, args, err := db.Q.Select("*").From("riders").Where(squirrel.Eq{"id": ridersId}).ToSql()
+func (s *RiderStorage) FindManyIDs(ctx context.Context, ridersID []uuid.UUID) ([]*domain.Rider, error) {
+	query, args, err := db.Q.Select("*").From("riders").Where(squirrel.Eq{"id": ridersID}).ToSql()
 
 	if err != nil {
 		return nil, err

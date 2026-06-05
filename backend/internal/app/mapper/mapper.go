@@ -21,20 +21,20 @@ func EventsToDTO(events []*domain.Event) []*dto.EventDTO {
 
 // Converts list of Rider to RiderSnapshot and map them by id.
 func RidersToSnapshotsByID(riders []*domain.Rider) map[uuid.UUID]dto.RiderDTO {
-	byId := make(map[uuid.UUID]dto.RiderDTO, len(riders))
+	byID := make(map[uuid.UUID]dto.RiderDTO, len(riders))
 	for _, r := range riders {
-		byId[r.ID] = RiderToSnapshot(r)
+		byID[r.ID] = RiderToSnapshot(r)
 	}
-	return byId
+	return byID
 }
 
 // Converts list of Team to TeamSnapshot and map them by id.
 func TeamsToSnapshotsByID(teams []*domain.TeamSeason) map[uuid.UUID]dto.TeamDTO {
-	byId := make(map[uuid.UUID]dto.TeamDTO, len(teams))
+	byID := make(map[uuid.UUID]dto.TeamDTO, len(teams))
 	for _, t := range teams {
-		byId[t.ID] = TeamToSnapshot(t)
+		byID[t.ID] = TeamToSnapshot(t)
 	}
-	return byId
+	return byID
 }
 
 // Converts a rider to a rider snapshot.

@@ -10,18 +10,18 @@ func CollectResultsRidersID(results []domain.Result) []uuid.UUID {
 	ridersID := []uuid.UUID{}
 
 	for _, r := range results {
-		riderId := r.RiderID
-		if riderId == nil {
+		riderID := r.RiderID
+		if riderID == nil {
 			continue
 		}
 
-		_, saw := seen[*riderId]
+		_, saw := seen[*riderID]
 		if saw {
 			continue
 		}
 
-		ridersID = append(ridersID, *riderId)
-		seen[*riderId] = true
+		ridersID = append(ridersID, *riderID)
+		seen[*riderID] = true
 	}
 
 	return ridersID
