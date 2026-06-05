@@ -75,3 +75,23 @@ func (h *EventHandler) GetOne(c *gin.Context) {
 
 	SuccessResponse(c, event)
 }
+
+func (h *EventHandler) GetStages(c *gin.Context) {
+	idParam := c.Param("id")
+
+	id, err := uuid.Parse(idParam)
+
+	if err != nil {
+		c.Error(common.ErrInvalidInput)
+		return
+	}
+
+	event, err := h.eventService.FindStages(c.Request.Context(), id)
+
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	SuccessResponse(c, event)
+}
