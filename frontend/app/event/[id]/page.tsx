@@ -1,6 +1,6 @@
 import DefaultLayout from "@/components/layouts/defaultLayout";
 import EventPage from "./components/event-page";
-import { getEvent } from "@/lib/events/getEvents";
+import { getEvent, getStages } from "@/lib/events/getEvents";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -10,10 +10,11 @@ const Page = async ({ params }: Props) => {
   const { id } = await params;
   const data = await getEvent(id);
 
-  console.log(data);
+  const stages = !data.isSingleDay ? await getStages(id) : undefined;
+
   return (
     <DefaultLayout>
-      <EventPage event={data} />
+      <EventPage event={data} stages={stages} />
     </DefaultLayout>
   );
 };

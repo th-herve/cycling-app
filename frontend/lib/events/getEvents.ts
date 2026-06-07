@@ -12,3 +12,9 @@ export const getEvent = async (id: string) => {
   const data: Event = (resp && resp.data);
   return data;
 };
+
+export const getStages = async (id: string) => {
+  const resp = await api.get(`/events/${id}/stages`);
+  const data: Event[] = (resp && resp.data) || [];
+  return data
+}
