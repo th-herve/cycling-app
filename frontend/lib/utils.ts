@@ -15,6 +15,16 @@ export const formatDateShort = (date: string) => {
   });
 };
 
+export const formatDateShortDay = (date: string) => {
+  if (!date) return null;
+
+  return new Date(date).toLocaleDateString("en-GB", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+  });
+};
+
 export const formatDateLong = (date: string) => {
   if (!date) return null;
 
