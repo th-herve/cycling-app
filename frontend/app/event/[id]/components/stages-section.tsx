@@ -15,8 +15,37 @@ import Event from "@/types/event";
 import { FaArrowRight, FaLocationDot, FaRoad } from "react-icons/fa6";
 import EventProfile from "./profile";
 import ResultDisplay from "@/components/common/result-display";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-export const StagesSection = ({ stages }: { stages: Event[] }) => {
+export const ResultView = ({ stages }: { stages: Event[] }) => {
+  return (
+    <div>
+      <Select defaultValue={stages[0].id}>
+        <SelectTrigger>
+          <SelectValue placeholder="Theme" />
+        </SelectTrigger>
+        <SelectContent position="popper">
+          <SelectGroup>
+            {stages.map((s) => (
+              <SelectItem key={s.id} value={s.id}>
+                {s.name}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </div>
+  );
+};
+
+export const ViewSelector = ({ stages }: { stages: Event[] }) => {
   return (
     <Tabs defaultValue="card">
       <TabsList>
@@ -98,7 +127,7 @@ export const StagesCardsSection = ({ stages }: { stages: Event[] }) => {
             <CardTitle className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <ClassificationIcon classification={s.classification} />
-                  <h2 className="font-race">{s.name}</h2>
+                <h2 className="font-race">{s.name}</h2>
               </div>
               <p className="font-date">{formatDateShortDay(s.start)}</p>
             </CardTitle>
@@ -135,4 +164,3 @@ export const StagesCardsSection = ({ stages }: { stages: Event[] }) => {
     </div>
   );
 };
-

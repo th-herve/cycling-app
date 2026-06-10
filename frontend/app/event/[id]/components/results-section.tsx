@@ -12,7 +12,7 @@ import Event from "@/types/event";
 import { Card, CardContent } from "@/components/ui/card";
 import CountryIcon from "@/components/common/countryIcon";
 
-export const ResultTab = ({ event }: { event: Event }) => {
+export const ResultSection = ({ event }: { event: Event }) => {
   if (!event.results) {
     return <p>No results yet.</p>;
   }
@@ -33,29 +33,29 @@ export const ResultTab = ({ event }: { event: Event }) => {
       </TabsList>
       <TabsContent value="general">
         {event.results?.general && (
-          <ResultSection type="time" results={event.results?.general} />
+          <ResultCard type="time" results={event.results?.general} />
         )}
       </TabsContent>
       <TabsContent value="mountain">
         {event.results?.mountain && (
-          <ResultSection type="points" results={event.results?.mountain} />
+          <ResultCard type="points" results={event.results?.mountain} />
         )}
       </TabsContent>
       <TabsContent value="points">
         {event.results?.point && (
-          <ResultSection type="points" results={event.results?.point} />
+          <ResultCard type="points" results={event.results?.point} />
         )}
       </TabsContent>
       <TabsContent value="young">
         {event.results?.young && (
-          <ResultSection type="time" results={event.results?.young} />
+          <ResultCard type="time" results={event.results?.young} />
         )}
       </TabsContent>
     </Tabs>
   );
 };
 
-export const ResultSection = ({
+export const ResultCard = ({
   results,
   type,
 }: {
