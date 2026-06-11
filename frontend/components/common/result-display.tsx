@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import Result from "@/types/result";
+import { Rider } from "@/types/rider";
 import { LucideCrown } from "lucide-react";
 
 const ResultDisplay = ({
@@ -10,18 +11,17 @@ const ResultDisplay = ({
   className?: string;
 }) => {
   const winner = results?.[0];
-  if (!winner) {
+  if (!winner || winner.rank != 1) {
     return null;
   }
 
-  const rider = winner.rider;
-  if (!rider) {
-    return null;
-  }
+  const text = winner.rider
+    ? formatRider(winner.rider)
+    : winner.team
+      ? winner.team.name
+      : undefined;
 
-  if (!rider.lastName || winner.rank !== 1) return null;
-
-  const firstInitial = rider.firstName?.charAt(0);
+  if (!text) return null;
 
   return (
     <dl
@@ -33,12 +33,15 @@ const ResultDisplay = ({
     >
       <dd className="flex items-center gap-2">
         <LucideCrown aria-hidden="true" className="size-4 text-yellow-400" />
-        <span className="text-xs font-semibold">
-          {firstInitial && `${firstInitial}.`} {rider.lastName}
-        </span>
+        <span className="text-xs font-semibold">{text}</span>
       </dd>
     </dl>
   );
+};
+
+const formatRider = (rider: Rider): string => {
+  const firstInitial = rider.firstName?.charAt(0);
+  return `${firstInitial}. ${rider.lastName}`;
 };
 
 export default ResultDisplay;
