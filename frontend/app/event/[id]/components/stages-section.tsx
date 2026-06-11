@@ -127,7 +127,9 @@ export const StagesCardsSection = ({ stages }: { stages: Event[] }) => {
             <CardTitle className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <ClassificationIcon classification={s.classification} />
-                <h2 className="font-race">{s.name}</h2>
+                <h2 className="font-race">
+                  {s.name} {s.classification === "ttt" && " (TTT)"}
+                </h2>
               </div>
               <p className="font-date">{formatDateShortDay(s.start)}</p>
             </CardTitle>
