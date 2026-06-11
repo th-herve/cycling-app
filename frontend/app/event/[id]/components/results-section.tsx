@@ -1,4 +1,9 @@
-import Result from "@/types/result";
+import Result, {
+  labels as resultLabels,
+  resultMetricByType,
+  ResultsResponse,
+  resultTypes,
+} from "@/types/result";
 import {
   Table,
   TableBody,
@@ -8,49 +13,33 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Event from "@/types/event";
 import { Card, CardContent } from "@/components/ui/card";
 import CountryIcon from "@/components/common/countryIcon";
 
-export const ResultSection = ({ event }: { event: Event }) => {
-  if (!event.results) {
+export const ResultSection = ({ results }: { results?: ResultsResponse }) => {
+  if (!results) {
+    return <p>No results yet.</p>;
+  }
+  const availableTypes = resultTypes.filter((t) => results?.[t]?.length);
+
+  if (availableTypes.length === 0) {
     return <p>No results yet.</p>;
   }
 
   return (
-    <Tabs defaultValue="general">
+    <Tabs defaultValue={availableTypes[0]}>
       <TabsList variant="line">
-        {event.results?.general && (
-          <TabsTrigger value="general">General</TabsTrigger>
-        )}
-        {event.results?.mountain && (
-          <TabsTrigger value="mountain">Mountain</TabsTrigger>
-        )}
-        {event.results?.point && (
-          <TabsTrigger value="points">Points</TabsTrigger>
-        )}
-        {event.results?.young && <TabsTrigger value="young">Young</TabsTrigger>}
+        {availableTypes.map((t) => (
+          <TabsTrigger key={t} value={t}>
+            {resultLabels[t]}
+          </TabsTrigger>
+        ))}
       </TabsList>
-      <TabsContent value="general">
-        {event.results?.general && (
-          <ResultCard type="time" results={event.results?.general} />
-        )}
-      </TabsContent>
-      <TabsContent value="mountain">
-        {event.results?.mountain && (
-          <ResultCard type="points" results={event.results?.mountain} />
-        )}
-      </TabsContent>
-      <TabsContent value="points">
-        {event.results?.point && (
-          <ResultCard type="points" results={event.results?.point} />
-        )}
-      </TabsContent>
-      <TabsContent value="young">
-        {event.results?.young && (
-          <ResultCard type="time" results={event.results?.young} />
-        )}
-      </TabsContent>
+      {availableTypes.map((t) => (
+        <TabsContent key={t} value={t}>
+          <ResultCard type={resultMetricByType[t]} results={results?.[t]} />
+        </TabsContent>
+      ))}
     </Tabs>
   );
 };
@@ -118,7 +107,6 @@ export const ResultCard = ({
     </Card>
   );
 };
-
 
 // TODO move it
 function formatHHMMSS(totalSeconds: number): string {

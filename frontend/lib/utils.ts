@@ -73,3 +73,5 @@ export const isEventToday = (event: Event) => {
     ? startDate === today
     : endDate && startDate <= today && endDate >= today;
 };
+
+export const slugify = (input: string) => input.toLowerCase().replace(" ", "-");
