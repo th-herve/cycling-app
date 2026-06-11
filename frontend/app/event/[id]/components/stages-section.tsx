@@ -45,7 +45,7 @@ export const ResultView = ({ stages }: { stages: Event[] }) => {
   );
 };
 
-export const ViewSelector = ({ stages }: { stages: Event[] }) => {
+export const StagesViewSelector = ({ stages }: { stages: Event[] }) => {
   return (
     <Tabs defaultValue="card">
       <TabsList>

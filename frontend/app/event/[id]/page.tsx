@@ -2,14 +2,6 @@ import { ResultSection } from "./components/results-section";
 import EventProfile from "./components/profile";
 import { getEvent } from "@/lib/events/getEvents";
 import { redirect } from "next/navigation";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -33,7 +25,7 @@ const SingleDayPage = async ({ params }: Props) => {
       </div>
       <div>
         <h2 className="mb-2">Results</h2>
-        <ResultSection event={event} />
+        <ResultSection results={event.results} />
       </div>
     </>
   );
