@@ -3,7 +3,11 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 
-export const TabsSelector = () => {
+export const TabsSelector = ({
+  resultsStageSlug,
+}: {
+  resultsStageSlug: string;
+}) => {
   const pathname = usePathname();
   const { id } = useParams<{
     id: string;
@@ -12,16 +16,13 @@ export const TabsSelector = () => {
   const currentPage = pathname.includes("/results") ? "results" : "stages";
 
   return (
-    <Tabs
-      className="mb-5"
-      value={currentPage}
-    >
+    <Tabs className="mb-5" value={currentPage}>
       <TabsList variant="line">
         <TabsTrigger asChild className="text-2xl" value="stages">
           <Link href={`/event/${id}/stages`}>Stages</Link>
         </TabsTrigger>
         <TabsTrigger asChild className="text-2xl" value="results">
-          <Link href={`/event/${id}/results`}>Results</Link>
+          <Link href={`/event/${id}/results/${resultsStageSlug}`}>Results</Link>
         </TabsTrigger>
       </TabsList>
     </Tabs>
