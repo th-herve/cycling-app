@@ -32,3 +32,7 @@ type TeamCategory struct {
 	DisciplineCode string `db:"discipline_code" json:"discipline"`
 	Gender         Gender `db:"gender" json:"gender"`
 }
+
+func (t *TeamSeason) GetCountryCode() *string {
+	return t.CountryCode
+}
