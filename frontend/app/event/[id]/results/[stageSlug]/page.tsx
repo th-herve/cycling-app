@@ -3,6 +3,7 @@ import { TabsSelector } from "../../components/tabs-selector";
 import { ResultSection } from "../../components/results-section";
 import { slugify } from "@/lib/utils";
 import StageSelector from "./stage-selector";
+import { EventHeader } from "../../components/event-header";
 
 interface Props {
   params: Promise<{ id: string; stageSlug: string }>;
@@ -24,11 +25,16 @@ const Page = async ({ params }: Props) => {
     : { ...event.results, ...currentStage.results };
 
   return (
-    <div>
-      <TabsSelector />
-      <StageSelector currentSlug={stageSlug} stages={stages} />
-      <ResultSection results={results} />
-    </div>
+    <>
+      <EventHeader event={event} />
+      <div className="mt-10 space-y-20">
+        <TabsSelector resultsStageSlug={slugify(stages[0].name)} />
+        <div>
+          <StageSelector currentSlug={stageSlug} stages={stages} />
+          <ResultSection results={results} />
+        </div>
+      </div>
+    </>
   );
 };
 
