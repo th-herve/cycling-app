@@ -1,6 +1,5 @@
 import { cn, formatRider } from "@/lib/utils";
 import Result from "@/types/result";
-import { Rider } from "@/types/rider";
 import { LucideCrown } from "lucide-react";
 
 const ResultDisplay = ({
