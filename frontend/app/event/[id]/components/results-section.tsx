@@ -15,6 +15,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import CountryIcon from "@/components/common/countryIcon";
+import { cn, formatRider } from "@/lib/utils";
 
 export const ResultSection = ({ results }: { results?: ResultsResponse }) => {
   if (!results) {
@@ -65,14 +66,20 @@ export const ResultCard = ({
 
   return (
     <Card>
-      <CardContent>
-        <Table className="bg-card table-auto">
+      <CardContent className="p-2">
+        <Table className="bg-card table-fixed">
           <TableHeader>
             <TableRow className="hover:bg-card uppercase">
-              <TableHead className="w-20">Rank</TableHead>
+              <TableHead className="w-14 md:w-20">Rank</TableHead>
               {isRiderResult && <TableHead>Rider</TableHead>}
-              <TableHead>Team</TableHead>
-              <TableHead className="text-right">
+              <TableHead
+                className={cn("hidden md:table-cell", {
+                  "table-cell": isTeamResult,
+                })}
+              >
+                Team
+              </TableHead>
+              <TableHead className="w-20 text-right">
                 {type === "time" ? "Time" : "Points"}
               </TableHead>
             </TableRow>
@@ -86,19 +93,21 @@ export const ResultCard = ({
                 <TableCell>{result.rank || result.status}</TableCell>
                 {isRiderResult && (
                   <>
-                    <TableCell className="flex items-center gap-2">
-                      <CountryIcon
-                        countryCode={result.rider?.nationality?.alpha2 || ""}
-                      />
-                      {result.rider?.firstName} {result.rider?.lastName}
-                    </TableCell>
                     <TableCell>
-                      <span className="hidden md:inline">
-                        {result.rider?.team?.name}
+                      <span className="flex items-center gap-2">
+                        <CountryIcon
+                          countryCode={result.rider?.nationality?.alpha2 || ""}
+                        />
+                        <span className="sm:hidden">
+                          {result.rider && formatRider(result.rider)}
+                        </span>
+                        <span className="hidden sm:table-cell">
+                          {result.rider?.firstName} {result.rider?.lastName}
+                        </span>
                       </span>
-                      <span className="md:hidden">
-                        {result.rider?.team?.abbreviation}
-                      </span>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {result.rider?.team?.name}
                     </TableCell>
                   </>
                 )}
@@ -107,11 +116,8 @@ export const ResultCard = ({
                     <CountryIcon
                       countryCode={result.team?.country?.alpha2 || ""}
                     />
-                    <span className="hidden md:inline">
-                      {result?.team?.name}
-                    </span>
-                    <span className="md:hidden">
-                      {result?.team?.abbreviation}
+                    <span className="min-w-0 truncate">
+                      {result.team?.name}
                     </span>
                   </TableCell>
                 )}

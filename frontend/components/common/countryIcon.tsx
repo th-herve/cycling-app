@@ -21,7 +21,7 @@ const CountryIcon = ({ countryCode, squared = false, className }: Props) => {
   }
 
   return (
-    <span className={cn(`fi fi-${code}`, { fis: squared }, className)}></span>
+    <span className={cn(`fi fi-${code} shrink-0`, { fis: squared }, className)}></span>
   );
 };
 

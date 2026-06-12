@@ -9,7 +9,7 @@ interface Props {
 const DefaultLayout = ({ children, className }: Props) => {
   return (
     <ScrollArea className="h-screen">
-      <main className="flex flex-col items-center px-4 py-24">
+      <main className="flex flex-col items-center px-2 py-24 md:px-4">
         <div className={cn("w-full max-w-300", className)}>{children}</div>
       </main>
     </ScrollArea>

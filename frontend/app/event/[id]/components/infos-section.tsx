@@ -8,7 +8,7 @@ export const InfoSection = ({ event }: { event: Event }) => (
       <CardTitle>Event infos</CardTitle>
     </CardHeader>
     <CardContent>
-      <dl className="flex justify-around">
+      <dl className="flex flex-col justify-around md:flex-row gap-2 md:gap-0">
         <DataInfo title="Date" value={formatDateLong(event.start)} />
         <DataInfo title="Country" value={event.country?.name} />
         <DataInfo
@@ -33,7 +33,7 @@ const DataInfo = ({
   title: string;
   value?: string | null;
 }) => (
-  <div className="border-muted-foreground flex w-full flex-col items-center border-r last:border-r-0">
+  <div className="border-muted-foreground flex w-full items-center justify-between last:border-r-0 md:flex-col md:border-r">
     <dt className="text-muted-foreground">{title}</dt>
     <dd className="font-bold">{value || "-"}</dd>
   </div>

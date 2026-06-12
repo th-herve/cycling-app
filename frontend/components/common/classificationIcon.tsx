@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import Classification from "@/types/classification";
 
 interface Props {
@@ -9,37 +10,52 @@ interface Props {
 interface SvgProps {
   size?: number;
   radius?: number;
+  className?: string;
 }
 
 const defaultSize = 31;
 const defaultRadius = 2;
 
-const ClassificationIcon = ({ classification, size }: Props) => {
+const ClassificationIcon = ({ classification, size, className }: Props) => {
   if (!classification) {
     return null;
   }
 
   switch (classification) {
     case Classification.HILLY:
-      return <HillySvg size={size} />;
+      return <HillySvg size={size} className={cn("shrink-0", className)} />;
+
     case Classification.MEDIUM_MOUNTAIN:
-      return <MediumMountainSvg size={size} />;
+      return (
+        <MediumMountainSvg size={size} className={cn("shrink-0", className)} />
+      );
+
     case Classification.HIGH_MOUNTAIN:
-      return <HighMountainSvg size={size} />;
+      return (
+        <HighMountainSvg size={size} className={cn("shrink-0", className)} />
+      );
+
     case Classification.TT:
-      return <TTSvg size={size} />;
+      return <TTSvg size={size} className={cn("shrink-0", className)} />;
+
     case Classification.TTT:
-      return <TTSvg size={size} />;
+      return <TTSvg size={size} className={cn("shrink-0", className)} />;
+
     case Classification.PROLOGUE:
-      return <TTSvg size={size} />;
+      return <TTSvg size={size} className={cn("shrink-0", className)} />;
+
     case Classification.FLAT:
-      return <FlatSvg size={size} />;
+      return <FlatSvg size={size} className={cn("shrink-0", className)} />;
   }
 };
 
 export default ClassificationIcon;
 
-const FlatSvg = ({ size = defaultSize, radius = defaultRadius }: SvgProps) => {
+const FlatSvg = ({
+  size = defaultSize,
+  radius = defaultRadius,
+  className,
+}: SvgProps) => {
   return (
     <svg
       width={size}
@@ -47,6 +63,7 @@ const FlatSvg = ({ size = defaultSize, radius = defaultRadius }: SvgProps) => {
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className={className}
     >
       <g clipPath="url(#clip0_16_313)">
         <rect width="24" height="24" rx={radius} fill="#313160" />
@@ -62,7 +79,11 @@ const FlatSvg = ({ size = defaultSize, radius = defaultRadius }: SvgProps) => {
   );
 };
 
-const HillySvg = ({ size = defaultSize, radius = defaultRadius }: SvgProps) => {
+const HillySvg = ({
+  size = defaultSize,
+  radius = defaultRadius,
+  className,
+}: SvgProps) => {
   return (
     <svg
       width={size}
@@ -70,6 +91,7 @@ const HillySvg = ({ size = defaultSize, radius = defaultRadius }: SvgProps) => {
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className={className}
     >
       <g clipPath="url(#clip0_16_316)">
         <rect width="24" height="24" rx={radius} fill="#313160" />
@@ -98,6 +120,7 @@ const HillySvg = ({ size = defaultSize, radius = defaultRadius }: SvgProps) => {
 const MediumMountainSvg = ({
   size = defaultSize,
   radius = defaultRadius,
+  className,
 }: SvgProps) => {
   return (
     <svg
@@ -106,6 +129,7 @@ const MediumMountainSvg = ({
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className={className}
     >
       <g clipPath="url(#clip0_16_319)">
         <rect width="24" height="24" rx={radius} fill="#313160" />
@@ -132,6 +156,7 @@ const MediumMountainSvg = ({
 const HighMountainSvg = ({
   size = defaultSize,
   radius = defaultRadius,
+  className,
 }: SvgProps) => {
   return (
     <svg
@@ -140,6 +165,7 @@ const HighMountainSvg = ({
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className={className}
     >
       <g clipPath="url(#clip0_16_322)">
         <rect width="24" height="24" rx={radius} fill="#313160" />
@@ -163,7 +189,11 @@ const HighMountainSvg = ({
   );
 };
 
-const TTSvg = ({ size = defaultSize, radius = defaultRadius }: SvgProps) => {
+const TTSvg = ({
+  size = defaultSize,
+  radius = defaultRadius,
+  className,
+}: SvgProps) => {
   return (
     <svg
       width={size}
@@ -171,6 +201,7 @@ const TTSvg = ({ size = defaultSize, radius = defaultRadius }: SvgProps) => {
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className={className}
     >
       <rect width="24" height="24" rx={radius} fill="#313160" />
       <circle cx="12" cy="14" r="6" fill="#50A2FF" />

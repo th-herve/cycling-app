@@ -72,8 +72,10 @@ export const StagesListSections = ({ stages }: { stages: Event[] }) => {
             <TableRow className="hover:bg-card uppercase">
               <TableHead>Date</TableHead>
               <TableHead>Stage</TableHead>
-              <TableHead>Distance</TableHead>
-              <TableHead>Winner</TableHead>
+              <TableHead className="text-right md:text-left">
+                Distance
+              </TableHead>
+              <TableHead className="hidden md:table-cell">Winner</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -90,11 +92,11 @@ export const StagesListSections = ({ stages }: { stages: Event[] }) => {
                   {s.name}
                   {s.classification === "ttt" && " (TTT)"}
                 </TableCell>
-                <TableCell>
+                <TableCell className="text-right md:text-left">
                   {s.distance}
                   {s.distanceUnit}
                 </TableCell>
-                <TableCell>
+                <TableCell className="hidden md:table-cell">
                   {s.results?.stage ? (
                     <ResultTableCell result={s.results?.stage[0]} />
                   ) : (
@@ -138,7 +140,7 @@ const ResultTableCell = ({ result }: { result?: Result }) => {
 
 export const StagesCardsSection = ({ stages }: { stages: Event[] }) => {
   return (
-    <div className="grid grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
       {stages.map((s) => (
         <Card key={s.name}>
           <CardHeader>
