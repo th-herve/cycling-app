@@ -56,15 +56,21 @@ export const ResultCard = ({
   }
 
   const firstTime = results[0].timeSeconds || 0;
+  const isRiderResult = !!results[0].rider;
+  const isTeamResult = !!results[0].team;
+
+  if (isRiderResult === isTeamResult) {
+    return null;
+  }
 
   return (
     <Card>
       <CardContent>
-        <Table className="bg-card">
+        <Table className="bg-card table-auto">
           <TableHeader>
             <TableRow className="hover:bg-card uppercase">
               <TableHead className="w-20">Rank</TableHead>
-              <TableHead>Rider</TableHead>
+              {isRiderResult && <TableHead>Rider</TableHead>}
               <TableHead>Team</TableHead>
               <TableHead className="text-right">
                 {type === "time" ? "Time" : "Points"}
@@ -74,24 +80,41 @@ export const ResultCard = ({
           <TableBody>
             {results.map((result) => (
               <TableRow
-                key={result.rider?.id ? result.rider.id : result.team?.id}
+                key={isRiderResult ? result.rider?.id : result.team?.id}
                 className="odd:bg-muted hover:bg-card odd:hover:bg-muted"
               >
                 <TableCell>{result.rank || result.status}</TableCell>
-                <TableCell className="flex items-center gap-2">
-                  <CountryIcon
-                    countryCode={result.rider?.nationality?.alpha2 || ""}
-                  />
-                  {result.rider?.firstName} {result.rider?.lastName}
-                </TableCell>
-                <TableCell>
-                  <span className="hidden md:inline">
-                    {result.rider?.team?.name}
-                  </span>
-                  <span className="md:hidden">
-                    {result.rider?.team?.abbreviation}
-                  </span>
-                </TableCell>
+                {isRiderResult && (
+                  <>
+                    <TableCell className="flex items-center gap-2">
+                      <CountryIcon
+                        countryCode={result.rider?.nationality?.alpha2 || ""}
+                      />
+                      {result.rider?.firstName} {result.rider?.lastName}
+                    </TableCell>
+                    <TableCell>
+                      <span className="hidden md:inline">
+                        {result.rider?.team?.name}
+                      </span>
+                      <span className="md:hidden">
+                        {result.rider?.team?.abbreviation}
+                      </span>
+                    </TableCell>
+                  </>
+                )}
+                {isTeamResult && (
+                  <TableCell className="flex items-center gap-2">
+                    <CountryIcon
+                      countryCode={result.team?.country?.alpha2 || ""}
+                    />
+                    <span className="hidden md:inline">
+                      {result?.team?.name}
+                    </span>
+                    <span className="md:hidden">
+                      {result?.team?.abbreviation}
+                    </span>
+                  </TableCell>
+                )}
                 <TableCell className="text-right tabular-nums">
                   {result.timeSeconds
                     ? result.rank === 1
