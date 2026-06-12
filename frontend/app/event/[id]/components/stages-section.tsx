@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { formatDateShort, formatDateShortDay } from "@/lib/utils";
+import { formatDateShort, formatDateShortDay, formatRider } from "@/lib/utils";
 import Event from "@/types/event";
 import { FaArrowRight, FaLocationDot, FaRoad } from "react-icons/fa6";
 import EventProfile from "./profile";
@@ -23,6 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Result from "@/types/result";
 
 export const ResultView = ({ stages }: { stages: Event[] }) => {
   return (
@@ -94,17 +95,8 @@ export const StagesListSections = ({ stages }: { stages: Event[] }) => {
                   {s.distanceUnit}
                 </TableCell>
                 <TableCell>
-                  {s.results?.stage && s.results?.stage[0] ? (
-                    <>
-                      <CountryIcon
-                        countryCode={
-                          s.results.stage[0].rider?.nationality?.alpha2 || ""
-                        }
-                      />{" "}
-                      {s.results.stage[0].rider?.firstName.at(0)}
-                      {". "}
-                      {s.results.stage[0].rider?.lastName}
-                    </>
+                  {s.results?.stage ? (
+                    <ResultTableCell result={s.results?.stage[0]} />
                   ) : (
                     "-"
                   )}
@@ -115,6 +107,32 @@ export const StagesListSections = ({ stages }: { stages: Event[] }) => {
         </Table>
       </CardContent>
     </Card>
+  );
+};
+
+const ResultTableCell = ({ result }: { result?: Result }) => {
+  if (!result || result.rank !== 1) return "-";
+
+  const isRider = !!result.rider;
+  if (!isRider && !result.team) return "-";
+
+  const countryCode = isRider
+    ? result.rider?.nationality?.alpha2
+    : result.team?.country?.alpha2;
+
+  const text = result.rider
+    ? formatRider(result.rider)
+    : result.team
+      ? result.team.name
+      : undefined;
+
+  if (!text) return "-";
+
+  return (
+    <span className="flex items-center gap-2">
+      <CountryIcon countryCode={countryCode || ""} />
+      {text}
+    </span>
   );
 };
 

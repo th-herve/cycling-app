@@ -1,4 +1,5 @@
 import Event from "@/types/event";
+import { Rider } from "@/types/rider";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -75,3 +76,11 @@ export const isEventToday = (event: Event) => {
 };
 
 export const slugify = (input: string) => input.toLowerCase().replace(" ", "-");
+
+/*
+ * Format rider name like this: "T. Pogacar"
+ */
+export const formatRider = (rider: Rider): string => {
+  const firstInitial = rider.firstName?.charAt(0);
+  return `${firstInitial}. ${rider.lastName}`;
+};

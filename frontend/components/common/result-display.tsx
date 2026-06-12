@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, formatRider } from "@/lib/utils";
 import Result from "@/types/result";
 import { Rider } from "@/types/rider";
 import { LucideCrown } from "lucide-react";
@@ -37,11 +37,6 @@ const ResultDisplay = ({
       </dd>
     </dl>
   );
-};
-
-const formatRider = (rider: Rider): string => {
-  const firstInitial = rider.firstName?.charAt(0);
-  return `${firstInitial}. ${rider.lastName}`;
 };
 
 export default ResultDisplay;
