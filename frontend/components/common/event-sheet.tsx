@@ -21,8 +21,8 @@ import {
   FaRoad,
 } from "react-icons/fa6";
 import { JerseyLine, ResultLine } from "./result-line";
-import ImageHideEmpty from "./ImageHideEmpty";
 import Result from "@/types/result";
+import EventProfile from "@/app/event/[id]/components/profile";
 
 const getFirstRider = (result?: Result[]) =>
   result?.find((r) => r.rank === 1)?.rider;
@@ -124,15 +124,7 @@ const EventSheet = ({
               </div>
             )}
 
-            <ImageHideEmpty
-              src={`/profiles/${event.id}.svg`}
-              className="bg-card rounded-sm"
-              alt="test"
-              width={0}
-              height={0}
-              sizes="100vw"
-              style={{ width: "100%", height: "auto" }}
-            />
+            <EventProfile id={event.id} />
 
             <Card className="rounded-sm">
               <CardContent className="space-y-2">
