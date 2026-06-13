@@ -4,6 +4,7 @@ import { ResultSection } from "../../components/results-section";
 import { slugify } from "@/lib/utils";
 import StageSelector from "./stage-selector";
 import { EventHeader } from "../../components/event-header";
+import FinalResultsSection from "../../components/final-results-section";
 
 interface Props {
   params: Promise<{ id: string; stageSlug: string }>;
@@ -27,7 +28,8 @@ const Page = async ({ params }: Props) => {
   return (
     <>
       <EventHeader event={event} />
-      <div className="mt-10 space-y-20">
+      <div className="mt-10 space-y-10">
+        <FinalResultsSection results={event.results} />
         <TabsSelector resultsStageSlug={slugify(stages[0].name)} />
         <div>
           <StageSelector currentSlug={stageSlug} stages={stages} />

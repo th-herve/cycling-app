@@ -3,6 +3,7 @@ import EventProfile from "./components/profile";
 import { getEvent } from "@/lib/events/getEvents";
 import { redirect } from "next/navigation";
 import { EventHeader } from "./components/event-header";
+import { Top3Result } from "./components/final-results-section";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -19,7 +20,8 @@ const SingleDayPage = async ({ params }: Props) => {
   return (
     <>
       <EventHeader event={event} />
-      <div className="mt-10 space-y-20">
+      <div className="mt-10 space-y-10">
+        <Top3Result results={event.results} />
         <div>
           <h2 className="mb-2">Profile</h2>
           <div>

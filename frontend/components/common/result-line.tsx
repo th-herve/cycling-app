@@ -2,13 +2,16 @@ import Result from "@/types/result";
 import CountryIcon from "./countryIcon";
 import JerseyIcon, { JerseyType } from "./jerseyIcon";
 import { Rider } from "@/types/rider";
+import { cn } from "@/lib/utils";
 
 export const ResultLine = ({
   result,
   rank,
+  className,
 }: {
   result?: Result;
   rank: 1 | 2 | 3;
+  className?: string;
 }) => {
   const rankDisplay = {
     1: "1st",
@@ -20,7 +23,7 @@ export const ResultLine = ({
 
   if (!isRiderResult && !result?.team) {
     return (
-      <Line>
+      <Line className={className}>
         <p>-</p>
       </Line>
     );
@@ -39,7 +42,7 @@ export const ResultLine = ({
     : result.team?.name;
 
   return (
-    <Line>
+    <Line className={className}>
       <>
         <div className="min-w-5">
           <p className="font-race">{rankDisplay[rank]}</p>
@@ -60,12 +63,14 @@ export const ResultLine = ({
 export const JerseyLine = ({
   type,
   rider,
+  className,
 }: {
   type: JerseyType;
   rider: Rider;
+  className?: string;
 }) => {
   return (
-    <Line>
+    <Line className={className}>
       <>
         <JerseyIcon type={type} />
 
@@ -81,8 +86,16 @@ export const JerseyLine = ({
   );
 };
 
-const Line = ({ children }: { children: React.ReactElement }) => {
+const Line = ({
+  children,
+  className,
+}: {
+  children: React.ReactElement;
+  className?: string;
+}) => {
   return (
-    <div className="bg-card flex items-center gap-2 px-3 py-1">{children}</div>
+    <div className={cn("bg-card flex items-center gap-2 px-3 py-1", className)}>
+      {children}
+    </div>
   );
 };
