@@ -144,7 +144,6 @@ func (s *EventService) getHydrationContext(ctx context.Context, events []*domain
 		mapper.ToHasCountryCodeSlice(teams),
 	)
 	countryMap, err := s.countryStorage.FindManyByAlpha3Code(ctx, countryCodes)
-	log.Info().Any("map", countryCodes).Msg("c")
 
 	if err != nil {
 		log.Warn().Caller().Err(err).Msg("Error getting countries, they won't be added to the response")
