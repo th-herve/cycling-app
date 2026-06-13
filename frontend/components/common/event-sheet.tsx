@@ -11,7 +11,7 @@ import {
 import CountryIcon from "./countryIcon";
 import { ScrollArea } from "../ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
-import { formatDateLong } from "@/lib/utils";
+import { formatDateLong, slugify } from "@/lib/utils";
 import ClassificationIcon from "./classificationIcon";
 import { classificationLabels } from "@/types/classification";
 import {
@@ -23,6 +23,7 @@ import {
 import { JerseyLine, ResultLine } from "./result-line";
 import Result from "@/types/result";
 import EventProfile from "@/app/event/[id]/components/profile";
+import Link from "next/link";
 
 const getFirstRider = (result?: Result[]) =>
   result?.find((r) => r.rank === 1)?.rider;
@@ -82,6 +83,10 @@ const EventSheet = ({
 
   const hasJerseySection = general || mountain || point || young;
 
+  const resultLink = !event.parentEventId
+    ? `/event/${event.id}`
+    : `/event/${event.parentEventId}/results/${slugify(event.name)}`;
+
   const isMobile = useIsMobile();
 
   return (
@@ -95,14 +100,18 @@ const EventSheet = ({
         }}
       >
         <SheetHeader>
-          <SheetTitle className="text-2xl">
-            <CountryIcon
-              className="mr-2 text-xl"
-              countryCode={event.country?.alpha2 || ""}
-              aria-label={event.country?.name}
-            />
-            {title}
-          </SheetTitle>
+          <Link
+            href={`/event/${event.parentEventId ? event.parentEventId : event.id}`}
+          >
+            <SheetTitle className="text-2xl">
+              <CountryIcon
+                className="mr-2 text-xl"
+                countryCode={event.country?.alpha2 || ""}
+                aria-label={event.country?.name}
+              />
+              {title}
+            </SheetTitle>
+          </Link>
 
           <SheetDescription className="sr-only">
             Event infos sheet
@@ -112,7 +121,7 @@ const EventSheet = ({
         <ScrollArea className="min-h-0 flex-1">
           <div className="space-y-6 px-4">
             {event.status === "canceled" && (
-              <p className="font-bold text-destructive">Canceled</p>
+              <p className="text-destructive font-bold">Canceled</p>
             )}
 
             {event.classification && (
@@ -176,6 +185,11 @@ const EventSheet = ({
                   {young && <JerseyLine type="young" rider={young} />}
                 </div>
               </div>
+            )}
+            {podium && (
+              <Link className="text-muted-foreground" href={resultLink}>
+                Full result
+              </Link>
             )}
           </div>
         </ScrollArea>
