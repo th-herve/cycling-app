@@ -4,6 +4,7 @@ import { TabsSelector } from "../components/tabs-selector";
 import { EventHeader } from "../components/event-header";
 import { slugify } from "@/lib/utils";
 import FinalResultsSection from "../components/final-results-section";
+import { notFound } from "next/navigation";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -13,6 +14,10 @@ const Page = async ({ params }: Props) => {
   const { id } = await params;
   const event = await getEvent(id);
   const stages = await getStages(id);
+
+  if (!event) {
+    notFound();
+  }
 
   return (
     <>

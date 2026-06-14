@@ -5,6 +5,7 @@ import { slugify } from "@/lib/utils";
 import StageSelector from "./stage-selector";
 import { EventHeader } from "../../components/event-header";
 import FinalResultsSection from "../../components/final-results-section";
+import { notFound } from "next/navigation";
 
 interface Props {
   params: Promise<{ id: string; stageSlug: string }>;
@@ -14,6 +15,10 @@ const Page = async ({ params }: Props) => {
   const { id, stageSlug } = await params;
   const event = await getEvent(id);
   const stages = await getStages(id);
+
+  if (!event) {
+    notFound();
+  }
 
   const stageID = stages.filter((s) => slugify(s.name) === stageSlug)[0].id;
   const currentStage = await getEvent(stageID);

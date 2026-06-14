@@ -1,7 +1,7 @@
 import { ResultSection } from "./components/results-section";
 import EventProfile from "./components/profile";
 import { getEvent } from "@/lib/events/getEvents";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { EventHeader } from "./components/event-header";
 import { Top3Result } from "./components/final-results-section";
 import { svgManifest } from "@/generated/svg-manifest";
@@ -13,6 +13,10 @@ interface Props {
 const SingleDayPage = async ({ params }: Props) => {
   const { id } = await params;
   const event = await getEvent(id);
+
+  if (!event) {
+    notFound()
+  }
 
   if (!event.isSingleDay) {
     redirect(`/event/${event.id}/stages`);
