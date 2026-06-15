@@ -1,6 +1,7 @@
 import CountryIcon from "@/components/common/countryIcon";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn, formatDateRange, isEventToday } from "@/lib/utils";
+import { siteRoute } from "@/siteConfig";
 import Event from "@/types/event";
 import Result from "@/types/result";
 import { LucideCrown } from "lucide-react";
@@ -28,7 +29,7 @@ const EventCard = ({ event }: Props) => {
                 countryCode={event.country?.alpha2 || ""}
                 aria-label={event.country?.name}
               />
-              <Link href={`/event/${event.id}`}>
+              <Link href={siteRoute.event.root(event.id)}>
                 <h2 id={titleId} className="font-race text-2xl font-bold">
                   {event.name}
                 </h2>

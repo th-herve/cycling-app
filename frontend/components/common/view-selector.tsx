@@ -9,6 +9,7 @@ import {
 import { LuCalendar, LuCheck, LuList } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { siteRoute } from "@/siteConfig";
 
 export type View = "calendar" | "list";
 
@@ -36,7 +37,7 @@ const ViewSelector = ({ currentView, className, gender, year }: Props) => {
         <DropdownMenuItem asChild disabled={currentView === "calendar"}>
           <Link
             className="flex items-center gap-2"
-            href={`/schedule/calendar?${params.toString()}`}
+            href={`${siteRoute.schedule.calendar}?${params.toString()}`}
           >
             <LuCalendar /> Calendar view
             {currentView === "calendar" && <LuCheck />}
@@ -45,7 +46,7 @@ const ViewSelector = ({ currentView, className, gender, year }: Props) => {
         <DropdownMenuItem asChild disabled={currentView === "list"}>
           <Link
             className="flex items-center gap-2"
-            href={`/schedule/list?${params.toString()}`}
+            href={`${siteRoute.schedule.list}?${params.toString()}`}
           >
             <LuList /> List view
             {currentView === "list" && <LuCheck />}

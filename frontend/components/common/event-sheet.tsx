@@ -24,6 +24,7 @@ import { JerseyLine, ResultLine } from "./result-line";
 import Result from "@/types/result";
 import EventProfile from "@/app/event/[id]/components/profile";
 import Link from "next/link";
+import { siteRoute } from "@/siteConfig";
 
 const getFirstRider = (result?: Result[]) =>
   result?.find((r) => r.rank === 1)?.rider;
@@ -84,8 +85,8 @@ const EventSheet = ({
   const hasJerseySection = general || mountain || point || young;
 
   const resultLink = !event.parentEventId
-    ? `/event/${event.id}`
-    : `/event/${event.parentEventId}/results/${slugify(event.name)}`;
+    ? siteRoute.event.root(event.id)
+    : siteRoute.event.results(event.parentEventId, slugify(event.name));
 
   const isMobile = useIsMobile();
 
@@ -101,7 +102,9 @@ const EventSheet = ({
       >
         <SheetHeader>
           <Link
-            href={`/event/${event.parentEventId ? event.parentEventId : event.id}`}
+            href={siteRoute.event.root(
+              event.parentEventId ? event.parentEventId : event.id,
+            )}
           >
             <SheetTitle className="text-2xl">
               <CountryIcon

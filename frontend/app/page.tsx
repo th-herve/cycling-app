@@ -1,5 +1,6 @@
+import { siteRoute } from "@/siteConfig";
 import { redirect } from "next/navigation";
 
 export default function Home() {
-  redirect("/schedule/calendar");
+  redirect(siteRoute.schedule.calendar);
 }
