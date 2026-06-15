@@ -8,8 +8,11 @@ const __dirname = dirname(__filename);
 
 const svgDir = path.join(__dirname, "../public/profiles");
 
-// output TS file (recommended over JSON)
+// Output TS file.
 const outputFile = path.join(__dirname, "../generated/svg-manifest.ts");
+
+// Ensure the generated directory exists.
+fs.mkdirSync(path.dirname(outputFile), { recursive: true });
 
 const files = fs.readdirSync(svgDir);
 
@@ -22,7 +25,7 @@ for (const file of files) {
   }
 }
 
-// generate TS module
+// Generate TS module.
 const content = `// AUTO-GENERATED FILE — DO NOT EDIT
 
 export const svgManifest = new Set([
