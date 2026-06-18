@@ -15,7 +15,7 @@ const SingleDayPage = async ({ params }: Props) => {
   const event = await getEvent(id);
 
   if (!event) {
-    notFound()
+    notFound();
   }
 
   if (!event.isSingleDay) {
