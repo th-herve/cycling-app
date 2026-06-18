@@ -1,8 +1,10 @@
 import CountryIcon from "@/components/common/country-icon";
 import Event from "@/types/event";
 import { InfoSection } from "./infos-section";
+import CanceledLabel from "@/components/common/canceled-label";
 
 export const EventHeader = ({ event }: { event: Event }) => {
+  const isCanceled = event.status === "canceled";
   return (
     <>
       <h1>
@@ -13,6 +15,7 @@ export const EventHeader = ({ event }: { event: Event }) => {
         />
         {event.name} {event.seasonYear}
       </h1>
+      {isCanceled && <CanceledLabel />}
       <InfoSection event={event} />
     </>
   );
