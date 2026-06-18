@@ -1,4 +1,4 @@
-import DefaultLayout from "@/components/layouts/defaultLayout";
+import DefaultLayout from "@/components/layouts/default-layout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LucideFilter } from "lucide-react";
 

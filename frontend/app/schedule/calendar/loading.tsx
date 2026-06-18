@@ -1,4 +1,4 @@
-import DefaultLayout from "@/components/layouts/defaultLayout";
+import DefaultLayout from "@/components/layouts/default-layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 

@@ -1,4 +1,4 @@
-import CountryIcon from "@/components/common/countryIcon";
+import CountryIcon from "@/components/common/country-icon";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn, formatDateRange, isEventToday } from "@/lib/utils";
 import { siteRoute } from "@/siteConfig";

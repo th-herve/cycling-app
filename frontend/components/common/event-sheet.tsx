@@ -8,11 +8,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import CountryIcon from "./countryIcon";
+import CountryIcon from "./country-icon";
 import { ScrollArea } from "../ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatDateLong, slugify } from "@/lib/utils";
-import ClassificationIcon from "./classificationIcon";
+import ClassificationIcon from "./classification-icon";
 import { classificationLabels } from "@/types/classification";
 import {
   FaArrowRight,

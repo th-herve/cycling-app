@@ -1,5 +1,5 @@
-import ClassificationIcon from "@/components/common/classificationIcon";
-import CountryIcon from "@/components/common/countryIcon";
+import ClassificationIcon from "@/components/common/classification-icon";
+import CountryIcon from "@/components/common/country-icon";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,

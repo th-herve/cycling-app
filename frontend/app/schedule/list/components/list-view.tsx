@@ -1,5 +1,5 @@
-import GenderSelectLinks from "@/components/common/genderSelect";
-import YearSelectLinks from "@/components/common/yearSelect";
+import GenderSelectLinks from "@/components/common/gender-select";
+import YearSelectLinks from "@/components/common/year-select";
 import { LucideFilter } from "lucide-react";
 import Event from "@/types/event";
 import { cn } from "@/lib/utils";

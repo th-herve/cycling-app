@@ -1,6 +1,6 @@
 import Result from "@/types/result";
-import CountryIcon from "./countryIcon";
-import JerseyIcon, { JerseyType } from "./jerseyIcon";
+import CountryIcon from "./country-icon";
+import JerseyIcon, { JerseyType } from "./jersey-icon";
 import { Rider } from "@/types/rider";
 import { cn } from "@/lib/utils";
 

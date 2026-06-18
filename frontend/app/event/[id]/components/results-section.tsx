@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
-import CountryIcon from "@/components/common/countryIcon";
+import CountryIcon from "@/components/common/country-icon";
 import { cn, formatRider } from "@/lib/utils";
 
 export const ResultSection = ({ results }: { results?: ResultsResponse }) => {

@@ -1,6 +1,6 @@
 "use client";
-import GenderSelectLinks from "@/components/common/genderSelect";
-import YearSelectLinks from "@/components/common/yearSelect";
+import GenderSelectLinks from "@/components/common/gender-select";
+import YearSelectLinks from "@/components/common/year-select";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useCalendar } from "@/lib/hooks/useCalendar";
@@ -10,7 +10,7 @@ import { format, getDate, getMonth, isToday } from "date-fns";
 import { LuChevronLeft, LuChevronRight, LuFilter } from "react-icons/lu";
 import { LoadingCalendarBody } from "../loading";
 import { useDebouncedLoader } from "@/lib/hooks/useDebouncedLoader";
-import CountryIcon from "@/components/common/countryIcon";
+import CountryIcon from "@/components/common/country-icon";
 import React, { startTransition } from "react";
 import { useUrlParamsNavigation } from "@/lib/hooks/useUrlParamsNavigation";
 import { siteConfig } from "@/siteConfig";

@@ -1,4 +1,4 @@
-import CountryIcon from "@/components/common/countryIcon";
+import CountryIcon from "@/components/common/country-icon";
 import Event from "@/types/event";
 import { InfoSection } from "./infos-section";
 

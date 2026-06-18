@@ -1,4 +1,4 @@
-import DefaultLayout from "@/components/layouts/defaultLayout";
+import DefaultLayout from "@/components/layouts/default-layout";
 import CalendarView from "./components/calendar-view";
 import ViewSelector from "@/components/common/view-selector";
 import { parseEventSearchParams } from "@/lib/events/parseEventsSearchParams";
