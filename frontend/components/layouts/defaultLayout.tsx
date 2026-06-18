@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "../ui/scroll-area";
+import Navbar from "../common/navbar";
 
 interface Props {
   children: React.ReactNode;
@@ -9,8 +10,11 @@ interface Props {
 const DefaultLayout = ({ children, className }: Props) => {
   return (
     <ScrollArea className="h-screen">
-      <main className="flex flex-col items-center px-2 py-24 md:px-4">
-        <div className={cn("w-full max-w-300", className)}>{children}</div>
+      <main
+        className={cn("mx-auto w-full max-w-300 px-2 pb-24 md:px-4", className)}
+      >
+        <Navbar className="mb-8" />
+        {children}
       </main>
     </ScrollArea>
   );
