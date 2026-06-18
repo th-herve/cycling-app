@@ -1,3 +1,4 @@
+import CanceledLabel from "@/components/common/canceled-label";
 import CountryIcon from "@/components/common/country-icon";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn, formatDateRange, isEventToday } from "@/lib/utils";
@@ -47,7 +48,7 @@ const EventCard = ({ event }: Props) => {
 
           {isCanceled && (
             <div className="md:row-span-2 md:self-start">
-              <p className="text-destructive px-2 py-3 font-bold">Canceled</p>
+              <CanceledLabel className="px-2 py-3" />
             </div>
           )}
 

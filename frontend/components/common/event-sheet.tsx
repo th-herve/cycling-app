@@ -25,6 +25,7 @@ import Result from "@/types/result";
 import EventProfile from "@/app/event/[id]/components/profile";
 import Link from "next/link";
 import { siteRoute } from "@/siteConfig";
+import CanceledLabel from "./canceled-label";
 
 const getFirstRider = (result?: Result[]) =>
   result?.find((r) => r.rank === 1)?.rider;
@@ -123,9 +124,7 @@ const EventSheet = ({
 
         <ScrollArea className="min-h-0 flex-1">
           <div className="space-y-6 px-4">
-            {event.status === "canceled" && (
-              <p className="text-destructive font-bold">Canceled</p>
-            )}
+            {event.status === "canceled" && <CanceledLabel />}
 
             {event.classification && (
               <div className="flex items-center gap-2">
