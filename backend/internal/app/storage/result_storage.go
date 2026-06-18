@@ -32,7 +32,7 @@ func (s *ResultStorage) FindManyByEventIDs(ctx context.Context, eventsID []uuid.
 
 	// Order by rank but put ranks 0 at the end. 0 is for DNS, DNF...
 	// It works by first ordering by if the rank is eq 0. Where 0=0 -> 1 (true) and not0=0 -> 0 (false). So false>true in the order.
-	queryBuilder = queryBuilder.OrderBy("event_id", "type", "rank = 0", "rank")
+	queryBuilder = queryBuilder.OrderBy("event_id", "type", "rank = 0", "rank", "status")
 
 	query, args, err := queryBuilder.ToSql()
 
@@ -57,7 +57,7 @@ func (s *ResultStorage) FindByEventID(ctx context.Context, eventID uuid.UUID, op
 
 	queryBuilder = s.applyOptions(queryBuilder, options)
 
-	queryBuilder = queryBuilder.OrderBy("type", "rank = 0", "rank")
+	queryBuilder = queryBuilder.OrderBy("type", "rank = 0", "rank", "status")
 
 	query, args, err := queryBuilder.ToSql()
 
