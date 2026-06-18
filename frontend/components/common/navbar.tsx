@@ -10,10 +10,7 @@ interface Props {
 const Navbar = ({ className }: Props) => {
   return (
     <div
-      className={cn(
-        "bg-background flex w-full items-center justify-between py-5",
-        className,
-      )}
+      className={cn("bg-background flex w-full items-center py-5", className)}
     >
       <Link href={siteRoute.schedule.calendar}>
         <div className="flex items-center gap-2">
