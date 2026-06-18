@@ -107,9 +107,9 @@ const EventSheet = ({
               event.parentEventId ? event.parentEventId : event.id,
             )}
           >
-            <SheetTitle className="text-2xl">
+            <SheetTitle className="text-2xl flex items-start">
               <CountryIcon
-                className="mr-2 text-xl"
+                className="mr-2 pt-3 text-xl"
                 countryCode={event.country?.alpha2 || ""}
                 aria-label={event.country?.name}
               />
