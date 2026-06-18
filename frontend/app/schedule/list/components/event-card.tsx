@@ -25,10 +25,11 @@ const EventCard = ({ event }: Props) => {
       <Card className={cn({ "outline-primary outline-2": isToday })}>
         <CardContent className="grid min-h-40 grid-rows-[auto_1fr_auto] md:min-h-0 md:grid-cols-[2fr_1fr] md:grid-rows-[auto_auto]">
           <div>
-            <header className="flex gap-2">
+            <header className="flex items-start gap-2">
               <CountryIcon
                 countryCode={event.country?.alpha2 || ""}
                 aria-label={event.country?.name}
+                className="pt-3"
               />
               <Link href={siteRoute.event.root(event.id)}>
                 <h2 id={titleId} className="font-race text-2xl font-bold">
