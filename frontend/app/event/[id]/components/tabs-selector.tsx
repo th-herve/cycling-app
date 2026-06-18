@@ -20,10 +20,14 @@ export const TabsSelector = ({
     <Tabs className="mb-5" value={currentPage}>
       <TabsList variant="line">
         <TabsTrigger asChild className="text-2xl" value="stages">
-          <Link href={siteRoute.event.stages(id)}>Stages</Link>
+          <Link replace href={siteRoute.event.stages(id)}>
+            Stages
+          </Link>
         </TabsTrigger>
         <TabsTrigger asChild className="text-2xl" value="results">
-          <Link href={siteRoute.event.results(id, resultsStageSlug)}>Results</Link>
+          <Link replace href={siteRoute.event.results(id, resultsStageSlug)}>
+            Results
+          </Link>
         </TabsTrigger>
       </TabsList>
     </Tabs>
