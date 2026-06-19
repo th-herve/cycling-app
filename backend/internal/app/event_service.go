@@ -92,7 +92,11 @@ func (s *EventService) FindStages(ctx context.Context, parentEventID uuid.UUID) 
 			Str("parentEventID", parentEventID.String()).
 			Caller().
 			Msg("Error getting events")
-		return nil, common.GetErr("EventService FindAllBySeason", err)
+		return nil, common.GetErr("EventService FindStages", err)
+	}
+
+	if len(events) == 0 {
+		return nil, common.GetErr("EventService FindStages", errors.New("response not found"))
 	}
 
 	hydrationCtx := s.getHydrationContext(ctx, events, events[0].SeasonYear, &storage.ResultSearchOptions{Limit: 1, Type: []domain.ResultType{domain.ResultTypeStageGeneral}})
