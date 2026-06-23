@@ -9,11 +9,10 @@ import (
 )
 
 type EventHydrationContext struct {
-	Countries   domain.CountryMap
-	Results     []domain.Result
-	Riders      []*domain.Rider
-	Teams       []*domain.TeamSeason
-	RidersTeams map[uuid.UUID]*domain.TeamSeason
+	Countries domain.CountryMap
+	Results   []domain.Result
+	Riders    []*domain.Rider
+	Teams     []*domain.TeamSeason
 }
 
 type ResultHydrationContext struct {
@@ -46,39 +45,54 @@ func HydrateEventResults(
 	results []domain.Result,
 	riderByID map[uuid.UUID]dto.RiderDTO,
 	teamByID map[uuid.UUID]dto.TeamDTO,
-	ridersTeams map[uuid.UUID]dto.TeamDTO,
 	countries domain.CountryMap,
 ) {
 	resultsSnapshotByEvent := make(map[uuid.UUID]map[domain.ResultType][]dto.ResultDTO)
 	hasRider := len(riderByID) > 0
-	hasTeam := len(teamByID) > 0 // Teams are for ttt stage result.
+	hasTeam := len(teamByID) > 0
 	hasCountry := len(countries) > 0
 
 	for _, r := range results {
 		res := mapper.ResultToDTO(r)
 
-		// Mutually exclusive.
+		// If not rider result, it's a team result (or TTT).
 		isRider := r.RiderID != nil
-		isTeam := r.TeamSeasonID != nil
 
-		if isRider && isTeam {
-			continue
-		}
-		if isRider && !hasRider {
-			continue
-		}
-		if isTeam && !hasTeam {
+		if !isRider && r.TeamSeasonID == nil {
 			log.Warn().Caller().
 				Str("resultID", r.ID.String()).
-				Msg("result has both rider and team id")
+				Msg("result has neither a rider or team id")
+			continue
+
+		}
+		if isRider && !hasRider {
+			log.Warn().Caller().
+				Str("resultID", r.ID.String()).
+				Msg("result is for riders but no riders hydration context given")
+			continue
+		}
+		if !isRider && !hasTeam {
+			log.Warn().Caller().
+				Str("resultID", r.ID.String()).
+				Msg("result is for teams but no teams hydration context given")
 			continue
 		}
 
 		if isRider {
-			res = hydrateResultRider(res, riderByID, ridersTeams)
+			var team *dto.TeamDTO
+			if r.TeamSeasonID != nil {
+				if t, ok := teamByID[*r.TeamSeasonID]; ok {
+					team = &t
+				} else {
+					log.Warn().Caller().
+						Str("resultID", r.ID.String()).
+						Msg("missing rider's team for result")
+				}
+			}
+			res = hydrateResultRider(res, riderByID, team)
 		}
 
-		if isTeam {
+		if !isRider {
 			res = hydrateResultTeam(res, teamByID)
 		}
 
@@ -108,7 +122,7 @@ func HydrateEventResults(
 	}
 }
 
-func hydrateResultRider(res dto.ResultDTO, riderByID map[uuid.UUID]dto.RiderDTO, teamsByRider map[uuid.UUID]dto.TeamDTO) dto.ResultDTO {
+func hydrateResultRider(res dto.ResultDTO, riderByID map[uuid.UUID]dto.RiderDTO, team *dto.TeamDTO) dto.ResultDTO {
 	if res.Rider == nil {
 		return res
 	}
@@ -118,11 +132,8 @@ func hydrateResultRider(res dto.ResultDTO, riderByID map[uuid.UUID]dto.RiderDTO,
 	}
 	res.Rider = &rider
 
-	riderTeam, ok := teamsByRider[res.Rider.ID]
-	if !ok {
-		return res
-	}
-	res.Rider.Team = &riderTeam
+	res.Rider.Team = team
+	res.Team = nil // Clear the result team, since now it's attach to the rider.
 
 	return res
 }
