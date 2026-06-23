@@ -284,8 +284,9 @@ CREATE TABLE "team_rosters" (
 
 
 -- Result for an event.
--- Can be for a rider or team depending on the type.
--- If it's one, the other ref key must be null.
+-- Can be for a rider or team depending on the type or if it's for a TTT.
+-- This can be determine from the event it's link to or if a rider id is present or not.
+-- The team_id can be for either the rider's team, or the team result if it's for a TTT or team result.
 CREATE TABLE "results" (
   "id" UUID PRIMARY KEY,
   "type" result_types NOT NULL,
@@ -304,11 +305,6 @@ CREATE TABLE "results" (
   FOREIGN KEY("rider_id") REFERENCES riders("id") ON DELETE CASCADE,
   FOREIGN KEY("team_season_id") REFERENCES team_seasons("id") ON DELETE CASCADE,
 
-  CONSTRAINT CHK_result_riderid_teamid_exclusive CHECK (
-    ("rider_id" IS NOT NULL AND "team_season_id" IS NULL)
-    OR
-    ("rider_id" IS NULL AND "team_season_id" IS NOT NULL)
-  ),
   -- If there is no rank, it must mean a special status is applied.
   CONSTRAINT CHK_result_status_or_rank_not_null CHECK (
     status IS NOT NULL
