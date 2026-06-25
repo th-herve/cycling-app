@@ -27,10 +27,10 @@ type TeamSeason struct {
 }
 
 type TeamCategory struct {
-	Code           string `db:"code" json:"code"`
-	Name           string `db:"name" json:"name"`
-	DisciplineCode string `db:"discipline_code" json:"discipline"`
-	Gender         Gender `db:"gender" json:"gender"`
+	Code           string  `db:"code" json:"code"`
+	Name           string  `db:"name" json:"name"`
+	DisciplineCode string  `db:"discipline_code" json:"discipline"`
+	Gender         *Gender `db:"gender" json:"gender"`
 }
 
 func (t *TeamSeason) GetCountryCode() *string {
