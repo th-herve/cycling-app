@@ -5,17 +5,22 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
+	"github.com/th-herve/cycling-app/backend/internal/app/assembler"
+	"github.com/th-herve/cycling-app/backend/internal/app/dto"
+	"github.com/th-herve/cycling-app/backend/internal/app/hydrator"
+	"github.com/th-herve/cycling-app/backend/internal/app/mapper"
 	"github.com/th-herve/cycling-app/backend/internal/app/storage"
 	"github.com/th-herve/cycling-app/backend/internal/common"
 	"github.com/th-herve/cycling-app/backend/pkg/domain"
 )
 
 type TeamService struct {
-	storage *storage.TeamStorage
+	storage        *storage.TeamStorage
+	countryStorage *storage.CountryStorage
 }
 
-func NewTeamService(storage *storage.TeamStorage) *TeamService {
-	return &TeamService{storage: storage}
+func NewTeamService(storage *storage.TeamStorage, countryStorage *storage.CountryStorage) *TeamService {
+	return &TeamService{storage: storage, countryStorage: countryStorage}
 }
 
 func (s *TeamService) FindByID(ctx context.Context, teamID uuid.UUID) (domain.TeamSeason, error) {
@@ -56,4 +61,35 @@ func (s *TeamService) FindManyByRiderIDAndSeason(ctx context.Context, riderIDs [
 	}
 
 	return teamByRiderIDs, nil
+}
+
+func (s *TeamService) FindBySeasonAndGender(ctx context.Context, gender domain.Gender, year int) ([]dto.TeamDTO, error) {
+	teamsSeason, err := s.storage.FindBySeasonAndGender(ctx, gender, year)
+
+	if err != nil {
+		log.Debug().
+			Caller().
+			Err(err).
+			Msg("Error getting teams seasons")
+		return nil, common.GetErr("TeamService FindBySeasonAndGender", err)
+	}
+
+	countryCode := assembler.CollectCountriesCodes(
+		mapper.ToHasCountryCodeSlice(teamsSeason),
+	)
+
+	var teamsDTOs []dto.TeamDTO
+	for _, ts := range teamsSeason {
+		teamsDTOs = append(teamsDTOs, mapper.TeamToSnapshot(ts))
+	}
+
+	countries, err := s.countryStorage.FindManyByAlpha3Code(ctx, countryCode)
+	if err != nil {
+		log.Warn().Caller().Err(err).Msg("Error getting countries, they won't be added to the response")
+	} else {
+		teamsDTOs = hydrator.HydrateTeamCountry(teamsDTOs, countries)
+	}
+
+
+	return teamsDTOs, nil
 }

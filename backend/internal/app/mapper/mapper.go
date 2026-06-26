@@ -69,6 +69,7 @@ func TeamToSnapshot(team *domain.TeamSeason) dto.TeamDTO {
 		ID:           team.ID,
 		Name:         team.Name,
 		Abbreviation: team.Abbreviation,
+		Category:     team.TeamCategoryCode,
 		Country:      c,
 	}
 }

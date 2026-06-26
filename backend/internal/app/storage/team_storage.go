@@ -86,3 +86,22 @@ func (s *TeamStorage) FindManyByRiderIDsAndSeason(ctx context.Context, riderIDs 
 
 	return teamsByRiderID, nil
 }
+
+func (s *TeamStorage) FindBySeasonAndGender(ctx context.Context, gender domain.Gender, year int) ([]*domain.TeamSeason, error) {
+
+	query, args, err := db.Q.Select("*").From("team_seasons").Where(squirrel.Eq{"season_gender": gender, "season_year": year}).OrderBy("team_category_code", "name").ToSql()
+
+	if err != nil {
+		return nil, err
+	}
+
+	var teams []*domain.TeamSeason
+
+	err = s.db.Select(&teams, query, args...)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return teams, nil
+}

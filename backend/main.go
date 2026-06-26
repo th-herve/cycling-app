@@ -111,7 +111,7 @@ func main() {
 	riderService := app.NewRiderService(riderStorage, countryStorage)
 
 	teamStorage := storage.NewTeamStorage(db)
-	teamService := app.NewTeamService(teamStorage)
+	teamService := app.NewTeamService(teamStorage, countryStorage)
 
 	resultStorage := storage.NewResultStorage(db)
 	resultService := app.NewResultService(resultStorage, riderService, countryStorage, teamService)
@@ -121,6 +121,7 @@ func main() {
 
 	eventHandler := handler.NewEventHandler(eventService)
 	resultHandler := handler.NewResultHandler(resultService)
+	teamHandler := handler.NewTeamHandler(teamService)
 
 	if AppMode == "prod" {
 		gin.SetMode(gin.ReleaseMode)
@@ -147,6 +148,11 @@ func main() {
 	resultGroup := r.Group("/results")
 	{
 		resultGroup.GET("/:eventID", resultHandler.GetOneByEventID)
+	}
+
+	teamGroup := r.Group("/teams")
+	{
+		teamGroup.GET("", teamHandler.GetBySeasonAndGender)
 	}
 
 	// Start server on port 8080 (default)

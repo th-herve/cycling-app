@@ -25,6 +25,7 @@ type TeamDTO struct {
 	ID           uuid.UUID   `json:"id"`
 	Name         string      `json:"name"`
 	Abbreviation string      `json:"abbreviation"`
+	Category     string      `json:"category"`
 	Country      *CountryDTO `json:"country,omitempty"`
 }
 

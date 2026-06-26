@@ -40,6 +40,29 @@ func HydrateEventCountry(events []*dto.EventDTO, countryMap domain.CountryMap) {
 	}
 }
 
+func HydrateTeamCountry(teams []dto.TeamDTO, countryMap domain.CountryMap) []dto.TeamDTO {
+	for i := range teams {
+		code := teams[i].Country.Alpha3
+		if code == "" {
+			continue
+		}
+
+		country, ok := countryMap[code]
+		if !ok {
+			log.Warn().
+				Caller().
+				Str("countryCode", code).
+				Str("teamSeasonID", teams[i].ID.String()).
+				Msg("Could not retrieve country from country map")
+			continue
+		}
+
+		teams[i].Country = mapper.CountryToSnapshot(*country)
+	}
+
+	return teams
+}
+
 func HydrateEventResults(
 	events []*dto.EventDTO,
 	results []domain.Result,
