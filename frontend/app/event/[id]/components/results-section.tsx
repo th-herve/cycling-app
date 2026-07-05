@@ -118,14 +118,13 @@ export const ResultCard = ({
                     </TableCell>
                   </>
                 )}
-                {isTeamResult && (
+                {isTeamResult && result.team && (
                   <TableCell className="flex items-center gap-2">
-                    <CountryIcon
-                      countryCode={result.team?.country?.alpha2 || ""}
+                    <TeamJerseyIcon
+                      className="size-4"
+                      teamID={result.team.id}
                     />
-                    <span className="min-w-0 truncate">
-                      {result.team?.name}
-                    </span>
+                    <span className="min-w-0 truncate">{result.team.name}</span>
                   </TableCell>
                 )}
                 <TableCell className="text-right tabular-nums">
