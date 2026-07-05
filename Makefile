@@ -29,6 +29,9 @@ docker-down: # stop the docker db
 db-inspect: # run psql for the db docker
 	docker exec -it $(DOCKER_DB_NAME) psql --user $(DB_USER) $(DB_NAME)
 
+db-test-inspect: # run psql for the db docker
+	docker exec -it $(DOCKER_DB_TEST_NAME) psql --user $(DB_USER) $(DB_TEST_NAME)
+
 db-backup: # create a db backup
 	docker exec -t $(DOCKER_DB_NAME) pg_dump \
 	  -U $(DB_USER) \
@@ -52,6 +55,22 @@ endif
 	  -d $(DB_NAME) \
 	  < $(FILE)
 
+db-test-apply: # apply a db file to the database, usage: make db-file FILE=backup.sql
+ifndef FILE
+	$(error FILE is not set, ex: 'make docker-db-restore FILE=./backup.sql')
+endif
+	docker exec -i $(DOCKER_DB_TEST_NAME) psql \
+	  -U $(DB_USER) \
+	  -d $(DB_TEST_NAME) \
+	  < $(FILE)
+
+db-trucate: # truncate the database table with the ./script/truncate.sql file
+	@echo -n "This will alter the db, are you sure? [y/n] " && read ans && [ $${ans:-y} != y ] && echo "Aborted" && exit 1
+	docker exec -i $(DOCKER_DB_NAME) psql \
+	  -U $(DB_USER) \
+	  -d $(DB_NAME) \
+	  < ./script/truncate.sql
+
 db-trucate: # truncate the database table with the ./script/truncate.sql file
 	@echo -n "This will alter the db, are you sure? [y/n] " && read ans && [ $${ans:-y} != y ] && echo "Aborted" && exit 1
 	docker exec -i $(DOCKER_DB_NAME) psql \
@@ -60,6 +79,7 @@ db-trucate: # truncate the database table with the ./script/truncate.sql file
 	  < ./script/truncate.sql
 
 db-restore: db-trucate db-apply # truncate the db and apply the given sql file. Usage: 'make db-restore FILE=backup.sql'
+db-test-restore: db-test-trucate db-test-apply # truncate the db and apply the given sql file. Usage: 'make db-restore FILE=backup.sql'
 
 db-test-rm: # delete the volume for the test database
 	docker volume rm $(DOCKER_DB_TEST_VOLUME)
