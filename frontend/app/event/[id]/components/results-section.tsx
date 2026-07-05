@@ -16,6 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import CountryIcon from "@/components/common/country-icon";
 import { cn, formatRider } from "@/lib/utils";
+import TeamJerseyIcon from "./team-jersey";
 
 export const ResultSection = ({ results }: { results?: ResultsResponse }) => {
   if (!results) {
@@ -107,10 +108,12 @@ export const ResultCard = ({
                       </span>
                     </TableCell>
                     <TableCell className="hidden items-center gap-2 md:flex">
-                      <img
-                        src={`/team_jerseys/${result.rider?.team.id}.svg`}
-                        className="h-4"
-                      />
+                      {result.rider?.team && (
+                        <TeamJerseyIcon
+                          className="size-4"
+                          teamID={result.rider?.team.id}
+                        />
+                      )}
                       {result.rider?.team?.name}
                     </TableCell>
                   </>

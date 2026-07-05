@@ -8,6 +8,7 @@ import { getTeams } from "@/lib/events/getTeams";
 import { parseEventSearchParams } from "@/lib/events/parseEventsSearchParams";
 import { Team } from "@/types/team";
 import { LucideFilter } from "lucide-react";
+import TeamJerseyIcon from "../event/[id]/components/team-jersey";
 
 interface Props {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -30,7 +31,7 @@ const TeamPage = async ({ searchParams }: Props) => {
     <DefaultLayout>
       <h1>Teams</h1>
 
-      <div className="flex items-center gap-4 mb-4">
+      <div className="mb-4 flex items-center gap-4">
         <div className="flex items-center gap-1">
           <LucideFilter className="text-primary" size={14} />
           <p>Filters</p>
@@ -87,7 +88,7 @@ const TeamCard = ({ team }: { team: Team }) => {
               Jersey
             </dt>
             <dd aria-hidden className="font-bold">
-              <img src={`/team_jerseys/${team.id}.svg`} className="h-8" />
+              <TeamJerseyIcon className="size-8" teamID={team.id} />
             </dd>
           </dl>
         </div>

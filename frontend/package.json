@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/generate-svg-profile-manifest.mjs",
+    "prebuild": "node scripts/generate-svg-profile-manifest.mjs && node scripts/generate-svg-team-jersey-manifest.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
