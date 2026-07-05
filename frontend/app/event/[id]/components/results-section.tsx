@@ -106,7 +106,11 @@ export const ResultCard = ({
                         </span>
                       </span>
                     </TableCell>
-                    <TableCell className="hidden md:table-cell">
+                    <TableCell className="hidden items-center gap-2 md:flex">
+                      <img
+                        src={`/team_jerseys/${result.rider?.team.id}.svg`}
+                        className="h-4"
+                      />
                       {result.rider?.team?.name}
                     </TableCell>
                   </>
