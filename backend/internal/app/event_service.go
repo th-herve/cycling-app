@@ -99,7 +99,7 @@ func (s *EventService) FindStages(ctx context.Context, parentEventID uuid.UUID) 
 		return nil, common.GetErr("EventService FindStages", errors.New("response not found"))
 	}
 
-	hydrationCtx := s.getHydrationContext(ctx, events, events[0].SeasonYear, &storage.ResultSearchOptions{Limit: 1, Type: []domain.ResultType{domain.ResultTypeStageGeneral}})
+	hydrationCtx := s.getHydrationContext(ctx, events, events[0].SeasonYear, &storage.ResultSearchOptions{Limit: 1})
 
 	response := assembler.CreateEventListResponse(events, hydrationCtx, false)
 
@@ -147,9 +147,9 @@ func (s *EventService) getHydrationContext(ctx context.Context, events []*domain
 	}
 
 	return hydrator.EventHydrationContext{
-		Countries:   countryMap,
-		Results:     results,
-		Riders:      riders,
-		Teams:       teams,
+		Countries: countryMap,
+		Results:   results,
+		Riders:    riders,
+		Teams:     teams,
 	}
 }
