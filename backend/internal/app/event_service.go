@@ -96,7 +96,7 @@ func (s *EventService) FindStages(ctx context.Context, parentEventID uuid.UUID) 
 	}
 
 	if len(events) == 0 {
-		return nil, common.GetErr("EventService FindStages", errors.New("response not found"))
+		return []*dto.EventDTO{}, nil
 	}
 
 	hydrationCtx := s.getHydrationContext(ctx, events, events[0].SeasonYear, &storage.ResultSearchOptions{Limit: 1})
