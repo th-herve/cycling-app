@@ -71,11 +71,11 @@ db-trucate: # truncate the database table with the ./script/truncate.sql file
 	  -d $(DB_NAME) \
 	  < ./script/truncate.sql
 
-db-trucate: # truncate the database table with the ./script/truncate.sql file
+db-test-trucate: # truncate the database table with the ./script/truncate.sql file
 	@echo -n "This will alter the db, are you sure? [y/n] " && read ans && [ $${ans:-y} != y ] && echo "Aborted" && exit 1
-	docker exec -i $(DOCKER_DB_NAME) psql \
+	docker exec -i $(DOCKER_DB_TEST_NAME) psql \
 	  -U $(DB_USER) \
-	  -d $(DB_NAME) \
+	  -d $(DB_TEST_NAME) \
 	  < ./script/truncate.sql
 
 db-restore: db-trucate db-apply # truncate the db and apply the given sql file. Usage: 'make db-restore FILE=backup.sql'
