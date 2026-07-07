@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   Select,
   SelectContent,
@@ -14,9 +14,11 @@ import { useParams, useRouter } from "next/navigation";
 const StageSelector = ({
   currentSlug,
   stages,
+  className,
 }: {
   currentSlug: string;
   stages: Event[];
+  className?: string;
 }) => {
   const router = useRouter();
   const { id } = useParams<{
@@ -29,7 +31,7 @@ const StageSelector = ({
 
   return (
     <Select onValueChange={onSelect} defaultValue={currentSlug}>
-      <SelectTrigger>
+      <SelectTrigger className={className}>
         <SelectValue />
       </SelectTrigger>
       <SelectContent position="popper">
