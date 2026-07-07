@@ -132,6 +132,10 @@ func main() {
 	r.Use(handler.LoggerMiddleware())
 	r.Use(handler.ErrorMiddleware())
 
+	r.NoRoute(func(c *gin.Context) {
+		handler.ErrorResponse(c, 404, "ROUTE_NOT_FOUND")
+	})
+
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
