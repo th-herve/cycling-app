@@ -3,7 +3,7 @@ import { StagesCardsSection } from "../components/stages-section";
 import { TabsSelector } from "../components/tabs-selector";
 import { EventHeader } from "../components/event-header";
 import { slugify } from "@/lib/utils";
-import FinalResultsSection from "../components/final-results-section";
+import { ResultsSnapshotSection } from "../components/results-snapshot-section";
 import { notFound } from "next/navigation";
 
 interface Props {
@@ -23,7 +23,7 @@ const Page = async ({ params }: Props) => {
     <>
       <EventHeader event={event} />
       <div className="mt-10 space-y-10">
-        <FinalResultsSection results={event.results} />
+        <ResultsSnapshotSection event={event} stages={stages} />
         <TabsSelector resultsStageSlug={slugify(stages[0].name)} />
         <StagesCardsSection stages={stages} />
       </div>

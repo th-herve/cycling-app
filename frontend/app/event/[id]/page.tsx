@@ -3,7 +3,7 @@ import EventProfile from "./components/profile";
 import { getEvent } from "@/lib/events/getEvents";
 import { notFound, redirect } from "next/navigation";
 import { EventHeader } from "./components/event-header";
-import { Top3Result } from "./components/final-results-section";
+import { Top3Result } from "./components/results-snapshot-section";
 import { svgManifest } from "@/generated/svg-manifest";
 
 interface Props {
