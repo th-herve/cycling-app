@@ -12,8 +12,7 @@ interface Props {
 
 const Page = async ({ params }: Props) => {
   const { id } = await params;
-  const event = await getEvent(id);
-  const stages = await getStages(id);
+  const [event, stages] = await Promise.all([getEvent(id), getStages(id)]);
 
   if (!event) {
     notFound();
