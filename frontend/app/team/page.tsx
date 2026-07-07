@@ -9,6 +9,7 @@ import { parseEventSearchParams } from "@/lib/events/parseEventsSearchParams";
 import { Team } from "@/types/team";
 import { LucideFilter } from "lucide-react";
 import TeamJerseyIcon from "../event/[id]/components/team-jersey";
+import { notFound } from "next/navigation";
 
 interface Props {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -20,6 +21,10 @@ const TeamPage = async ({ searchParams }: Props) => {
   const { year, gender } = parseEventSearchParams(params);
 
   const teams = await getTeams(year, gender);
+
+  if (!teams) {
+    notFound();
+  }
 
   const wtw = teams.filter((t) => t.category === "WTW");
   const ptw = teams.filter((t) => t.category === "PRW");

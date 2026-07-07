@@ -5,7 +5,8 @@ import { slugify } from "@/lib/utils";
 import StageSelector from "./stage-selector";
 import { EventHeader } from "../../components/event-header";
 import { ResultsSnapshotSection } from "../../components/results-snapshot-section";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { siteRoute } from "@/siteConfig";
 
 interface Props {
   params: Promise<{ id: string; stageSlug: string }>;
@@ -19,8 +20,16 @@ const Page = async ({ params }: Props) => {
     notFound();
   }
 
+  if (event.isSingleDay) {
+    redirect(siteRoute.event.root(id));
+  }
+
   const stageID = stages.filter((s) => slugify(s.name) === stageSlug)[0].id;
   const currentStage = await getEvent(stageID);
+
+  if (!currentStage) {
+    notFound();
+  }
 
   const isLastEvent = currentStage.id === stages[stages.length - 1].id;
 

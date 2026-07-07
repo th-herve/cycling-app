@@ -1,20 +1,26 @@
-import { api } from "@/services/api";
+import { apiOrEmpty, apiOrNull } from "@/services/api";
 import Event from "@/types/event";
 
-export const getEvents = async (year: number, gender: string) => {
-  const resp = await api.get(`/events?year=${year}&gender=${gender}`);
-  const data: Event[] = (resp && resp.data) || [];
-  return data;
-};
+export const getEvents = (year: number, gender: string) =>
+  apiOrEmpty<Event>(`/events?year=${year}&gender=${gender}`, {
+    next: {
+      revalidate: 120,
+      tags: [`events-${year}-${gender}`],
+    },
+  });
 
-export const getEvent = async (id: string) => {
-  const resp = await api.get(`/events/${id}`);
-  const data: Event = (resp && resp.data);
-  return data;
-};
+export const getEvent = (id: string) =>
+  apiOrNull<Event>(`/events/${id}`, {
+    next: {
+      revalidate: 120,
+      tags: [`event-${id}`],
+    },
+  });
 
-export const getStages = async (id: string) => {
-  const resp = await api.get(`/events/${id}/stages`);
-  const data: Event[] = (resp && resp.data) || [];
-  return data
-}
+export const getStages = (id: string) =>
+  apiOrEmpty<Event>(`/events/${id}/stages`, {
+    next: {
+      revalidate: 120,
+      tags: [`event-${id}-stages`],
+    },
+  });
