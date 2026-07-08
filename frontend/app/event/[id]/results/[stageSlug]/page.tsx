@@ -45,7 +45,11 @@ const Page = async ({ params }: Props) => {
         <ResultsSnapshotSection event={event} stages={stages} />
         <TabsSelector resultsStageSlug={slugify(stages[0].name)} />
         <div>
-          <StageSelector className="mb-2" currentSlug={stageSlug} stages={stages} />
+          <StageSelector
+            className="mb-2 min-w-27"
+            currentSlug={stageSlug}
+            stages={stages}
+          />
           <ResultSection results={results} />
         </div>
       </div>
