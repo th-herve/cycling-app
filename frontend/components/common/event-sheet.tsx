@@ -88,7 +88,7 @@ const EventSheet = ({
   const resultLink = !event.parentEventId
     ? siteRoute.event.root(event.slug, event.seasonYear)
     : siteRoute.event.results(
-        event.parentEventId,
+        event.slug,
         event.seasonYear,
         slugify(event.name),
       );
