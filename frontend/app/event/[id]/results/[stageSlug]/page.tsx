@@ -82,8 +82,12 @@ const StageInfo = ({ stage }: { stage: Event }) => {
         <dt className="sr-only">Route</dt>
         <dd className="flex items-center">
           {stage.departureCity}
-          <ArrowRight className="mx-1 size-4" aria-hidden="true" />
-          {stage.arrivalCity}
+          {stage.arrivalCity && (
+            <>
+              <ArrowRight className="mx-1 size-4" aria-hidden="true" />
+              {stage.arrivalCity}
+            </>
+          )}
         </dd>
       </div>
 
