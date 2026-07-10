@@ -1,4 +1,7 @@
-import { getEvent, getStages } from "@/lib/events/getEvents";
+import {
+  getEventBySlug,
+  getStagesBySlug,
+} from "@/lib/events/getEvents";
 import { slugify } from "@/lib/utils";
 import { notFound, redirect } from "next/navigation";
 import { siteRoute } from "@/siteConfig";
@@ -8,19 +11,22 @@ import { StagesCardsSection } from "../components/stages-section";
 import { ResultsSnapshotSection } from "../components/results-snapshot-section";
 
 interface Props {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string; year: string }>;
 }
 
 const Page = async ({ params }: Props) => {
-  const { id } = await params;
-  const [event, stages] = await Promise.all([getEvent(id), getStages(id)]);
+  const { slug, year } = await params;
+  const [event, stages] = await Promise.all([
+    getEventBySlug(slug, year),
+    getStagesBySlug(slug, year),
+  ]);
 
   if (!event) {
     notFound();
   }
 
   if (event.isSingleDay) {
-    redirect(siteRoute.event.root(id));
+    redirect(siteRoute.event.root(slug, year));
   }
 
   return (

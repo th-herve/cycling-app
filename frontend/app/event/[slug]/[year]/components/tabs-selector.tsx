@@ -10,8 +10,9 @@ export const TabsSelector = ({
   resultsStageSlug: string;
 }) => {
   const pathname = usePathname();
-  const { id } = useParams<{
-    id: string;
+  const { slug, year } = useParams<{
+    slug: string;
+    year: string;
   }>();
 
   const currentPage = pathname.includes("/results") ? "results" : "stages";
@@ -20,12 +21,15 @@ export const TabsSelector = ({
     <Tabs className="mb-5" value={currentPage}>
       <TabsList variant="line">
         <TabsTrigger asChild className="text-2xl" value="stages">
-          <Link replace href={siteRoute.event.stages(id)}>
+          <Link replace href={siteRoute.event.stages(slug, year)}>
             Stages
           </Link>
         </TabsTrigger>
         <TabsTrigger asChild className="text-2xl" value="results">
-          <Link replace href={siteRoute.event.results(id, resultsStageSlug)}>
+          <Link
+            replace
+            href={siteRoute.event.results(slug, year, resultsStageSlug)}
+          >
             Results
           </Link>
         </TabsTrigger>

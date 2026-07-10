@@ -1,15 +1,16 @@
-import { getStages } from "@/lib/events/getEvents";
+import { getStagesBySlug } from "@/lib/events/getEvents";
 import { slugify } from "@/lib/utils";
+import { siteRoute } from "@/siteConfig";
 import { notFound, redirect } from "next/navigation";
 
 interface Props {
-  params: Promise<{ id: string; stageID: string }>;
+  params: Promise<{ slug: string; year: string }>;
 }
 
 const Page = async ({ params }: Props) => {
-  const { id } = await params;
+  const { slug, year } = await params;
 
-  const stages = await getStages(id);
+  const stages = await getStagesBySlug(slug, year);
 
   if (!stages || stages.length <= 0) {
     notFound();
@@ -17,7 +18,7 @@ const Page = async ({ params }: Props) => {
 
   const stageSlug = slugify(stages[0].name);
 
-  redirect(`/event/${id}/results/${stageSlug}`);
+  redirect(siteRoute.event.results(slug, year, stageSlug));
 };
 
 export default Page;

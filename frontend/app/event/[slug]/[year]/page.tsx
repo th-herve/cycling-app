@@ -5,6 +5,7 @@ import { Top3Result } from "./components/results-snapshot-section";
 import EventProfile from "./components/profile";
 import { ResultSection } from "./components/results-section";
 import { getEventBySlug } from "@/lib/events/getEvents";
+import { siteRoute } from "@/siteConfig";
 
 interface Props {
   params: Promise<{ slug: string; year: string }>;
@@ -19,7 +20,7 @@ const SingleDayPage = async ({ params }: Props) => {
   }
 
   if (!event.isSingleDay) {
-    redirect(`/event/${event.id}/stages`);
+    redirect(siteRoute.event.stages(slug, year));
   }
 
   return (

@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { slugify } from "@/lib/utils";
+import { siteRoute } from "@/siteConfig";
 import Event from "@/types/event";
 import { useParams, useRouter } from "next/navigation";
 
@@ -21,12 +22,13 @@ const StageSelector = ({
   className?: string;
 }) => {
   const router = useRouter();
-  const { id } = useParams<{
-    id: string;
+  const { slug, year } = useParams<{
+    slug: string;
+    year: string;
   }>();
 
-  const onSelect = (slug: string) => {
-    router.replace(`/event/${id}/results/${slug}`);
+  const onSelect = (stageSlug: string) => {
+    router.replace(siteRoute.event.results(slug, year, stageSlug));
   };
 
   return (

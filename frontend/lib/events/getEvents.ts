@@ -32,3 +32,11 @@ export const getStages = (id: string) =>
       tags: [`event-${id}-stages`],
     },
   });
+
+export const getStagesBySlug = (slug: string, year: string) =>
+  apiOrEmpty<Event>(`/events/${slug}/${year}/stages`, {
+    next: {
+      revalidate: 120,
+      tags: [`event-${slug}-${year}-stages`],
+    },
+  });

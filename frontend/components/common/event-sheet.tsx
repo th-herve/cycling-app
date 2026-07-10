@@ -87,7 +87,11 @@ const EventSheet = ({
 
   const resultLink = !event.parentEventId
     ? siteRoute.event.root(event.slug, event.seasonYear)
-    : siteRoute.event.results(event.parentEventId, slugify(event.name));
+    : siteRoute.event.results(
+        event.parentEventId,
+        event.seasonYear,
+        slugify(event.name),
+      );
 
   const isMobile = useIsMobile();
 
@@ -102,13 +106,7 @@ const EventSheet = ({
         }}
       >
         <SheetHeader>
-          <Link
-            // TODO need to link to the parent event for stages
-            // href={siteRoute.event.root(
-            //   event.parentEventId ? event.parentEventId : event.id,
-            // )}
-            href={siteRoute.event.root(event.slug, event.seasonYear)}
-          >
+          <Link href={siteRoute.event.root(event.slug, event.seasonYear)}>
             <SheetTitle className="flex items-start text-2xl">
               <CountryIcon
                 className="mr-2 pt-3 text-xl"
