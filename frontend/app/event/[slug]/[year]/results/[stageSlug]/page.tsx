@@ -34,7 +34,16 @@ const Page = async ({ params }: Props) => {
     redirect(siteRoute.event.root(slug, year));
   }
 
-  const stageID = stages.filter((s) => slugify(s.name) === stageSlug)[0].id;
+  // Look for the requested stage from the url stage slug.
+  const requestedStage = stages.filter((s) => slugify(s.name) === stageSlug);
+
+  // If there is no stage found, redirect to the first stage result.
+  if (requestedStage.length < 1) {
+    redirect(siteRoute.event.results(slug, year, slugify(stages[0].name)));
+  }
+
+  const stageID = requestedStage[0].id;
+
   const currentStage = await getEvent(stageID);
 
   if (!currentStage) {
