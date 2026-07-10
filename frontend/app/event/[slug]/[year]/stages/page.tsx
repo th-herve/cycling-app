@@ -1,11 +1,11 @@
 import { getEvent, getStages } from "@/lib/events/getEvents";
-import { StagesCardsSection } from "../components/stages-section";
-import { TabsSelector } from "../components/tabs-selector";
-import { EventHeader } from "../components/event-header";
 import { slugify } from "@/lib/utils";
-import { ResultsSnapshotSection } from "../components/results-snapshot-section";
 import { notFound, redirect } from "next/navigation";
 import { siteRoute } from "@/siteConfig";
+import { EventHeader } from "../components/event-header";
+import { TabsSelector } from "../components/tabs-selector";
+import { StagesCardsSection } from "../components/stages-section";
+import { ResultsSnapshotSection } from "../components/results-snapshot-section";
 
 interface Props {
   params: Promise<{ id: string }>;

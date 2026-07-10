@@ -1,17 +1,15 @@
 import { getEvent, getStages } from "@/lib/events/getEvents";
-import { TabsSelector } from "../../components/tabs-selector";
-import { ResultSection } from "../../components/results-section";
 import { slugify } from "@/lib/utils";
 import StageSelector from "./stage-selector";
-import { EventHeader } from "../../components/event-header";
-import { ResultsSnapshotSection } from "../../components/results-snapshot-section";
 import { notFound, redirect } from "next/navigation";
 import { siteRoute } from "@/siteConfig";
 import { ArrowRight } from "lucide-react";
-import EventProfile from "../../components/profile";
 import Event from "@/types/event";
 import ClassificationIcon from "@/components/common/classification-icon";
-import { Badge } from "@/components/ui/badge";
+import { EventHeader } from "../../components/event-header";
+import { TabsSelector } from "../../components/tabs-selector";
+import { ResultSection } from "../../components/results-section";
+import { ResultsSnapshotSection } from "../../components/results-snapshot-section";
 
 interface Props {
   params: Promise<{ id: string; stageSlug: string }>;

@@ -1,18 +1,18 @@
-import { ResultSection } from "./components/results-section";
-import EventProfile from "./components/profile";
-import { getEvent } from "@/lib/events/getEvents";
 import { notFound, redirect } from "next/navigation";
+import { svgManifest } from "@/generated/svg-manifest";
 import { EventHeader } from "./components/event-header";
 import { Top3Result } from "./components/results-snapshot-section";
-import { svgManifest } from "@/generated/svg-manifest";
+import EventProfile from "./components/profile";
+import { ResultSection } from "./components/results-section";
+import { getEventBySlug } from "@/lib/events/getEvents";
 
 interface Props {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string; year: string }>;
 }
 
 const SingleDayPage = async ({ params }: Props) => {
-  const { id } = await params;
-  const event = await getEvent(id);
+  const { slug, year } = await params;
+  const event = await getEventBySlug(slug, year);
 
   if (!event) {
     notFound();
