@@ -107,12 +107,12 @@ func (s *EventService) FindBySlug(ctx context.Context, slug string, seasonYear i
 	return response[0], nil
 }
 
-func (s *EventService) FindStages(ctx context.Context, parentEventID uuid.UUID) ([]*dto.EventDTO, error) {
-	events, err := s.storage.FindStages(ctx, parentEventID)
+func (s *EventService) FindStages(ctx context.Context, slug string, year int) ([]*dto.EventDTO, error) {
+	events, err := s.storage.FindStagesBySlug(ctx, slug, year)
 
 	if err != nil {
 		log.Debug().
-			Str("parentEventID", parentEventID.String()).
+			Str("parentSlug", slug).
 			Caller().
 			Msg("Error getting events")
 		return nil, common.GetErr("EventService FindStages", err)

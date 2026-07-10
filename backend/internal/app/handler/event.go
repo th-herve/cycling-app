@@ -97,16 +97,16 @@ func (h *EventHandler) GetSlug(c *gin.Context) {
 }
 
 func (h *EventHandler) GetStages(c *gin.Context) {
-	idParam := c.Param("id")
+	slug := c.Param("id")
 
-	id, err := uuid.Parse(idParam)
-
+	yearParam := c.Param("year")
+	year, err := strconv.Atoi(yearParam)
 	if err != nil {
 		c.Error(common.ErrInvalidInput)
 		return
 	}
 
-	event, err := h.eventService.FindStages(c.Request.Context(), id)
+	event, err := h.eventService.FindStages(c.Request.Context(), slug, year)
 
 	if err != nil {
 		c.Error(err)

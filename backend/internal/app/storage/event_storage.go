@@ -118,3 +118,29 @@ func (s *EventStorage) FindStages(ctx context.Context, parentEventID uuid.UUID) 
 
 	return stages, nil
 }
+
+func (s *EventStorage) FindStagesBySlug(ctx context.Context, slug string, year int) ([]*domain.Event, error) {
+
+	query, args, err :=
+		db.Q.Select("e.*").
+			From("events e").
+			Join("events parent ON parent.id = e.parent_event_id").
+			Join("event_series series ON series.id = parent.event_series_id").
+			Where(squirrel.Eq{"series.name": slug, "e.season_year": year}).
+			OrderBy("e.start").
+			ToSql()
+
+	if err != nil {
+		return nil, err
+	}
+
+	var stages []*domain.Event
+
+	err = s.db.Select(&stages, query, args...)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return stages, nil
+}
