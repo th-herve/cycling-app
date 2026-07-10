@@ -84,6 +84,29 @@ func (s *EventService) FindByID(ctx context.Context, id uuid.UUID) (*dto.EventDT
 	return response[0], nil
 }
 
+func (s *EventService) FindBySlug(ctx context.Context, slug string, seasonYear int) (*dto.EventDTO, error) {
+	event, err := s.storage.FindBySlug(ctx, slug, seasonYear)
+
+	if err != nil {
+		log.Debug().
+			Caller().
+			Msg("Error getting team")
+		return nil, common.GetErr("EventService FindByID", err)
+	}
+
+	asList := []*domain.Event{&event}
+
+	hydrationCtx := s.getHydrationContext(ctx, asList, event.SeasonYear, nil)
+
+	response := assembler.CreateEventListResponse(asList, hydrationCtx, true)
+
+	if len(response) == 0 {
+		return nil, common.GetErr("EventService FindByID", errors.New("response not found"))
+	}
+
+	return response[0], nil
+}
+
 func (s *EventService) FindStages(ctx context.Context, parentEventID uuid.UUID) ([]*dto.EventDTO, error) {
 	events, err := s.storage.FindStages(ctx, parentEventID)
 

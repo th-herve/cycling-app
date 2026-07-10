@@ -20,10 +20,15 @@ func NewEventStorage(db *sqlx.DB) *EventStorage {
 
 func (s *EventStorage) FindAllBySeason(ctx context.Context, seasonYear int, seasonGender domain.Gender) ([]*domain.Event, error) {
 
+	// Stages don't have an event_series_id. They inherit the public series
+	// (and therefore slug) from their parent event. Thus all the joining required and the COALESCE.
 	query, args, err :=
-		db.Q.Select("*").
+		db.Q.Select("events.*, COALESCE(event_series.name, parent_series.name) as slug").
 			From("events").
-			Where(squirrel.Eq{"season_year": seasonYear, "season_gender": seasonGender}).
+			LeftJoin("event_series ON events.event_series_id = event_series.id").
+			LeftJoin("events parent_event ON events.parent_event_id = parent_event.id").
+			LeftJoin("event_series parent_series ON parent_event.event_series_id = parent_series.id").
+			Where(squirrel.Eq{"events.season_year": seasonYear, "events.season_gender": seasonGender}).
 			OrderBy("start").
 			ToSql()
 

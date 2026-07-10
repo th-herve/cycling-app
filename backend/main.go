@@ -146,6 +146,7 @@ func main() {
 	{
 		eventGroup.GET("", eventHandler.Get)
 		eventGroup.GET("/:id", eventHandler.GetOne)
+		eventGroup.GET("/:id/:year", eventHandler.GetSlug)
 		eventGroup.GET("/:id/stages", eventHandler.GetStages)
 	}
 

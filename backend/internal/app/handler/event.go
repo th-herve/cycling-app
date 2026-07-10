@@ -76,6 +76,26 @@ func (h *EventHandler) GetOne(c *gin.Context) {
 	SuccessResponse(c, event)
 }
 
+func (h *EventHandler) GetSlug(c *gin.Context) {
+	slug := c.Param("id")
+
+	yearParam := c.Param("year")
+	year, err := strconv.Atoi(yearParam)
+	if err != nil {
+		c.Error(common.ErrInvalidInput)
+		return
+	}
+
+	event, err := h.eventService.FindBySlug(c.Request.Context(), slug, year)
+
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	SuccessResponse(c, event)
+}
+
 func (h *EventHandler) GetStages(c *gin.Context) {
 	idParam := c.Param("id")
 

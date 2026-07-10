@@ -51,7 +51,7 @@ type Event struct {
 	DistanceUnit   *string     `db:"distance_unit" json:"distanceUnit,omitempty"`
 	IsSingleDay    bool        `db:"is_single_day" json:"isSingleDay"`
 	CountryCode    *string     `db:"country_code" json:"countryCode,omitempty"`
-	Slug           string      `db:"slug" json:"slug"`
+	Slug           *string     `db:"slug" json:"slug"`
 
 	Timestamps
 }
