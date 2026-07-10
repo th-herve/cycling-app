@@ -54,7 +54,7 @@ func (s *EventStorage) FindByID(ctx context.Context, id uuid.UUID) (domain.Event
 	query, args, err :=
 		db.Q.Select("events.*, event_series.name as slug").
 			From("events").
-			Join("event_series ON events.event_series_id = event_series.id").
+			LeftJoin("event_series ON events.event_series_id = event_series.id").
 			Where(squirrel.Eq{"events.id": id.String()}).
 			ToSql()
 
