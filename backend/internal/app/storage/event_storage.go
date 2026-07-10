@@ -47,9 +47,34 @@ func (s *EventStorage) FindByID(ctx context.Context, id uuid.UUID) (domain.Event
 	var event domain.Event
 
 	query, args, err :=
-		db.Q.Select("*").
+		db.Q.Select("events.*, event_series.name as slug").
 			From("events").
-			Where(squirrel.Eq{"id": id.String()}).
+			Join("event_series ON events.event_series_id = event_series.id").
+			Where(squirrel.Eq{"events.id": id.String()}).
+			ToSql()
+
+	if err != nil {
+		return event, err
+	}
+
+	err = s.db.GetContext(ctx, &event, query, args...)
+
+	if err != nil {
+		return event, err
+	}
+
+	return event, nil
+}
+
+func (s *EventStorage) FindBySlug(ctx context.Context, slug string, seasonYear int) (domain.Event, error) {
+
+	var event domain.Event
+
+	query, args, err :=
+		db.Q.Select("events.*, event_series.name as slug").
+			From("events").
+			Join("event_series ON events.event_series_id = event_series.id").
+			Where(squirrel.Eq{"event_series.name": slug, "events.season_year": seasonYear}).
 			ToSql()
 
 	if err != nil {
