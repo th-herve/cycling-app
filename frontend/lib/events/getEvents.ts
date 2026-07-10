@@ -17,6 +17,14 @@ export const getEvent = (id: string) =>
     },
   });
 
+export const getEventBySlug = (slug: string, year: string) =>
+  apiOrNull<Event>(`/events/${slug}/${year}`, {
+    next: {
+      revalidate: 120,
+      tags: [`event-${slug}-${year}`],
+    },
+  });
+
 export const getStages = (id: string) =>
   apiOrEmpty<Event>(`/events/${id}/stages`, {
     next: {

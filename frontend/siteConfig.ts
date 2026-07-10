@@ -13,7 +13,7 @@ export const siteRoute = {
     calendar: "/schedule/calendar",
   },
   event: {
-    root: (eventID: string) => `/event/${eventID}`,
+    root: (slug: string, year: string) => `/event/${slug}/${year}`,
     stages: (eventID: string) => `/event/${eventID}/stages`,
     results: (eventID: string, stageSlug: string) =>
       `/event/${eventID}/results/${stageSlug}`,

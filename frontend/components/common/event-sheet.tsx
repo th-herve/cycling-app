@@ -22,7 +22,7 @@ import {
 } from "react-icons/fa6";
 import { JerseyLine, ResultLine } from "./result-line";
 import Result from "@/types/result";
-import EventProfile from "@/app/event/[id]/components/profile";
+import EventProfile from "@/app/event/[slug]/[year]/components/profile";
 import Link from "next/link";
 import { siteRoute } from "@/siteConfig";
 import CanceledLabel from "./canceled-label";
@@ -86,7 +86,7 @@ const EventSheet = ({
   const hasJerseySection = general || mountain || point || young;
 
   const resultLink = !event.parentEventId
-    ? siteRoute.event.root(event.id)
+    ? siteRoute.event.root(event.slug, event.seasonYear)
     : siteRoute.event.results(event.parentEventId, slugify(event.name));
 
   const isMobile = useIsMobile();
@@ -103,11 +103,13 @@ const EventSheet = ({
       >
         <SheetHeader>
           <Link
-            href={siteRoute.event.root(
-              event.parentEventId ? event.parentEventId : event.id,
-            )}
+            // TODO need to link to the parent event for stages
+            // href={siteRoute.event.root(
+            //   event.parentEventId ? event.parentEventId : event.id,
+            // )}
+            href={siteRoute.event.root(event.slug, event.seasonYear)}
           >
-            <SheetTitle className="text-2xl flex items-start">
+            <SheetTitle className="flex items-start text-2xl">
               <CountryIcon
                 className="mr-2 pt-3 text-xl"
                 countryCode={event.country?.alpha2 || ""}

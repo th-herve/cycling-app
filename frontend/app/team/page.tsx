@@ -8,7 +8,7 @@ import { getTeams } from "@/lib/events/getTeams";
 import { parseEventSearchParams } from "@/lib/events/parseEventsSearchParams";
 import { Team } from "@/types/team";
 import { LucideFilter } from "lucide-react";
-import TeamJerseyIcon from "../event/[id]/components/team-jersey";
+import TeamJerseyIcon from "../event/[slug]/[year]/components/team-jersey";
 import { notFound } from "next/navigation";
 
 interface Props {

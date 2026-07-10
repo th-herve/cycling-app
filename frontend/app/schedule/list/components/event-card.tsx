@@ -31,7 +31,7 @@ const EventCard = ({ event }: Props) => {
                 aria-label={event.country?.name}
                 className="pt-3"
               />
-              <Link href={siteRoute.event.root(event.id)}>
+              <Link href={siteRoute.event.root(event.slug, event.seasonYear)}>
                 <h2 id={titleId} className="font-race text-2xl font-bold">
                   {event.name}
                 </h2>

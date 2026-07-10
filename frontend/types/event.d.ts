@@ -32,4 +32,6 @@ export default interface Event {
   results?: ResultsResponse;
 
   parentName?: string;
+
+  slug: string;
 }
