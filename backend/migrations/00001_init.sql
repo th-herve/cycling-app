@@ -126,16 +126,15 @@ CREATE TABLE "seasons" (
 -- Group event together across season.
 -- ex: tour de france 2024, 2025...
 -- Usefull to track event that change name (ex: GP Plouay->Bretagne classique).
--- !!: The "name" is only there to help, use events.name to get the right name of an event.
 CREATE TABLE "event_series" (
   "id" UUID PRIMARY KEY,
-  "name" varchar,
+  "slug" varchar,
   "created_at" TIMESTAMPTZ DEFAULT (now()),
   "updated_at" TIMESTAMPTZ
 );
 
+CREATE UNIQUE INDEX ON "event_series" ("slug");
 COMMENT ON TABLE "event_series" IS 'Id to group recurring event together ex: tour de france 2025, 2024, 2023... Handle the fact that the name can change over the year (ex: GP plouay).';
-COMMENT ON COLUMN "event_series"."name" IS 'This is only a helper to identify which event it references. Use the events.name to get an event actual name.';
 
 
 -- Road, bmx...

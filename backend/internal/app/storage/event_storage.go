@@ -23,7 +23,7 @@ func (s *EventStorage) FindAllBySeason(ctx context.Context, seasonYear int, seas
 	// Stages don't have an event_series_id. They inherit the public series
 	// (and therefore slug) from their parent event. Thus all the joining required and the COALESCE.
 	query, args, err :=
-		db.Q.Select("events.*, COALESCE(event_series.name, parent_series.name) as slug").
+		db.Q.Select("events.*, COALESCE(event_series.slug, parent_series.slug) AS slug").
 			From("events").
 			LeftJoin("event_series ON events.event_series_id = event_series.id").
 			LeftJoin("events parent_event ON events.parent_event_id = parent_event.id").
@@ -52,7 +52,7 @@ func (s *EventStorage) FindByID(ctx context.Context, id uuid.UUID) (domain.Event
 	var event domain.Event
 
 	query, args, err :=
-		db.Q.Select("events.*, event_series.name as slug").
+		db.Q.Select("events.*, event_series.slug").
 			From("events").
 			LeftJoin("event_series ON events.event_series_id = event_series.id").
 			Where(squirrel.Eq{"events.id": id.String()}).
@@ -76,10 +76,10 @@ func (s *EventStorage) FindBySlug(ctx context.Context, slug string, seasonYear i
 	var event domain.Event
 
 	query, args, err :=
-		db.Q.Select("events.*, event_series.name as slug").
+		db.Q.Select("events.*, event_series.slug").
 			From("events").
 			Join("event_series ON events.event_series_id = event_series.id").
-			Where(squirrel.Eq{"event_series.name": slug, "events.season_year": seasonYear}).
+			Where(squirrel.Eq{"event_series.slug": slug, "events.season_year": seasonYear}).
 			ToSql()
 
 	if err != nil {
@@ -126,7 +126,7 @@ func (s *EventStorage) FindStagesBySlug(ctx context.Context, slug string, year i
 			From("events e").
 			Join("events parent ON parent.id = e.parent_event_id").
 			Join("event_series series ON series.id = parent.event_series_id").
-			Where(squirrel.Eq{"series.name": slug, "e.season_year": year}).
+			Where(squirrel.Eq{"series.slug": slug, "e.season_year": year}).
 			OrderBy("e.start").
 			ToSql()
 
