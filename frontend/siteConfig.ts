@@ -18,7 +18,7 @@ export const siteRoute = {
     results: (eventSlug: string, year: string, stageSlug: string) =>
       `/event/${eventSlug}/${year}/results/${stageSlug}`,
   },
-  team: {
-    list: "/team",
+  teams: {
+    list: "/teams",
   },
 };

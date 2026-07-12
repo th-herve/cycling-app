@@ -36,7 +36,7 @@ const Navbar = ({ className }: Props) => {
             </Link>
           </li>
           <li>
-            <Link className="font-bold" href={siteRoute.team.list}>
+            <Link className="font-bold" href={siteRoute.teams.list}>
               Teams
             </Link>
           </li>
