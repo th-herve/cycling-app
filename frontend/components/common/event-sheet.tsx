@@ -22,7 +22,7 @@ import {
 } from "react-icons/fa6";
 import { JerseyLine, ResultLine } from "./result-line";
 import Result from "@/types/result";
-import EventProfile from "@/app/event/[slug]/[year]/components/profile";
+import EventProfile from "@/app/events/[slug]/[year]/components/profile";
 import Link from "next/link";
 import { siteRoute } from "@/siteConfig";
 import CanceledLabel from "./canceled-label";
@@ -86,8 +86,8 @@ const EventSheet = ({
   const hasJerseySection = general || mountain || point || young;
 
   const resultLink = !event.parentEventId
-    ? siteRoute.event.root(event.slug, event.seasonYear)
-    : siteRoute.event.results(
+    ? siteRoute.events.root(event.slug, event.seasonYear)
+    : siteRoute.events.results(
         event.slug,
         event.seasonYear,
         slugify(event.name),
@@ -106,7 +106,7 @@ const EventSheet = ({
         }}
       >
         <SheetHeader>
-          <Link href={siteRoute.event.root(event.slug, event.seasonYear)}>
+          <Link href={siteRoute.events.root(event.slug, event.seasonYear)}>
             <SheetTitle className="flex items-start text-2xl">
               <CountryIcon
                 className="mr-2 pt-3 text-xl"

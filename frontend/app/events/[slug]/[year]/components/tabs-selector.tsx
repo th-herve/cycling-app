@@ -21,14 +21,14 @@ export const TabsSelector = ({
     <Tabs className="mb-5" value={currentPage}>
       <TabsList variant="line">
         <TabsTrigger asChild className="text-2xl" value="stages">
-          <Link replace href={siteRoute.event.stages(slug, year)}>
+          <Link replace href={siteRoute.events.stages(slug, year)}>
             Stages
           </Link>
         </TabsTrigger>
         <TabsTrigger asChild className="text-2xl" value="results">
           <Link
             replace
-            href={siteRoute.event.results(slug, year, resultsStageSlug)}
+            href={siteRoute.events.results(slug, year, resultsStageSlug)}
           >
             Results
           </Link>

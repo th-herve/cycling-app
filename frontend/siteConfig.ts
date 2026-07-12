@@ -12,11 +12,11 @@ export const siteRoute = {
     list: "/schedule/list",
     calendar: "/schedule/calendar",
   },
-  event: {
-    root: (slug: string, year: string) => `/event/${slug}/${year}`,
-    stages: (slug: string, year: string) => `/event/${slug}/${year}/stages`,
+  events: {
+    root: (slug: string, year: string) => `/events/${slug}/${year}`,
+    stages: (slug: string, year: string) => `/events/${slug}/${year}/stages`,
     results: (eventSlug: string, year: string, stageSlug: string) =>
-      `/event/${eventSlug}/${year}/results/${stageSlug}`,
+      `/events/${eventSlug}/${year}/results/${stageSlug}`,
   },
   teams: {
     list: "/teams",

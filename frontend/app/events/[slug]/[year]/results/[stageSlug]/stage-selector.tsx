@@ -28,7 +28,7 @@ const StageSelector = ({
   }>();
 
   const onSelect = (stageSlug: string) => {
-    router.replace(siteRoute.event.results(slug, year, stageSlug));
+    router.replace(siteRoute.events.results(slug, year, stageSlug));
   };
 
   return (

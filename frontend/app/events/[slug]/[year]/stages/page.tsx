@@ -26,7 +26,7 @@ const Page = async ({ params }: Props) => {
   }
 
   if (event.isSingleDay) {
-    redirect(siteRoute.event.root(slug, year));
+    redirect(siteRoute.events.root(slug, year));
   }
 
   return (

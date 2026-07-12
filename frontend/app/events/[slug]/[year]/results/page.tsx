@@ -18,7 +18,7 @@ const Page = async ({ params }: Props) => {
 
   const stageSlug = slugify(stages[0].name);
 
-  redirect(siteRoute.event.results(slug, year, stageSlug));
+  redirect(siteRoute.events.results(slug, year, stageSlug));
 };
 
 export default Page;

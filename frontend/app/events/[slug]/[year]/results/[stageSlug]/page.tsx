@@ -31,7 +31,7 @@ const Page = async ({ params }: Props) => {
   }
 
   if (event.isSingleDay) {
-    redirect(siteRoute.event.root(slug, year));
+    redirect(siteRoute.events.root(slug, year));
   }
 
   // Look for the requested stage from the url stage slug.
@@ -39,7 +39,7 @@ const Page = async ({ params }: Props) => {
 
   // If there is no stage found, redirect to the first stage result.
   if (requestedStage.length < 1) {
-    redirect(siteRoute.event.results(slug, year, slugify(stages[0].name)));
+    redirect(siteRoute.events.results(slug, year, slugify(stages[0].name)));
   }
 
   const stageID = requestedStage[0].id;
