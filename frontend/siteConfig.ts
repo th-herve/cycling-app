@@ -21,4 +21,5 @@ export const siteRoute = {
   teams: {
     list: "/teams",
   },
+  export: "/export",
 };
