@@ -58,7 +58,7 @@ const SelectList = ({ events }: Props) => {
   return (
     <div className="grid grid-cols-[1fr_auto_1fr] gap-5">
       <EventsCard
-        title="Select the events."
+        title="Select the races."
         onChange={onCheck}
         events={notChecked}
       />
@@ -73,7 +73,7 @@ const SelectList = ({ events }: Props) => {
       </div>
 
       <EventsCard
-        title="Events to be added to your calendar."
+        title="Races to be added to your calendar."
         areChecked
         onChange={onUncheck}
         events={checked}
