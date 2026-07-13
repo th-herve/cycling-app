@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { eventToIcs, generateIcs } from "@/lib/export/cal-export";
 import Event from "@/types/event";
 import { useState } from "react";
@@ -101,23 +102,25 @@ const EventsCard = ({
   title: string;
 }) => {
   return (
-    <Card className="grow">
-      <CardHeader>
-        <CardTitle className="border-b border-white/50 pb-4">{title}</CardTitle>
+    <Card>
+      <CardHeader className="border-muted-foreground border-b">
+        <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <ul>
-          {events.map((event) => (
-            <li
-              className="cursor-pointer"
-              onClick={() => onChange(event.id)}
-              key={`event-${event.id}`}
-            >
-              <Checkbox checked={areChecked} className="mr-2" />
-              {event.name}
-            </li>
-          ))}
-        </ul>
+        <ScrollArea variant="secondary" className="h-150">
+          <ul>
+            {events.map((event) => (
+              <li
+                className="cursor-pointer"
+                onClick={() => onChange(event.id)}
+                key={`event-${event.id}`}
+              >
+                <Checkbox checked={areChecked} className="mr-2" />
+                {event.name}
+              </li>
+            ))}
+          </ul>
+        </ScrollArea>
       </CardContent>
     </Card>
   );
