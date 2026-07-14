@@ -46,7 +46,7 @@ const Navbar = ({ className }: Props) => {
           </ul>
         </div>
 
-        <Link href={siteRoute.export}>
+        <Link href={siteRoute.export.root}>
           <Button variant="outline">
             <FaCalendarDay />
             Export

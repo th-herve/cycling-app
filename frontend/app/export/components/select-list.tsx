@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { eventToIcs, generateIcs } from "@/lib/export/cal-export";
+import { getFeedToken } from "@/lib/actions/generate-feed";
+import { siteRoute } from "@/siteConfig";
 import Event from "@/types/event";
+import { redirect } from "next/navigation";
 import { useState } from "react";
 import { FaAnglesLeft, FaAnglesRight } from "react-icons/fa6";
 
@@ -50,9 +52,11 @@ const SelectList = ({ events }: Props) => {
 
   const isExportDisabled = checked.length <= 0;
 
-  const onExport = () => {
-    const ics = generateIcs(eventToIcs(checked));
-    console.log(ics);
+  const onExport = async () => {
+    const slugs = checked.map((e) => e.slug);
+    const token = await getFeedToken(slugs);
+
+    redirect(siteRoute.export.token(token));
   };
 
   return (
@@ -84,7 +88,7 @@ const SelectList = ({ events }: Props) => {
         onClick={onExport}
         className="col-span-full"
       >
-        Export
+        Continue
       </Button>
     </div>
   );

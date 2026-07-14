@@ -21,5 +21,8 @@ export const siteRoute = {
   teams: {
     list: "/teams",
   },
-  export: "/export",
+  export: {
+    root: "/export",
+    token: (token: string) => `/export/${token}`,
+  },
 };
