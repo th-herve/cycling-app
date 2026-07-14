@@ -119,9 +119,12 @@ func main() {
 	eventStorage := storage.NewEventStorage(db)
 	eventService := app.NewEventService(eventStorage, seasonService, resultService, riderService, countryStorage, teamService)
 
+	feedService := app.NewFeedService(eventService)
+
 	eventHandler := handler.NewEventHandler(eventService)
 	resultHandler := handler.NewResultHandler(resultService)
 	teamHandler := handler.NewTeamHandler(teamService)
+	feedHandler := handler.NewFeedHandler(feedService)
 
 	if AppMode == "prod" {
 		gin.SetMode(gin.ReleaseMode)
@@ -158,6 +161,13 @@ func main() {
 	teamGroup := r.Group("/teams")
 	{
 		teamGroup.GET("", teamHandler.GetBySeasonAndGender)
+	}
+
+	// Routes for the ics feed for personal calendar integration.
+	feedGroup := r.Group("/cycling-calendar")
+	{
+		feedGroup.GET("/men.ics", feedHandler.GetMen)
+		feedGroup.GET("/women.ics", feedHandler.GetWomen)
 	}
 
 	// Start server on port 8080 (default)
