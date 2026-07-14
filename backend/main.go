@@ -119,9 +119,12 @@ func main() {
 	eventStorage := storage.NewEventStorage(db)
 	eventService := app.NewEventService(eventStorage, seasonService, resultService, riderService, countryStorage, teamService)
 
+	feedService := app.NewFeedService(eventService)
+
 	eventHandler := handler.NewEventHandler(eventService)
 	resultHandler := handler.NewResultHandler(resultService)
 	teamHandler := handler.NewTeamHandler(teamService)
+	feedHandler := handler.NewFeedHandler(feedService)
 
 	if AppMode == "prod" {
 		gin.SetMode(gin.ReleaseMode)
@@ -158,6 +161,11 @@ func main() {
 	teamGroup := r.Group("/teams")
 	{
 		teamGroup.GET("", teamHandler.GetBySeasonAndGender)
+	}
+
+	feedGroup := r.Group("/feed")
+	{
+		feedGroup.POST("", feedHandler.Post)
 	}
 
 	// Start server on port 8080 (default)
