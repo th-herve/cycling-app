@@ -166,6 +166,7 @@ func main() {
 	feedGroup := r.Group("/feed")
 	{
 		feedGroup.POST("", feedHandler.Post)
+		feedGroup.GET("/:token", feedHandler.Get)
 	}
 
 	// Start server on port 8080 (default)

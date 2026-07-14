@@ -1,6 +1,9 @@
 package handler
 
 import (
+	"net/http"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/th-herve/cycling-app/backend/internal/app"
 	"github.com/th-herve/cycling-app/backend/internal/common"
@@ -27,4 +30,25 @@ func (h *FeedHandler) Post(c *gin.Context) {
 	}
 
 	SuccessResponse(c, token)
+}
+
+func (h *FeedHandler) Get(c *gin.Context) {
+	raw := c.Param("token")
+	token, ok := strings.CutSuffix(raw, ".ics")
+	if !ok {
+		c.Error(common.ErrInvalidInput)
+		return
+	}
+
+	feed, err := h.feedService.GetFeed(c.Request.Context(), token)
+	if err != nil {
+		c.Error(common.ErrInternal)
+		return
+	}
+
+	c.Data(
+		http.StatusOK,
+		"text/calendar; charset=utf-8",
+		[]byte(feed),
+	)
 }
