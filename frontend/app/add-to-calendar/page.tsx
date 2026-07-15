@@ -84,7 +84,7 @@ const CalLink = ({
   link?: string;
 }) => {
   return (
-    <Link href={link || ""}>
+    <Link target="_blank" href={link || ""}>
       <div className="bg-secondary flex flex-col items-center gap-2 p-4">
         {children}
         {title}
