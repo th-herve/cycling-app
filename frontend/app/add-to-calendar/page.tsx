@@ -1,6 +1,5 @@
 import DefaultLayout from "@/components/layouts/default-layout";
-import { SiProton } from "react-icons/si";
-import { FaApple, FaGoogle } from "react-icons/fa6";
+import { FaApple, FaDownload, FaGoogle } from "react-icons/fa6";
 import Link from "next/link";
 import { siteRoute } from "@/siteConfig";
 import { headers } from "next/headers";
@@ -10,8 +9,10 @@ const googleLinkBase = "https://calendar.google.com/calendar/r?cid=";
 const AddToCalPage = async () => {
   const h = await headers();
   const host = h.get("host");
-  const webCal = `webcal://${host}/${siteRoute.calendarFeed.men}`;
-  const googleLink = `${googleLinkBase}${encodeURIComponent(webCal)}`;
+  const webCal = (gender: "men" | "women") =>
+    `webcal://${host}/${siteRoute.calendarFeed[gender]}`;
+  const googleLink = (gender: "men" | "women") =>
+    `${googleLinkBase}${encodeURIComponent(webCal(gender))}`;
 
   return (
     <DefaultLayout>
@@ -24,20 +25,23 @@ const AddToCalPage = async () => {
         <div>
           <h3>Men calendar</h3>
           <div className="grid grid-cols-4 gap-10">
-            <CalLink link={googleLink} title="Google Calendar">
+            <CalLink link={googleLink("men")} title="Google Calendar">
               <FaGoogle className="size-10" />
             </CalLink>
 
-            <CalLink title="Outlook">
+            <CalLink link={webCal("men")} title="Outlook">
               <Outlook />
             </CalLink>
 
-            <CalLink title="Apple">
+            <CalLink link={webCal("men")} title="Apple">
               <FaApple className="size-10" />
             </CalLink>
 
-            <CalLink title="Proton Calendar">
-              <SiProton className="size-10" />
+            <CalLink
+              link={"/" + siteRoute.calendarFeed.men}
+              title="Download ics file"
+            >
+              <FaDownload className="size-10" />
             </CalLink>
           </div>
         </div>
@@ -45,20 +49,23 @@ const AddToCalPage = async () => {
         <div>
           <h3>Women calendar</h3>
           <div className="grid grid-cols-4 gap-10">
-            <CalLink title="Google Calendar">
+            <CalLink link={googleLink("women")} title="Google Calendar">
               <FaGoogle className="size-10" />
             </CalLink>
 
-            <CalLink title="Outlook">
+            <CalLink link={webCal("women")} title="Outlook">
               <Outlook />
             </CalLink>
 
-            <CalLink title="Apple">
+            <CalLink link={webCal("women")} title="Apple">
               <FaApple className="size-10" />
             </CalLink>
 
-            <CalLink title="Proton Calendar">
-              <SiProton className="size-10" />
+            <CalLink
+              link={"/" + siteRoute.calendarFeed.women}
+              title="Download ics file"
+            >
+              <FaDownload className="size-10" />
             </CalLink>
           </div>
         </div>

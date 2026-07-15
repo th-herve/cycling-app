@@ -12,6 +12,7 @@ export async function GET(
   return new Response(feed, {
     headers: {
       "Content-Type": "text/calendar; charset=utf-8",
+      "Content-Disposition": `attachment; filename="cycling-calendar-${gender}.ics"`,
     },
   });
 }
