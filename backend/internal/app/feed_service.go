@@ -28,7 +28,7 @@ func (s *FeedService) GetFeed(ctx context.Context, gender domain.Gender) (string
 
 	cal := ics.NewCalendar()
 	cal.SetMethod(ics.MethodPublish)
-	cal.SetName("Cycling calendar")
+	cal.SetName("Cycling calendar " + string(gender))
 
 	for _, e := range events {
 		event := cal.AddEvent(e.ID.String())
