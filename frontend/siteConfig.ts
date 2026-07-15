@@ -21,4 +21,12 @@ export const siteRoute = {
   teams: {
     list: "/teams",
   },
+  export: {
+    root: "/add-to-calendar",
+  },
+  // Calendar feed do not include leading '/'.
+  calendarFeed: {
+    men: "cycling-calendar/men",
+    women: "cycling-calendar/women",
+  },
 };

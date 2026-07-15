@@ -49,6 +49,32 @@ export async function api<T>(path: string, options?: RequestInit): Promise<T> {
   return body.data;
 }
 
+/*
+ * Call the api route where a string response is expected.
+ */
+export async function apiString(
+  path: string,
+  options?: RequestInit,
+): Promise<string> {
+  const response = await fetch(`${BASE_URL}${path}`, options);
+
+  const body = await response.text();
+
+  if (!response.ok) {
+    if (typeof body === "string") {
+      throw new Error(body);
+    }
+
+    throw new Error();
+  }
+
+  if (typeof body !== "string") {
+    throw new Error("Unexpected non string response");
+  }
+
+  return body;
+}
+
 // Helper function to wrap the api call in try/catch.
 // Returns:
 // - if ok: the api response
