@@ -44,6 +44,7 @@ func (s *FeedService) GetFeed(ctx context.Context, gender domain.Gender) (string
 		}
 		event.SetDescription("More infos: https://cycling.th-herve.fr/events/" + *e.Slug + "/2026")
 		event.SetSummary(e.Name)
+		event.SetColor("#313160")
 	}
 
 	return cal.Serialize(), err
