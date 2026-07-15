@@ -42,6 +42,7 @@ func (s *FeedService) GetFeed(ctx context.Context, gender domain.Gender) (string
 		if e.Slug != nil {
 			event.SetURL("https://cycling.th-herve.fr/events/" + *e.Slug + "/2026")
 		}
+		event.SetDescription("More infos: https://cycling.th-herve.fr/events/" + *e.Slug + "/2026")
 		event.SetSummary(e.Name)
 	}
 
