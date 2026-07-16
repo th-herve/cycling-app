@@ -36,8 +36,15 @@ func (s *FeedService) GetFeed(ctx context.Context, gender domain.Gender) (string
 	cal.SetProductId("-//th-herve.fr//Cycling Calendar//EN") // TODO .env or config var
 
 	for _, e := range events {
-		event := cal.AddEvent(e.ID.String() + "@cycling.th-herve.fr") // TODO .env or config
-		s.convertEventToIcal(event, e)
+		if e.Stages == nil || len(e.Stages) == 0 {
+			event := cal.AddEvent(e.ID.String() + "@cycling.th-herve.fr") // TODO .env or config
+			s.convertEventToIcal(event, e)
+		} else {
+			for _, st := range e.Stages {
+				event := cal.AddEvent(st.ID.String() + "@cycling.th-herve.fr") // TODO .env or config
+				s.convertEventToIcal(event, st)
+			}
+		}
 	}
 
 	// WithNewLineWindows uses CRLF new line, which is better for broad compatibility (see golang-ical library readme).
