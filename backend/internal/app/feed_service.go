@@ -37,7 +37,15 @@ func (s *FeedService) GetFeed(ctx context.Context, gender domain.Gender) (string
 		event.SetModifiedAt(time.Now())
 		event.SetAllDayStartAt(e.Start)
 		if e.End != nil {
-			event.SetAllDayEndAt(*e.End)
+			// The end on ical is exclusive, so we need to add one day to the actual end date.
+			end := time.Date(
+				e.End.Year(),
+				e.End.Month(),
+				e.End.Day()+1,
+				0, 0, 0, 0,
+				e.End.Location(),
+			)
+			event.SetAllDayEndAt(end)
 		}
 		if e.Slug != nil {
 			event.SetURL("https://cycling.th-herve.fr/events/" + *e.Slug + "/2026")
