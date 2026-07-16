@@ -5,7 +5,11 @@ export async function GET(
   _req: NextRequest,
   ctx: RouteContext<"/cycling-calendar/[gender]">,
 ) {
-  const { gender } = await ctx.params;
+  const { gender: genderParam } = await ctx.params;
+
+  const gender = genderParam.endsWith(".ics")
+    ? genderParam.replace(".ics", "")
+    : genderParam;
 
   const feed = await getFeed(gender);
 

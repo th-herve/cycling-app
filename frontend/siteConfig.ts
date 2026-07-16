@@ -26,7 +26,7 @@ export const siteRoute = {
   },
   // Calendar feed do not include leading '/'.
   calendarFeed: {
-    men: "cycling-calendar/men",
-    women: "cycling-calendar/women",
+    men: "cycling-calendar/men.ics",
+    women: "cycling-calendar/women.ics",
   },
 };
