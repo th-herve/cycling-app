@@ -2,10 +2,12 @@ package app
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	ics "github.com/arran4/golang-ical"
 	"github.com/rs/zerolog/log"
+	"github.com/th-herve/cycling-app/backend/internal/app/dto"
 	"github.com/th-herve/cycling-app/backend/pkg/domain"
 )
 
@@ -29,32 +31,45 @@ func (s *FeedService) GetFeed(ctx context.Context, gender domain.Gender) (string
 
 	cal := ics.NewCalendar()
 	cal.SetMethod(ics.MethodPublish)
-	cal.SetName("Cycling calendar " + string(gender))
+	cal.SetXWRCalName("Cycling calendar " + string(gender))
+	cal.SetCalscale("GREGORIAN")
+	cal.SetProductId("-//th-herve.fr//Cycling Calendar//EN") // TODO .env or config var
 
 	for _, e := range events {
-		event := cal.AddEvent(e.ID.String())
-		event.SetCreatedTime(time.Now())
-		event.SetDtStampTime(time.Now())
-		event.SetModifiedAt(time.Now())
-		event.SetAllDayStartAt(e.Start)
-		if e.End != nil {
-			// The end on ical is exclusive, so we need to add one day to the actual end date.
-			end := time.Date(
-				e.End.Year(),
-				e.End.Month(),
-				e.End.Day()+1,
-				0, 0, 0, 0,
-				e.End.Location(),
-			)
-			event.SetAllDayEndAt(end)
-		}
-		if e.Slug != nil {
-			event.SetURL("https://cycling.th-herve.fr/events/" + *e.Slug + "/" + string(year))
-		}
-		event.SetDescription("More infos: https://cycling.th-herve.fr/events/" + *e.Slug + "/" + string(year))
-		event.SetSummary(e.Name)
-		event.SetColor("#313160")
+		event := cal.AddEvent(e.ID.String() + "@cycling.th-herve.fr") // TODO .env or config
+		s.convertEventToIcal(event, e)
 	}
 
-	return cal.Serialize(), err
+	// WithNewLineWindows uses CRLF new line, which is better for broad compatibility (see golang-ical library readme).
+	return cal.Serialize(ics.WithNewLineWindows), err
+}
+
+func (s *FeedService) convertEventToIcal(event *ics.VEvent, e *dto.EventDTO) {
+	event.SetCreatedTime(e.CreatedAt)
+	event.SetDtStampTime(time.Now().UTC())
+	if e.UpdatedAt != nil {
+		event.SetModifiedAt(*e.UpdatedAt)
+	}
+
+	if e.Country.Name != "" {
+		event.SetLocation(e.Country.Name)
+	}
+
+	event.SetAllDayStartAt(e.Start)
+
+	end := e.Start
+	if e.End != nil {
+		end = *e.End
+	}
+	// iCalendar end date is exclusive, so we need to add 1 day to the actual end date.
+	end = end.AddDate(0, 0, 1)
+	event.SetAllDayEndAt(end)
+
+	if e.Slug != nil {
+		url := fmt.Sprintf("https://cycling.th-herve.fr/events/%s/%d", *e.Slug, e.Start.Year())
+		event.SetURL(url)
+		event.SetDescription("More infos: " + url)
+	}
+	event.SetSummary(e.Name)
+	event.SetColor("#313160")
 }
