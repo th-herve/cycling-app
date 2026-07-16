@@ -20,7 +20,8 @@ func NewFeedService(eventService *EventService) *FeedService {
 }
 
 func (s *FeedService) GetFeed(ctx context.Context, gender domain.Gender) (string, error) {
-	events, err := s.eventService.FindAllBySeason(ctx, 2026, gender)
+	year := time.Now().Year()
+	events, err := s.eventService.FindAllBySeason(ctx, year, gender)
 	if err != nil {
 		log.Warn().Caller().Err(err).Msg("error finding events")
 		return "", err
@@ -48,9 +49,9 @@ func (s *FeedService) GetFeed(ctx context.Context, gender domain.Gender) (string
 			event.SetAllDayEndAt(end)
 		}
 		if e.Slug != nil {
-			event.SetURL("https://cycling.th-herve.fr/events/" + *e.Slug + "/2026")
+			event.SetURL("https://cycling.th-herve.fr/events/" + *e.Slug + "/" + string(year))
 		}
-		event.SetDescription("More infos: https://cycling.th-herve.fr/events/" + *e.Slug + "/2026")
+		event.SetDescription("More infos: https://cycling.th-herve.fr/events/" + *e.Slug + "/" + string(year))
 		event.SetSummary(e.Name)
 		event.SetColor("#313160")
 	}
