@@ -29,7 +29,7 @@ const HelpSection = () => {
             </li>
             <li>
               In the URL of calendar input, enter the link above. Then click Add
-              calendar.
+              calendar
             </li>
           </ol>
         </TabsContent>
@@ -50,7 +50,7 @@ const HelpSection = () => {
             </li>
             <li>
               Enter the link above. Then click{" "}
-              <Badge variant="outline">Add import</Badge>.
+              <Badge variant="outline">Add import</Badge>
             </li>
           </ol>
         </TabsContent>

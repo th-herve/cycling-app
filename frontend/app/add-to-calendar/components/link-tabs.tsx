@@ -1,3 +1,4 @@
+import ClipboardCopy from "@/components/common/clipboard-copy";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { siteRoute } from "@/siteConfig";
 import { headers } from "next/headers";
@@ -7,13 +8,6 @@ import { FaApple, FaDownload, FaGoogle } from "react-icons/fa6";
 const googleLinkBase = "https://calendar.google.com/calendar/r?cid=";
 
 const LinkTabs = async () => {
-  const h = await headers();
-  const host = h.get("host");
-  const webCal = (gender: "men" | "women") =>
-    `webcal://https://${host}/${siteRoute.calendarFeed[gender]}`;
-  const googleLink = (gender: "men" | "women") =>
-    `${googleLinkBase}${encodeURIComponent(webCal(gender))}`;
-
   return (
     <Tabs defaultValue="men" className="">
       <TabsList>
@@ -21,58 +15,53 @@ const LinkTabs = async () => {
         <TabsTrigger value="women">Women</TabsTrigger>
       </TabsList>
       <TabsContent value="men">
-        <p className="text-muted-foreground">
-          Subscribe to the men calendar. Includes WorldTour one-day races and
-          stage races.
-        </p>
-        <div className="grid grid-cols-4 gap-10">
-          <CalLink link={googleLink("men")} title="Google Calendar">
-            <FaGoogle className="size-10" />
-          </CalLink>
-
-          <CalLink link={webCal("men")} title="Outlook">
-            <Outlook />
-          </CalLink>
-
-          <CalLink link={webCal("men")} title="Apple">
-            <FaApple className="size-10" />
-          </CalLink>
-
-          <CalLink
-            link={"/" + siteRoute.calendarFeed.men}
-            title="Download ics file"
-          >
-            <FaDownload className="size-10" />
-          </CalLink>
-        </div>
+        <Content gender="men" />
       </TabsContent>
       <TabsContent value="women">
-        <p className="text-muted-foreground">
-          Subscribe to the women calendar. Includes WorldTour one-day and stage
-          races.
-        </p>
-        <div className="grid grid-cols-4 gap-10">
-          <CalLink link={googleLink("women")} title="Google Calendar">
-            <FaGoogle className="size-10" />
-          </CalLink>
-
-          <CalLink link={webCal("women")} title="Outlook">
-            <Outlook />
-          </CalLink>
-
-          <CalLink link={webCal("women")} title="Apple">
-            <FaApple className="size-10" />
-          </CalLink>
-
-          <CalLink
-            link={"/" + siteRoute.calendarFeed.women}
-            title="Download ics file"
-          >
-            <FaDownload className="size-10" />
-          </CalLink>
-        </div>
+        <Content gender="women" />
       </TabsContent>
     </Tabs>
+  );
+};
+
+const Content = async ({ gender }: { gender: "men" | "women" }) => {
+  const h = await headers();
+  const host = h.get("host");
+  const base = `https://${host}/${siteRoute.calendarFeed[gender]}`;
+  const webCal = `webcal://${base}`;
+  const googleLink = `${googleLinkBase}${encodeURIComponent(webCal)}`;
+  return (
+    <>
+      <p className="text-muted-foreground">
+        Subscribe to the {gender} calendar. Includes WorldTour one-day and stage
+        races.
+      </p>
+      <div className="grid grid-cols-4 gap-10">
+        <CalLink link={googleLink} title="Google Calendar">
+          <FaGoogle className="size-10" />
+        </CalLink>
+
+        <CalLink link={webCal} title="Outlook">
+          <Outlook />
+        </CalLink>
+
+        <CalLink link={webCal} title="Apple">
+          <FaApple className="size-10" />
+        </CalLink>
+
+        <CalLink
+          link={"/" + siteRoute.calendarFeed[gender]}
+          title="Download ics file"
+        >
+          <FaDownload className="size-10" />
+        </CalLink>
+      </div>
+      <p className="text-muted-foreground mt-4">
+        You can also copy the link to subscribe manually. See the help section
+        for more details.
+      </p>
+      <ClipboardCopy content={base} />
+    </>
   );
 };
 
