@@ -10,7 +10,7 @@ const LinkTabs = async () => {
   const h = await headers();
   const host = h.get("host");
   const webCal = (gender: "men" | "women") =>
-    `webcal://${host}/${siteRoute.calendarFeed[gender]}`;
+    `webcal://https://${host}/${siteRoute.calendarFeed[gender]}`;
   const googleLink = (gender: "men" | "women") =>
     `${googleLinkBase}${encodeURIComponent(webCal(gender))}`;
 
