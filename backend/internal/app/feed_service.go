@@ -77,6 +77,10 @@ func (s *FeedService) convertEventToIcal(event *ics.VEvent, e *dto.EventDTO) {
 		event.SetURL(url)
 		event.SetDescription("More infos: " + url)
 	}
-	event.SetSummary(e.Name)
+	name := e.Name
+	if e.Type == domain.EventTypeStage && e.ParentName != nil {
+		name = *e.ParentName + " " + e.Name
+	}
+	event.SetSummary(name)
 	event.SetColor("#313160")
 }
