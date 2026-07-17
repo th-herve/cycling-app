@@ -1,5 +1,6 @@
 import DefaultLayout from "@/components/layouts/default-layout";
 import LinkTabs from "./components/link-tabs";
+import HelpSection from "./components/help-section";
 
 const AddToCalPage = async () => {
   return (
@@ -12,6 +13,7 @@ const AddToCalPage = async () => {
           required.
         </p>
         <LinkTabs />
+        <HelpSection />
       </div>
     </DefaultLayout>
   );
