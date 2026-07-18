@@ -14,26 +14,26 @@ const HelpSection = () => {
       <Collapsible>
         <CollapsibleTrigger asChild>
           <Button variant="ghost" className="group w-full text-base">
-            Google calendar
+            Google Calendar
             <FaChevronDown className="ml-auto group-data-[state=open]:rotate-180" />
           </Button>
         </CollapsibleTrigger>
 
         <CollapsibleContent className="text-muted-foreground px-5">
-          If the google calendar link above does not work, you can try
-          subscribing manually to the calendars:
+          If the Google Calendar button doesn&apos;t work, you can subscribe
+          manually:
           <ol className="ml-8 list-decimal">
-            <li>Open google calendar</li>
+            <li>Open google calendar.</li>
             <li>
-              In the left panel, click the <Badge variant="outline">+</Badge>{" "}
-              next to <Badge variant="outline">Other calendars</Badge>
+              Click <Badge variant="outline">+</Badge> next to{" "}
+              <Badge variant="outline">Other calendars</Badge>.
             </li>
             <li>
-              Select <Badge variant="outline">From URL</Badge> in the menu
+              Select <Badge variant="outline">From URL</Badge>.
             </li>
+            <li>Paste the calendar URL above.</li>
             <li>
-              In the URL of calendar input, enter the link above. Then click Add
-              calendar
+              Click <Badge variant="outline">Add calendar</Badge>.
             </li>
           </ol>
         </CollapsibleContent>
@@ -47,22 +47,19 @@ const HelpSection = () => {
           </Button>
         </CollapsibleTrigger>
         <CollapsibleContent className="text-muted-foreground px-5">
-          If the Outlook link above does not work (which is usually the case if
-          you are using the web version), you can try subscribing manually to
-          the calendars:
+          If the Outlook button doesn&apos;t work (which is usually the case if
+          you are using the web version), you can subscribe manually:
           <ol className="ml-8 list-decimal">
-            <li>Open Outlook calendar</li>
+            <li>Open Outlook Calendar.</li>
             <li>
-              In the left panel, click{" "}
-              <Badge variant="outline">Add calendar</Badge>
+              Click <Badge variant="outline">Add calendar</Badge>.
             </li>
             <li>
-              In the menu that opens, click{" "}
-              <Badge variant="outline">Subscribe from web</Badge>
+              Click <Badge variant="outline">Subscribe from web</Badge>.
             </li>
+            <li>Paste the calendar URL above.</li>
             <li>
-              Enter the link above. Then click{" "}
-              <Badge variant="outline">Add import</Badge>
+              Click <Badge variant="outline">Add import</Badge>.
             </li>
           </ol>
         </CollapsibleContent>

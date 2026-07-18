@@ -8,10 +8,13 @@ const AddToCalPage = async () => {
       <h1>Add to calendar</h1>
 
       <div className="space-y-10">
-        <p className="text-muted-foreground">
-          Never miss a race by adding them to your online calendar. No signup
-          required.
-        </p>
+        <div className="text-muted-foreground">
+          <p>Never miss a race by subscribing to the race calendar.</p>
+          <ul className="list-disc ml-5">
+            <li>No signup required</li>
+            <li>Automatically updates</li>
+          </ul>
+        </div>
         <LinkTabs />
         <HelpSection />
       </div>
