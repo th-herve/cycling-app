@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 	"fmt"
-	"strings"
 	"time"
 
 	ics "github.com/arran4/golang-ical"
@@ -59,13 +58,12 @@ func (s *FeedService) convertEventToIcal(event *ics.VEvent, e *dto.EventDTO) {
 		event.SetModifiedAt(*e.UpdatedAt)
 	}
 
-	// Set country.
 	if e.Country.Name != "" {
 		event.SetLocation(e.Country.Name)
 	}
 
-	// Set dates.
 	event.SetAllDayStartAt(e.Start)
+
 	end := e.Start
 	if e.End != nil {
 		end = *e.End
@@ -74,29 +72,15 @@ func (s *FeedService) convertEventToIcal(event *ics.VEvent, e *dto.EventDTO) {
 	end = end.AddDate(0, 0, 1)
 	event.SetAllDayEndAt(end)
 
-	desc := []string{}
-	if e.DepartureCity != nil && e.ArrivalCity != nil {
-		desc = append(desc, *e.DepartureCity+" - "+*e.ArrivalCity)
-	}
-	if e.Classification != nil {
-		desc = append(desc, *e.Classification)
-	}
-
-	// Set link.
 	if e.Slug != nil {
 		url := fmt.Sprintf("https://cycling.th-herve.fr/events/%s/%d", *e.Slug, e.Start.Year())
 		event.SetURL(url)
-
-		desc = append(desc, "More infos: "+url)
+		event.SetDescription("More infos: " + url)
 	}
-
 	name := e.Name
 	if e.Type == domain.EventTypeStage && e.ParentName != nil {
 		name = *e.ParentName + " " + e.Name
 	}
-
-	event.SetDescription(strings.Join(desc, "\n"))
-
 	event.SetSummary(name)
 	event.SetColor("#313160")
 }
