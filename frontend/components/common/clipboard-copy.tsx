@@ -18,12 +18,11 @@ const ClipboardCopy = ({ content }: Props) => {
     <Badge className="gap-4 text-xl" variant="secondary">
       {content}
       <div className="border-muted-foreground h-5 border-l" />
-      <div className="cursor-pointer" onClick={onClick}>
-        {ok ? (
-          <FaCheck className="text-muted-foreground size-4" />
-        ) : (
-          <FaClone className="text-muted-foreground size-4" />
-        )}
+      <div
+        className="text-muted-foreground cursor-pointer hover:text-white"
+        onClick={onClick}
+      >
+        {ok ? <FaCheck className="size-4" /> : <FaClone className="size-4" />}
       </div>
     </Badge>
   );
