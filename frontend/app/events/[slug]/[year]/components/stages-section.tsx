@@ -10,7 +10,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { formatDateShort, formatDateShortDay, formatRider } from "@/lib/utils";
+import {
+  cn,
+  formatDateShort,
+  formatDateShortDay,
+  formatRider,
+  isEventToday,
+} from "@/lib/utils";
 import Event from "@/types/event";
 import { FaArrowRight, FaLocationDot, FaRoad } from "react-icons/fa6";
 import EventProfile from "./profile";
@@ -142,47 +148,55 @@ export const StagesCardsSection = ({ stages }: { stages: Event[] }) => {
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
       {stages.map((s) => (
-        <Card key={s.name}>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <ClassificationIcon classification={s.classification} />
-                <h2 className="font-race">
-                  {s.name} {s.classification === "ttt" && " (TTT)"}
-                </h2>
-              </div>
-              <p className="font-date">{formatDateShortDay(s.start)}</p>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {s.departureCity && s.arrivalCity && (
-              <div className="flex items-center gap-2">
-                <FaLocationDot />
-                <span>{s.departureCity}</span>
-                <span aria-hidden="true">
-                  <FaArrowRight />
-                </span>
-                <span>{s.arrivalCity}</span>
-              </div>
-            )}
-            {s.distance && (
-              <div className="flex items-center gap-2">
-                <FaRoad />
-                <p>{s.distance} km</p>
-              </div>
-            )}
-            <EventProfile id={s.id} />
-            {s.results?.stage && (
-              <div className="">
-                <ResultDisplay
-                  className="md:bg-muted"
-                  results={s.results.stage}
-                />
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <StageCard key={`stage-${s.id}`} stage={s} />
       ))}
     </div>
+  );
+};
+
+const StageCard = ({ stage }: { stage: Event }) => {
+  const isToday = isEventToday(stage);
+
+  return (
+    <Card className={cn({ "outline-primary outline-2": isToday })}>
+      <CardHeader>
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <ClassificationIcon classification={stage.classification} />
+            <h2 className="font-race">
+              {stage.name} {stage.classification === "ttt" && " (TTT)"}
+            </h2>
+          </div>
+          <p className="font-date">{formatDateShortDay(stage.start)}</p>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        {stage.departureCity && stage.arrivalCity && (
+          <div className="flex items-center gap-2">
+            <FaLocationDot />
+            <span>{stage.departureCity}</span>
+            <span aria-hidden="true">
+              <FaArrowRight />
+            </span>
+            <span>{stage.arrivalCity}</span>
+          </div>
+        )}
+        {stage.distance && (
+          <div className="flex items-center gap-2">
+            <FaRoad />
+            <p>{stage.distance} km</p>
+          </div>
+        )}
+        <EventProfile id={stage.id} />
+        {stage.results?.stage && (
+          <div className="">
+            <ResultDisplay
+              className="md:bg-muted"
+              results={stage.results.stage}
+            />
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
