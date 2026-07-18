@@ -27,9 +27,11 @@ const LinkTabs = async () => {
 const Content = async ({ gender }: { gender: "men" | "women" }) => {
   const h = await headers();
   const host = h.get("host");
-  const base = `https://${host}/${siteRoute.calendarFeed[gender]}`;
+  const base = `${host}/${siteRoute.calendarFeed[gender]}`;
   const webCal = `webcal://${base}`;
-  const googleLink = `${googleLinkBase}${encodeURIComponent(webCal)}`;
+  const https = `https://${base}`;
+  const googleLink = `${googleLinkBase}${webCal}`;
+
   return (
     <>
       <p className="text-muted-foreground">
@@ -60,7 +62,7 @@ const Content = async ({ gender }: { gender: "men" | "women" }) => {
         You can also copy the link to subscribe manually. See the help section
         for more details.
       </p>
-      <ClipboardCopy content={base} />
+      <ClipboardCopy content={https} />
     </>
   );
 };
