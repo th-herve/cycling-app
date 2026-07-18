@@ -16,7 +16,7 @@ const ClipboardCopy = ({ content }: Props) => {
 
   return (
     <Badge className="gap-4 text-xl" variant="secondary">
-      {content}
+      <div className="truncate max-w-60 md:max-w-full">{content}</div>
       <div className="border-muted-foreground h-5 border-l" />
       <div
         className="text-muted-foreground cursor-pointer hover:text-white"

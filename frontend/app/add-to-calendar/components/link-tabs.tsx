@@ -35,9 +35,10 @@ const Content = async ({ gender }: { gender: "men" | "women" }) => {
   return (
     <>
       <p className="text-muted-foreground">
-        Subscribe to the {gender} &apos;s calendar. Includes all {gender}&apos;s UCI WorldTour one-day races and stage races.
+        Subscribe to the {gender} &apos;s calendar. Includes all {gender}&apos;s
+        UCI WorldTour one-day races and stage races.
       </p>
-      <div className="grid grid-cols-4 gap-10">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-4 md:gap-10">
         <CalLink link={googleLink} title="Google Calendar">
           <FaGoogle className="size-10" />
         </CalLink>
