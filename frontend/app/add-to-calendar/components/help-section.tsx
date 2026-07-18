@@ -1,21 +1,25 @@
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { FaChevronDown } from "react-icons/fa6";
 
 const HelpSection = () => {
   return (
-    <div>
+    <div className="max-w-200">
       <h2 className="mb-4">Help</h2>
-      <Tabs defaultValue="google" className="">
-        <TabsList variant="line">
-          <TabsTrigger className="text-xl" value="google">
+      <Collapsible>
+        <CollapsibleTrigger asChild>
+          <Button variant="ghost" className="group w-full text-base">
             Google calendar
-          </TabsTrigger>
-          <TabsTrigger className="text-xl" value="outlook">
-            Outlook
-          </TabsTrigger>
-        </TabsList>
+            <FaChevronDown className="ml-auto group-data-[state=open]:rotate-180" />
+          </Button>
+        </CollapsibleTrigger>
 
-        <TabsContent className="text-muted-foreground" value="google">
+        <CollapsibleContent className="text-muted-foreground px-5">
           If the google calendar link above does not work, you can try
           subscribing manually to the calendars:
           <ol className="ml-8 list-decimal">
@@ -32,9 +36,17 @@ const HelpSection = () => {
               calendar
             </li>
           </ol>
-        </TabsContent>
+        </CollapsibleContent>
+      </Collapsible>
 
-        <TabsContent className="text-muted-foreground" value="outlook">
+      <Collapsible>
+        <CollapsibleTrigger asChild>
+          <Button variant="ghost" className="group w-full text-base">
+            Outlook
+            <FaChevronDown className="ml-auto group-data-[state=open]:rotate-180" />
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="text-muted-foreground px-5">
           If the Outlook link above does not work (which is usually the case if
           you are using the web version), you can try subscribing manually to
           the calendars:
@@ -53,8 +65,8 @@ const HelpSection = () => {
               <Badge variant="outline">Add import</Badge>
             </li>
           </ol>
-        </TabsContent>
-      </Tabs>
+        </CollapsibleContent>
+      </Collapsible>
     </div>
   );
 };
