@@ -54,7 +54,7 @@ const EventCalendar = ({ eventsByDay, year, gender }: Props) => {
   };
 
   return (
-    <div className="space-y-2">
+    <div className="flex grow flex-col gap-2">
       <CalendarHeader
         year={displayedYear}
         gender={gender}
@@ -94,8 +94,8 @@ const CalendarBody = ({
   displayedMonth: number;
 }) => {
   return (
-    <Card className="p-0">
-      <CardContent className="space-y-2 p-0">
+    <Card className="max-h-212 grow p-0">
+      <CardContent className="flex h-full flex-col gap-2 p-0">
         <CalendarWeekDaysRow />
 
         <CalendarDaysCells
@@ -118,7 +118,7 @@ const CalendarDaysCells = ({
   month: number;
 }) => {
   return (
-    <div className="grid grid-cols-7 gap-0.5 p-0 md:gap-4">
+    <div className="grid grow auto-rows-fr grid-cols-7 gap-0.5 md:gap-4">
       {displayedDays.map((day) => {
         return (
           <DayCell
@@ -147,7 +147,8 @@ const DayCell = ({
   return (
     <div
       className={cn(
-        "bg-secondary h-27 px-0.5 py-1 md:h-35 md:rounded-xl md:px-3",
+        // "bg-secondary h-27 px-0.5 py-1 md:h-35 md:rounded-xl md:px-3",
+        "bg-secondary px-0.5 py-1 md:rounded-xl md:px-3",
         {
           "outline-primary outline-2": isCellToday,
           "bg-secondary/40": isOutsideMonth,

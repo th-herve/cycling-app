@@ -16,7 +16,7 @@ const Page = async ({ searchParams }: Props) => {
   const data = await getEvents(year, gender);
 
   return (
-    <DefaultLayout className="max-w-600">
+    <DefaultLayout className="flex max-w-600 flex-col pb-12 md:h-screen">
       <div className="flex justify-between">
         <h1>Calendar</h1>
         <ViewSelector currentView="calendar" year={year} gender={gender} />
