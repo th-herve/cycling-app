@@ -94,7 +94,7 @@ const CalendarBody = ({
   displayedMonth: number;
 }) => {
   return (
-    <Card className="max-h-212 grow p-0">
+    <Card className="grow p-0">
       <CardContent className="flex h-full flex-col gap-2 p-0">
         <CalendarWeekDaysRow />
 
@@ -118,7 +118,7 @@ const CalendarDaysCells = ({
   month: number;
 }) => {
   return (
-    <div className="grid grow auto-rows-fr grid-cols-7 gap-0.5 md:gap-4">
+    <div className="grid grow auto-rows-fr grid-cols-7 gap-0.5 md:gap-3">
       {displayedDays.map((day) => {
         return (
           <DayCell
@@ -148,7 +148,7 @@ const DayCell = ({
     <div
       className={cn(
         // "bg-secondary h-27 px-0.5 py-1 md:h-35 md:rounded-xl md:px-3",
-        "bg-secondary px-0.5 py-1 md:rounded-xl md:px-3",
+        "bg-secondary px-0.5 py-1 md:rounded-lg md:px-3",
         {
           "outline-primary outline-2": isCellToday,
           "bg-secondary/40": isOutsideMonth,
