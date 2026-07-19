@@ -92,7 +92,7 @@ const StageInfo = ({ stage }: { stage: Event }) => {
         </dd>
       </div>
 
-      <div className="flex items-center gap-1">
+      <div className="hidden items-center gap-1 md:flex">
         <dt className="sr-only">Route</dt>
         <dd className="flex items-center">
           {stage.departureCity}
