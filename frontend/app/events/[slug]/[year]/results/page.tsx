@@ -1,3 +1,4 @@
+import { getLastStageWithResults } from "@/lib/events/events-utils";
 import { getStagesBySlug } from "@/lib/events/getEvents";
 import { slugify } from "@/lib/utils";
 import { siteRoute } from "@/siteConfig";
@@ -12,13 +13,15 @@ const Page = async ({ params }: Props) => {
 
   const stages = await getStagesBySlug(slug, year);
 
+  // TODO this is wrong in the case where an event does not have stages yet.
   if (!stages || stages.length <= 0) {
     notFound();
   }
 
-  const stageSlug = slugify(stages[0].name);
+  // Name of the stages to open the results tab with.
+  const stage = getLastStageWithResults(stages) || stages[0];
 
-  redirect(siteRoute.events.results(slug, year, stageSlug));
+  redirect(siteRoute.events.results(slug, year, slugify(stage.name)));
 };
 
 export default Page;

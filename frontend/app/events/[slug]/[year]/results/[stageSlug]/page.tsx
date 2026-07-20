@@ -62,7 +62,7 @@ const Page = async ({ params }: Props) => {
       <EventHeader event={event} />
       <div className="mt-10 space-y-10">
         <ResultsSnapshotSection event={event} stages={stages} />
-        <TabsSelector resultsStageSlug={slugify(stages[0].name)} />
+        <TabsSelector resultsStageSlug={slugify(currentStage.name)} />
         <div>
           <div className="mb-2 flex items-center gap-6">
             <StageSelector

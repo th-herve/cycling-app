@@ -1,4 +1,5 @@
 import { JerseyLine, ResultLine } from "@/components/common/result-line";
+import { getLastStageWithResults } from "@/lib/events/events-utils";
 import Event from "@/types/event";
 import { ResultsResponse } from "@/types/result";
 
@@ -12,23 +13,14 @@ export const ResultsSnapshotSection = ({
 }) => {
   const hasFinalResult = !!event.results;
 
-  let standings: ResultsResponse | undefined;
-  let standingsStage: string | undefined;
-  if (!hasFinalResult) {
-    stages.forEach((s) => {
-      if (s.results && Object.keys(s.results).length > 0) {
-        standings = s.results;
-        standingsStage = s.name;
-      }
-    });
-  }
+  const stage = getLastStageWithResults(stages);
 
-  const hasStandings = !!standings;
+  const hasStandings = !!stage;
 
   return hasFinalResult ? (
     <FinalResultsSection results={event.results} />
   ) : hasStandings ? (
-    <StandingSection stageName={standingsStage} results={standings} />
+    <StandingSection stageName={stage.name} results={stage.results} />
   ) : null;
 };
 
