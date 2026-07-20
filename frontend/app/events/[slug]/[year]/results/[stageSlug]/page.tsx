@@ -34,6 +34,11 @@ const Page = async ({ params }: Props) => {
     redirect(siteRoute.events.root(slug, year));
   }
 
+  // Only shows the header if there is no stages yet.
+  if (!stages || stages.length <= 0) {
+    return <EventHeader event={event} />;
+  }
+
   // Look for the requested stage from the url stage slug.
   const requestedStage = stages.filter((s) => slugify(s.name) === stageSlug);
 

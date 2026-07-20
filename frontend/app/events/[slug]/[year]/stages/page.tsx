@@ -34,7 +34,7 @@ const Page = async ({ params }: Props) => {
     <>
       <EventHeader event={event} />
       <div className="mt-10 space-y-10">
-        {stages && (
+        {stages.length > 0 && (
           <>
             <ResultsSnapshotSection event={event} stages={stages} />
             <TabsSelector resultsStageSlug={slugify(stage.name)} />
